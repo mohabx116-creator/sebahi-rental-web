@@ -11,7 +11,7 @@ export const publicRentalBrand = {
   compoundAr: 'كمباوند السبحي',
   compoundEn: 'Sebahi Compound',
   rentalsTitle: 'إيجارات كمباوند السبحي',
-  marketplaceLabel: 'بوابة إيجارات السبحي',
+  marketplaceLabel: 'سوق إيجارات السبحي',
 } as const;
 
 export const listingTypeLabels: Record<RentalListingType, string> = {
@@ -62,14 +62,20 @@ export function toNumber(value: number | string | null | undefined) {
 }
 
 export function formatRentalMoney(value: number | string | null | undefined) {
-  return `${new Intl.NumberFormat('ar-EG').format(toNumber(value))} ج.م`;
+  const amount = toNumber(value);
+  return `${new Intl.NumberFormat('ar-EG').format(amount)} ج.م`;
 }
 
 export function formatRentalDate(value: string | null | undefined) {
   if (!value) return 'غير محدد';
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return 'غير محدد';
-  return new Intl.DateTimeFormat('ar-EG', { day: 'numeric', month: 'long', year: 'numeric' }).format(date);
+
+  return new Intl.DateTimeFormat('ar-EG', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(date);
 }
 
 export function shortId(value: string) {
@@ -78,6 +84,7 @@ export function shortId(value: string) {
 
 export function sanitizeSebahiDisplayText(value: string | null | undefined, fallback = '') {
   if (!value?.trim()) return fallback;
+
   return value
     .trim()
     .replace(/Black Horse Compound/gi, publicRentalBrand.compoundAr)
@@ -98,7 +105,10 @@ export function publicCompoundName(value: string | null | undefined) {
 
 export function sortListingImages(listingOrImages: RentalListing | RentalListingImage[] | null | undefined) {
   const images = Array.isArray(listingOrImages) ? listingOrImages : listingOrImages?.images;
-  return [...(images ?? [])].filter((image) => image.url.trim().length > 0).sort((a, b) => a.sortOrder - b.sortOrder);
+
+  return [...(images ?? [])]
+    .filter((image) => image.url.trim().length > 0)
+    .sort((a, b) => a.sortOrder - b.sortOrder);
 }
 
 export function getListingCoverImage(listing: RentalListing | null | undefined) {

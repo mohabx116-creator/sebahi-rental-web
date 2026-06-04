@@ -40,6 +40,7 @@ export type RentalInquiryStatus = 'NEW' | 'CONTACT_UNLOCKED' | 'VIEWING_REQUESTE
 export type RentalInquiryType = 'VIEWING_REQUEST' | 'GENERAL';
 export type RentalPaymentStatus = 'INITIATED' | 'PENDING' | 'PAID' | 'FAILED' | 'EXPIRED' | 'CANCELLED' | 'REFUNDED' | 'PARTIALLY_REFUNDED' | 'DISPUTED';
 export type RentalReservationStatus = 'PENDING_PAYMENT' | 'PAYMENT_LOCKED' | 'PAID_PENDING_CONFIRMATION' | 'RESERVED' | 'CONFIRMED' | 'CANCELLED' | 'EXPIRED' | 'REFUNDED' | 'REJECTED';
+export type RentalOwnerSubmissionStatus = 'NEW' | 'UNDER_REVIEW' | 'NEEDS_CHANGES' | 'APPROVED' | 'REJECTED' | 'CONVERTED_TO_LISTING' | 'CANCELLED';
 
 export interface RentalCompoundPublicSummary {
   id: string;
@@ -122,6 +123,8 @@ export interface StartContactUnlockInput {
   tenantEmail?: string;
 }
 
+export type StartReservationInput = StartContactUnlockInput;
+
 export interface RentalPaymentSummary {
   id: string;
   amount: number | string;
@@ -176,4 +179,62 @@ export interface RentalReservation {
   listing?: Pick<RentalListing, 'id' | 'title' | 'slug' | 'status'> | null;
   paymentUrl?: string | null;
   payment?: { paymentUrl?: string | null } | null;
+}
+
+export interface StartReservationResponse {
+  reservation: RentalReservation;
+  payment?: RentalPaymentSummary | null;
+  paymentUrl?: string | null;
+}
+
+export interface OwnerSubmissionImageInput {
+  url: string;
+  publicId?: string;
+  storagePath?: string;
+  altText?: string;
+  sortOrder?: number;
+  isCover?: boolean;
+}
+
+export interface CreateOwnerSubmissionInput {
+  ownerName: string;
+  ownerPhone: string;
+  ownerEmail?: string;
+  ownerNationalId?: string;
+  preferredContactMethod?: string;
+  listingType: RentalListingType;
+  title: string;
+  description: string;
+  addressText?: string;
+  locationText?: string;
+  floor?: number | null;
+  areaSqm?: number;
+  bedrooms?: number;
+  bathrooms?: number;
+  furnishingStatus: RentalFurnishingStatus;
+  monthlyRent: number;
+  depositAmount?: number;
+  images: OwnerSubmissionImageInput[];
+  policyAccepted: true;
+}
+
+export interface OwnerSubmissionPublicStatus {
+  id: string;
+  status: RentalOwnerSubmissionStatus;
+  title: string;
+  createdListingId?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  createdListing?: Pick<RentalListing, 'id' | 'title' | 'slug' | 'status'> & { isPublished: boolean } | null;
+}
+
+export interface CloudinaryUploadSignatureResponse {
+  cloudName: string;
+  uploadUrl: string;
+  fields: {
+    api_key: string;
+    folder: string;
+    timestamp: number;
+    signature: string;
+  };
 }
