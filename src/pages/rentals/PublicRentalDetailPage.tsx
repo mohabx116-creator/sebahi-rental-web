@@ -59,15 +59,15 @@ function optionalAmenities(listing: RentalListing) {
 function DetailImageFallback({ title }: { title: string }) {
   return (
     <div className="absolute inset-0 flex flex-col justify-between overflow-hidden bg-primary p-6 text-white sm:p-8">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_22%,rgba(201,169,97,0.4),transparent_30%),linear-gradient(135deg,rgba(255,255,255,0.14),transparent_42%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_22%,rgba(214,178,94,0.35),transparent_30%),linear-gradient(135deg,rgba(255,255,255,0.08),transparent_42%)]" />
       <div className="relative flex h-full flex-col justify-between">
-        <span className="inline-flex w-fit items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-black text-secondary-fixed backdrop-blur-md">
-          <Building2 className="h-4 w-4" />
+        <span className="inline-flex w-fit items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-black text-tertiary backdrop-blur-md">
+          <Building2 className="h-4 w-4 text-tertiary" />
           {publicRentalBrand.rentalsTitle}
         </span>
         <div className="max-w-2xl">
-          <p className="text-sm font-bold text-primary-fixed">كمباوند السبحي</p>
-          <p className="mt-2 text-3xl font-black leading-[1.35] sm:text-5xl">{title}</p>
+          <p className="text-sm font-bold text-tertiary">كمباوند السبحي</p>
+          <p className="mt-2 text-3xl font-black leading-[1.35] sm:text-5xl text-fixed">{title}</p>
         </div>
       </div>
     </div>
@@ -82,11 +82,11 @@ function isPaymentProviderPending(error: unknown) {
 
 function DetailError({ title, message }: { title: string; message: string }) {
   return (
-    <main className="mx-auto flex min-h-[70dvh] w-full max-w-3xl flex-col items-center justify-center px-4 py-12 text-center">
-      <Building2 className="h-14 w-14 text-secondary" />
-      <h1 className="mt-5 text-3xl font-black text-primary">{title}</h1>
-      <p className="mt-3 leading-8 text-on-surface-variant">{message}</p>
-      <Link className="mt-6 rounded-full bg-primary px-6 py-3 font-bold text-white" to={ROUTES.RENTALS}>
+    <main className="mx-auto flex min-h-[70dvh] w-full max-w-3xl flex-col items-center justify-center px-4 py-12 text-center text-fixed">
+      <Building2 className="h-14 w-14 text-tertiary" />
+      <h1 className="mt-5 text-3xl font-black text-fixed">{title}</h1>
+      <p className="mt-3 leading-8 text-fixed-dim">{message}</p>
+      <Link className="mt-6 rounded-full bg-tertiary px-6 py-3 font-bold text-primary hover:bg-tertiary/90 transition shadow-lg shadow-tertiary/20" to={ROUTES.RENTALS}>
         العودة إلى الإيجارات
       </Link>
     </main>
@@ -157,7 +157,7 @@ export function PublicRentalDetailPage() {
   if (listingQuery.isLoading) {
     return (
       <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="h-[520px] animate-pulse rounded-[32px] bg-white shadow-xl shadow-primary/5" />
+        <div className="h-[520px] animate-pulse rounded-[32px] bg-primary/30 border border-outline/25 shadow-xl" />
       </main>
     );
   }
@@ -207,18 +207,18 @@ export function PublicRentalDetailPage() {
   }
 
   return (
-    <main className="bg-background pb-16">
-      <section className="border-b border-outline-variant/50 bg-white">
+    <main className="pb-16 text-fixed">
+      <section className="border-b border-outline/30 bg-primary/20">
         <div className="mx-auto w-full max-w-7xl px-4 py-5 sm:px-6 lg:px-8 lg:py-8">
-          <Link className="mb-5 inline-flex min-h-10 items-center gap-2 rounded-full px-1 text-sm font-bold text-primary hover:text-secondary" to={ROUTES.RENTALS}>
-            <ChevronRight className="h-5 w-5" />
+          <Link className="mb-5 inline-flex min-h-10 items-center gap-2 rounded-full px-4 py-1 text-sm font-bold text-fixed-dim hover:text-tertiary hover:bg-white/5 transition" to={ROUTES.RENTALS}>
+            <ChevronRight className="h-5 w-5 text-tertiary" />
             رجوع إلى الإيجارات
           </Link>
 
           <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_420px] xl:items-start">
             <div className="min-w-0 space-y-4">
-              <div className="relative overflow-hidden rounded-[32px] bg-surface-container-low shadow-2xl shadow-primary/10">
-                <div className="relative aspect-[4/3] sm:aspect-[16/10] lg:aspect-[16/8.5]">
+              <div className="relative overflow-hidden rounded-[32px] glass-panel">
+                <div className="relative aspect-[4/3] sm:aspect-[16/10] lg:aspect-[16/8.5] bg-surface-dim">
                   <DetailImageFallback title={title} />
                   {coverImage && (
                     <img
@@ -231,21 +231,21 @@ export function PublicRentalDetailPage() {
                     />
                   )}
                 </div>
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-primary/80 via-primary/25 to-transparent p-5 text-white sm:p-7">
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-primary/90 via-primary/30 to-transparent p-5 text-white sm:p-7">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="rounded-full bg-white/95 px-3 py-1 text-xs font-bold text-secondary shadow-md">{listingStatusLabels[listing.status]}</span>
+                    <span className="rounded-full bg-primary/80 border border-outline px-3 py-1 text-xs font-bold text-fixed backdrop-blur-md">{listingStatusLabels[listing.status]}</span>
                     {listing.isFeatured && (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-secondary px-3 py-1 text-xs font-bold text-white shadow-md">
-                        <Sparkles className="h-3.5 w-3.5" />
+                      <span className="inline-flex items-center gap-1 rounded-full bg-tertiary px-3 py-1 text-xs font-bold text-primary shadow-md">
+                        <Sparkles className="h-3.5 w-3.5 text-primary" />
                         مميز
                       </span>
                     )}
-                    <span className="rounded-full bg-white/15 px-3 py-1 text-xs font-bold text-white backdrop-blur-md">{listingTypeLabels[listing.listingType]}</span>
-                    <span className="rounded-full bg-white/15 px-3 py-1 text-xs font-bold text-white backdrop-blur-md">{furnishingLabels[listing.furnishingStatus]}</span>
+                    <span className="rounded-full bg-white/5 border border-white/10 px-3 py-1 text-xs font-bold text-fixed backdrop-blur-md">{listingTypeLabels[listing.listingType]}</span>
+                    <span className="rounded-full bg-white/5 border border-white/10 px-3 py-1 text-xs font-bold text-fixed backdrop-blur-md">{furnishingLabels[listing.furnishingStatus]}</span>
                   </div>
-                  <h1 className="mt-3 max-w-4xl text-2xl font-black leading-[1.35] sm:text-4xl lg:text-5xl">{title}</h1>
-                  <p className="mt-2 flex max-w-3xl items-center gap-2 text-sm text-primary-fixed sm:text-base">
-                    <MapPin className="h-5 w-5 shrink-0 text-secondary-fixed" />
+                  <h1 className="mt-3 max-w-4xl text-2xl font-black leading-[1.35] sm:text-4xl lg:text-5xl text-fixed">{title}</h1>
+                  <p className="mt-2 flex max-w-3xl items-center gap-2 text-sm text-fixed-dim sm:text-base">
+                    <MapPin className="h-5 w-5 shrink-0 text-tertiary" />
                     {location}
                   </p>
                 </div>
@@ -257,7 +257,7 @@ export function PublicRentalDetailPage() {
                     <img
                       key={image.id}
                       alt={getListingImageAlt(listing, image)}
-                      className="aspect-[4/3] rounded-2xl border border-outline-variant/50 object-cover shadow-sm"
+                      className="aspect-[4/3] rounded-2xl border border-outline/50 object-cover shadow-md"
                       src={image.url}
                       onError={(event) => {
                         event.currentTarget.style.display = 'none';
@@ -268,11 +268,11 @@ export function PublicRentalDetailPage() {
               )}
             </div>
 
-            <aside className="self-start rounded-[32px] border border-outline-variant/60 bg-white p-5 text-right shadow-2xl shadow-primary/10 xl:sticky xl:top-24 xl:p-6">
-              <div className="rounded-[26px] bg-primary p-5 text-white">
-                <p className="text-sm font-bold text-primary-fixed-dim">الإيجار الشهري</p>
-                <p className="mt-1 text-4xl font-black leading-tight">{formatRentalMoney(listing.monthlyRent)}</p>
-                <p className="mt-3 text-sm leading-7 text-primary-fixed">
+            <aside className="self-start rounded-[32px] glass-panel p-5 text-right xl:sticky xl:top-24 xl:p-6">
+              <div className="rounded-[26px] bg-secondary p-5 text-white border border-secondary/35 shadow-inner">
+                <p className="text-sm font-bold text-tertiary">الإيجار الشهري</p>
+                <p className="mt-1 text-4xl font-black leading-tight text-white">{formatRentalMoney(listing.monthlyRent)}</p>
+                <p className="mt-3 text-sm leading-7 text-fixed-dim/90">
                   لوحة الحجز تعرض الرسوم فقط. التأكيد وفتح بيانات المالك يتمان عبر الخادم.
                 </p>
               </div>
@@ -281,41 +281,41 @@ export function PublicRentalDetailPage() {
                 {unitFacts.map((fact) => {
                   const Icon = fact.icon;
                   return (
-                    <div key={fact.label} className="rounded-2xl bg-surface-container-low px-2 py-3 text-center">
-                      <Icon className="mx-auto mb-1 h-5 w-5 text-primary" />
-                      <p className="text-xs font-bold text-on-surface-variant">{fact.label}</p>
-                      <p className="mt-1 text-sm font-black text-primary">{fact.value}</p>
+                    <div key={fact.label} className="rounded-2xl bg-primary/45 border border-outline/20 px-2 py-3 text-center">
+                      <Icon className="mx-auto mb-1 h-5 w-5 text-tertiary" />
+                      <p className="text-xs font-bold text-fixed-dim">{fact.label}</p>
+                      <p className="mt-1 text-sm font-black text-fixed">{fact.value}</p>
                     </div>
                   );
                 })}
               </div>
 
-              <div className="mt-4 space-y-2 rounded-[24px] border border-outline-variant/60 p-4">
+              <div className="mt-4 space-y-2 rounded-[24px] border border-outline/40 p-4 bg-white/5">
                 {pricingItems.map((item) => (
                   <div key={item.label} className="flex items-center justify-between gap-4 text-sm">
-                    <span className="font-bold text-on-surface-variant">{item.label}</span>
-                    <span className="font-black text-primary">{item.value}</span>
+                    <span className="font-bold text-fixed-dim">{item.label}</span>
+                    <span className="font-black text-tertiary">{item.value}</span>
                   </div>
                 ))}
               </div>
 
               <div className="mt-5 space-y-3">
-                <button className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-secondary px-5 py-4 text-base font-black text-white shadow-xl shadow-secondary/15" type="button" onClick={revealInquiryForm}>
+                <button className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-secondary hover:bg-secondary/90 px-5 py-4 text-base font-black text-white shadow-xl shadow-secondary/15 transition" type="button" onClick={revealInquiryForm}>
                   <CalendarCheck className="h-5 w-5" />
                   طلب معاينة
                 </button>
-                <Link className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-primary px-5 py-4 text-base font-black text-white shadow-xl shadow-primary/15" to={`/rentals/${listing.slug}/contact`}>
+                <Link className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-tertiary hover:bg-tertiary/90 px-5 py-4 text-base font-black text-primary shadow-xl shadow-tertiary/15 transition" to={`/rentals/${listing.slug}/contact`}>
                   <LockKeyhole className="h-5 w-5" />
                   فتح بيانات التواصل
                 </Link>
-                <button className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-secondary px-5 py-4 text-base font-black text-white shadow-xl shadow-secondary/15" type="button" onClick={() => setShowReservationForm((value) => !value)}>
+                <button className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-secondary hover:bg-secondary/90 px-5 py-4 text-base font-black text-white shadow-xl shadow-secondary/15 transition" type="button" onClick={() => setShowReservationForm((value) => !value)}>
                   <CalendarClock className="h-5 w-5" />
                   بدء حجز مؤقت
                 </button>
               </div>
 
-              <p className="mt-4 flex items-start gap-2 rounded-2xl bg-secondary/10 p-3 text-xs leading-6 text-secondary">
-                <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0" />
+              <p className="mt-4 flex items-start gap-2 rounded-2xl bg-secondary/20 border border-secondary/30 p-3 text-xs leading-6 text-fixed-dim">
+                <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-tertiary" />
                 لا تظهر بيانات المالك ولا يتم تأكيد الحجز إلا بعد تحقق الدفع من الخادم.
               </p>
             </aside>
@@ -325,27 +325,27 @@ export function PublicRentalDetailPage() {
 
       <section className="mx-auto grid w-full max-w-7xl gap-6 px-4 py-8 sm:px-6 lg:px-8 xl:grid-cols-[minmax(0,1fr)_420px]">
         <div className="space-y-6">
-          <section className="rounded-[28px] border border-outline-variant/60 bg-white p-6 text-right shadow-xl shadow-primary/5">
-            <h2 className="text-2xl font-black text-primary">وصف الوحدة</h2>
-            <p className="mt-4 whitespace-pre-line text-base leading-9 text-on-surface-variant">{description}</p>
+          <section className="rounded-[28px] glass-panel p-6 text-right">
+            <h2 className="text-2xl font-black text-fixed">وصف الوحدة</h2>
+            <p className="mt-4 whitespace-pre-line text-base leading-9 text-fixed-dim">{description}</p>
           </section>
 
-          <section className="rounded-[28px] border border-outline-variant/60 bg-white p-6 text-right shadow-xl shadow-primary/5">
-            <h2 className="text-2xl font-black text-primary">المواصفات</h2>
+          <section className="rounded-[28px] glass-panel p-6 text-right">
+            <h2 className="text-2xl font-black text-fixed">المواصفات</h2>
             <dl className="mt-5 grid gap-3 sm:grid-cols-2">
-              <div className="rounded-2xl bg-surface-container-low p-4"><dt className="text-sm text-on-surface-variant">نوع الوحدة</dt><dd className="mt-1 font-black text-primary">{listingTypeLabels[listing.listingType]}</dd></div>
-              <div className="rounded-2xl bg-surface-container-low p-4"><dt className="text-sm text-on-surface-variant">التجهيز</dt><dd className="mt-1 font-black text-primary">{furnishingLabels[listing.furnishingStatus]}</dd></div>
-              <div className="rounded-2xl bg-surface-container-low p-4"><dt className="text-sm text-on-surface-variant">الدور</dt><dd className="mt-1 font-black text-primary">{listing.floor ?? 'غير محدد'}</dd></div>
-              <div className="rounded-2xl bg-surface-container-low p-4"><dt className="text-sm text-on-surface-variant">تاريخ النشر</dt><dd className="mt-1 font-black text-primary">{formatRentalDate(listing.publishedAt)}</dd></div>
+              <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">نوع الوحدة</dt><dd className="mt-1 font-black text-tertiary">{listingTypeLabels[listing.listingType]}</dd></div>
+              <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">التجهيز</dt><dd className="mt-1 font-black text-tertiary">{furnishingLabels[listing.furnishingStatus]}</dd></div>
+              <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">الدور</dt><dd className="mt-1 font-black text-tertiary">{listing.floor ?? 'غير محدد'}</dd></div>
+              <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">تاريخ النشر</dt><dd className="mt-1 font-black text-tertiary">{formatRentalDate(listing.publishedAt)}</dd></div>
             </dl>
           </section>
 
           {amenities.length > 0 && (
-            <section className="rounded-[28px] border border-outline-variant/60 bg-white p-6 text-right shadow-xl shadow-primary/5">
-              <h2 className="text-2xl font-black text-primary">المميزات</h2>
+            <section className="rounded-[28px] glass-panel p-6 text-right">
+              <h2 className="text-2xl font-black text-fixed">المميزات</h2>
               <div className="mt-5 flex flex-wrap gap-2">
                 {amenities.map((item) => (
-                  <span key={item} className="rounded-full bg-secondary/10 px-4 py-2 text-sm font-bold text-secondary">
+                  <span key={item} className="rounded-full bg-secondary/30 border border-secondary/20 px-4 py-2 text-sm font-bold text-white">
                     {publicRentalText(item)}
                   </span>
                 ))}
@@ -363,13 +363,13 @@ export function PublicRentalDetailPage() {
                 intro="يمكنك طلب معاينة الوحدة الآن بدون تسجيل دخول وبدون دفع. سيصل الطلب إلى إدارة كمباوند السبحي للمتابعة."
               />
             ) : (
-              <section className="rounded-[28px] border border-secondary/20 bg-secondary/10 p-5 text-right">
-                <CalendarCheck className="h-6 w-6 text-secondary" />
-                <h2 className="mt-3 text-xl font-black text-primary">تريد معاينة الوحدة أولًا؟</h2>
-                <p className="mt-2 text-sm leading-7 text-on-surface-variant">
+              <section className="rounded-[28px] border border-secondary/35 bg-secondary/20 p-6 text-right">
+                <CalendarCheck className="h-6 w-6 text-tertiary" />
+                <h2 className="mt-3 text-xl font-black text-fixed">تريد معاينة الوحدة أولًا؟</h2>
+                <p className="mt-2 text-sm leading-7 text-fixed-dim">
                   أرسل طلب معاينة للإدارة بدون دفع أو فتح بيانات المالك. الطلب يصل لفريق كمباوند السبحي لمتابعته من لوحة الإدارة.
                 </p>
-                <button className="mt-4 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-secondary px-5 py-3 text-sm font-black text-white shadow-lg shadow-secondary/15" type="button" onClick={revealInquiryForm}>
+                <button className="mt-4 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-secondary hover:bg-secondary/90 px-5 py-3 text-sm font-black text-white shadow-lg shadow-secondary/15 transition" type="button" onClick={revealInquiryForm}>
                   طلب معاينة
                   <CalendarCheck className="h-4 w-4" />
                 </button>
@@ -378,50 +378,50 @@ export function PublicRentalDetailPage() {
           </div>
 
           {showReservationForm && (
-            <form className="rounded-[28px] border border-secondary/20 bg-white p-5 text-right shadow-xl shadow-secondary/10" onSubmit={onReservationSubmit}>
-              <h2 className="text-xl font-black text-primary">بيانات الحجز المؤقت</h2>
-              <p className="mt-2 text-sm leading-7 text-on-surface-variant">
+            <form className="rounded-[28px] glass-panel p-6 text-right" onSubmit={onReservationSubmit}>
+              <h2 className="text-xl font-black text-fixed">بيانات الحجز المؤقت</h2>
+              <p className="mt-2 text-sm leading-7 text-fixed-dim">
                 رسوم الحجز المؤقت: {formatRentalMoney(listing.reservationFee)}. الدفع الإلكتروني يجب أن يتم من خلال رابط مزود الدفع عند توفره.
               </p>
               <div className="mt-5 space-y-3">
                 <label className="block">
-                  <span className="mb-2 block text-sm font-bold text-primary">الاسم</span>
-                  <input className="w-full rounded-2xl border-outline-variant bg-surface-container-low text-right focus:border-secondary focus:ring-secondary/20" {...register('tenantName')} />
+                  <span className="mb-2 block text-sm font-bold text-fixed-dim">الاسم</span>
+                  <input className="w-full rounded-2xl border-outline bg-primary/40 text-right text-fixed focus:border-tertiary focus:ring-tertiary/20" {...register('tenantName')} />
                   {errors.tenantName && <span className="mt-1 block text-sm font-bold text-error">{errors.tenantName.message}</span>}
                 </label>
                 <label className="block">
-                  <span className="mb-2 block text-sm font-bold text-primary">رقم الموبايل</span>
-                  <input className="w-full rounded-2xl border-outline-variant bg-surface-container-low text-right focus:border-secondary focus:ring-secondary/20" {...register('tenantPhone')} />
+                  <span className="mb-2 block text-sm font-bold text-fixed-dim">رقم الموبايل</span>
+                  <input className="w-full rounded-2xl border-outline bg-primary/40 text-right text-fixed focus:border-tertiary focus:ring-tertiary/20" {...register('tenantPhone')} />
                   {errors.tenantPhone && <span className="mt-1 block text-sm font-bold text-error">{errors.tenantPhone.message}</span>}
                 </label>
                 <label className="block">
-                  <span className="mb-2 block text-sm font-bold text-primary">البريد الإلكتروني اختياري</span>
-                  <input className="w-full rounded-2xl border-outline-variant bg-surface-container-low text-right focus:border-secondary focus:ring-secondary/20" type="email" {...register('tenantEmail')} />
+                  <span className="mb-2 block text-sm font-bold text-fixed-dim">البريد الإلكتروني اختياري</span>
+                  <input className="w-full rounded-2xl border-outline bg-primary/40 text-right text-fixed focus:border-tertiary focus:ring-tertiary/20" type="email" {...register('tenantEmail')} />
                   {errors.tenantEmail && <span className="mt-1 block text-sm font-bold text-error">{errors.tenantEmail.message}</span>}
                 </label>
               </div>
               {reservationNotice && (
-                <div className="mt-4 rounded-2xl border border-outline-variant/60 bg-surface-container-low p-4 text-sm leading-7 text-on-surface-variant">
-                  <p className="font-bold text-primary">{reservationNotice.message}</p>
+                <div className="mt-4 rounded-2xl border border-outline/30 bg-white/5 p-4 text-sm leading-7 text-fixed-dim">
+                  <p className="font-bold text-fixed">{reservationNotice.message}</p>
                   {reservationNotice.href && (
-                    <a className="mt-3 inline-flex items-center gap-2 rounded-full bg-secondary px-4 py-2 font-bold text-white" href={reservationNotice.href}>
+                    <a className="mt-3 inline-flex items-center gap-2 rounded-full bg-secondary hover:bg-secondary/90 px-4 py-2 font-bold text-white transition" href={reservationNotice.href}>
                       {reservationNotice.type === 'ready' ? 'فتح رابط الدفع' : 'متابعة حالة الحجز'}
                       <ArrowLeft className="h-4 w-4" />
                     </a>
                   )}
                 </div>
               )}
-              <button className="mt-5 flex w-full items-center justify-center gap-2 rounded-2xl bg-secondary px-5 py-4 font-black text-white disabled:opacity-60" disabled={isReservationPending} type="submit">
+              <button className="mt-5 flex w-full items-center justify-center gap-2 rounded-2xl bg-tertiary hover:bg-tertiary/90 px-5 py-4 font-black text-primary transition disabled:opacity-60" disabled={isReservationPending} type="submit">
                 <CheckCircle2 className="h-5 w-5" />
                 {isReservationPending ? 'جار بدء الطلب...' : 'بدء طلب الحجز'}
               </button>
             </form>
           )}
 
-          <section className="rounded-[28px] border border-outline-variant/60 bg-white p-5 text-right shadow-xl shadow-primary/5">
-            <h2 className="text-xl font-black text-primary">الموقع والكمباوند</h2>
-            <p className="mt-3 text-sm leading-7 text-on-surface-variant">{compoundName}</p>
-            <p className="mt-1 text-sm leading-7 text-on-surface-variant">{publicRentalText(listing.addressText ?? listing.compound?.address, 'القاهرة الجديدة')}</p>
+          <section className="rounded-[28px] glass-panel p-6 text-right">
+            <h2 className="text-xl font-black text-fixed">الموقع والكمباوند</h2>
+            <p className="mt-3 text-sm leading-7 text-fixed-dim">{compoundName}</p>
+            <p className="mt-1 text-sm leading-7 text-fixed-dim">{publicRentalText(listing.addressText ?? listing.compound?.address, 'القاهرة الجديدة')}</p>
           </section>
         </div>
       </section>

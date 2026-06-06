@@ -4,8 +4,8 @@
 
 @layer base {
   :root {
-    color: #191c1e;
-    background: #f7f9fb;
+    color: #f6f1df;
+    background: #111b10;
     font-family: 'IBM Plex Sans Arabic', 'IBM Plex Sans', system-ui, sans-serif;
     font-synthesis: none;
     text-rendering: optimizeLegibility;
@@ -19,21 +19,37 @@
 
   html {
     direction: rtl;
-    background: #eceef0;
+    background: #111b10;
+    scroll-behavior: smooth;
   }
 
   body {
     min-width: 320px;
     min-height: 100vh;
     margin: 0;
-    background: #eceef0;
+    background: #111b10;
     -webkit-tap-highlight-color: transparent;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    content: "";
+    background:
+      radial-gradient(circle at 20% 10%, rgba(214, 178, 94, 0.13), transparent 30%),
+      radial-gradient(circle at 78% 24%, rgba(16, 119, 96, 0.2), transparent 34%),
+      linear-gradient(180deg, #111b10 0%, #172414 48%, #08120b 100%);
   }
 
   button,
   input,
-  textarea {
+  textarea,
+  select {
     font: inherit;
+    color: inherit;
   }
 
   a {
@@ -45,6 +61,47 @@
     min-height: 100vh;
   }
 }
+
+/* Premium Glassmorphic styles */
+.glass-panel {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04)),
+    rgba(17, 27, 16, 0.72);
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(16px);
+}
+
+.glass-card {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)),
+    rgba(23, 36, 20, 0.78);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(12px);
+  transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+  border-color: rgba(214, 178, 94, 0.3);
+  background:
+    linear-gradient(145deg, rgba(214, 178, 94, 0.08), rgba(255, 255, 255, 0.02)),
+    rgba(23, 36, 20, 0.84);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+}
+
+.glass-emerald {
+  border: 1px solid rgba(15, 79, 58, 0.25);
+  background:
+    linear-gradient(135deg, rgba(15, 79, 58, 0.15), rgba(11, 107, 79, 0.05)),
+    rgba(17, 27, 16, 0.8);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(12px);
+}
+
 
 .material-symbols-outlined {
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
@@ -91,4 +148,28 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Form input styling for premium olive system */
+.form-input {
+  width: 100%;
+  border-radius: 1rem !important; /* rounded-2xl */
+  border: 1px solid rgba(255, 255, 255, 0.14) !important; /* border-outline */
+  background-color: rgba(17, 27, 16, 0.45) !important; /* primary/45 bg */
+  color: #f6f1df !important; /* text-fixed */
+  text-align: right;
+  padding: 0.75rem 1rem !important;
+  transition: all 0.2s ease !important;
+}
+
+.form-input:focus {
+  border-color: #c49a3a !important; /* border-tertiary */
+  --tw-ring-color: rgba(196, 154, 58, 0.2) !important;
+  box-shadow: 0 0 0 3px rgba(196, 154, 58, 0.2) !important;
+  outline: none !important;
+}
+
+.form-input option {
+  background-color: #172414;
+  color: #f6f1df;
 }

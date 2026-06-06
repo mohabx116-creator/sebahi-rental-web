@@ -4,13 +4,15 @@ import { ROUTES } from '../lib/constants/routes';
 
 export function NotFoundPage() {
   return (
-    <main className="center-state page">
-      <section className="panel">
-        <SearchX size={48} color="#b58a35" />
-        <h1 className="title">الصفحة غير موجودة</h1>
-        <p className="muted">الرابط الذي تحاول فتحه غير متاح داخل بوابة إيجارات السبحي.</p>
-        <div className="actions" style={{ justifyContent: 'center', marginTop: 18 }}>
-          <Link className="btn" to={ROUTES.RENTALS}>العودة إلى الإيجارات</Link>
+    <main className="mx-auto flex min-h-[70dvh] w-full max-w-xl flex-col items-center justify-center px-4 py-12 text-center text-fixed">
+      <section className="glass-panel p-8 rounded-[32px] w-full flex flex-col items-center shadow-xl">
+        <SearchX size={48} className="text-tertiary" />
+        <h1 className="mt-5 text-3xl font-black text-fixed">الصفحة غير موجودة</h1>
+        <p className="mt-3 leading-8 text-fixed-dim">الرابط الذي تحاول فتحه غير متاح داخل بوابة إيجارات السبحي.</p>
+        <div className="mt-6 flex justify-center">
+          <Link className="rounded-full bg-tertiary hover:bg-tertiary/90 px-6 py-3 font-bold text-primary transition shadow-lg shadow-tertiary/20" to={ROUTES.RENTALS}>
+            العودة إلى الإيجارات
+          </Link>
         </div>
       </section>
     </main>

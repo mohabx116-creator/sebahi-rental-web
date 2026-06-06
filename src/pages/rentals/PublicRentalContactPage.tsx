@@ -80,15 +80,15 @@ function whatsappHref(phone: string | null | undefined) {
 function ContactImageFallback({ title }: { title: string }) {
   return (
     <div className="absolute inset-0 flex flex-col justify-between overflow-hidden bg-primary p-5 text-white">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_22%_18%,rgba(201,169,97,0.42),transparent_32%),linear-gradient(135deg,rgba(255,255,255,0.12),transparent_40%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_22%_18%,rgba(214,178,94,0.35),transparent_32%),linear-gradient(135deg,rgba(255,255,255,0.08),transparent_40%)]" />
       <div className="relative flex h-full flex-col justify-between">
-        <span className="inline-flex w-fit items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-xs font-black text-secondary-fixed backdrop-blur-md">
-          <LockKeyhole className="h-4 w-4" />
+        <span className="inline-flex w-fit items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-black text-tertiary backdrop-blur-md">
+          <LockKeyhole className="h-4 w-4 text-tertiary" />
           فتح بيانات التواصل
         </span>
         <div>
-          <p className="text-sm font-bold text-primary-fixed">كمباوند السبحي</p>
-          <p className="mt-2 text-2xl font-black leading-9">{title}</p>
+          <p className="text-sm font-bold text-tertiary">كمباوند السبحي</p>
+          <p className="mt-2 text-2xl font-black leading-9 text-fixed">{title}</p>
         </div>
       </div>
     </div>
@@ -190,8 +190,8 @@ export function PublicRentalContactPage() {
     return (
       <main className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="grid gap-5 lg:grid-cols-[0.85fr_1.15fr]">
-          <div className="h-[420px] animate-pulse rounded-[32px] bg-white shadow-xl shadow-primary/5" />
-          <div className="h-[520px] animate-pulse rounded-[32px] bg-white shadow-xl shadow-primary/5" />
+          <div className="h-[420px] animate-pulse rounded-[32px] bg-primary/30 border border-outline/25 shadow-xl" />
+          <div className="h-[520px] animate-pulse rounded-[32px] bg-primary/30 border border-outline/25 shadow-xl" />
         </div>
       </main>
     );
@@ -199,13 +199,13 @@ export function PublicRentalContactPage() {
 
   if (listingQuery.isError || !listing) {
     return (
-      <main className="mx-auto flex min-h-[70dvh] w-full max-w-3xl flex-col items-center justify-center px-4 py-12 text-center">
-        <LockKeyhole className="h-14 w-14 text-secondary" />
-        <h1 className="mt-5 text-3xl font-black text-primary">الوحدة غير موجودة أو تم تحديث رابطها</h1>
-        <p className="mt-3 leading-8 text-on-surface-variant">
+      <main className="mx-auto flex min-h-[70dvh] w-full max-w-3xl flex-col items-center justify-center px-4 py-12 text-center text-fixed">
+        <LockKeyhole className="h-14 w-14 text-tertiary" />
+        <h1 className="mt-5 text-3xl font-black text-fixed">الوحدة غير موجودة أو تم تحديث رابطها</h1>
+        <p className="mt-3 leading-8 text-fixed-dim">
           الوحدة غير موجودة أو تم تحديث رابطها. يمكنك الرجوع إلى سوق إيجارات السبحي واختيار الرابط الحالي من قائمة الوحدات.
         </p>
-        <Link className="mt-6 rounded-full bg-primary px-6 py-3 font-bold text-white" to={ROUTES.RENTALS}>
+        <Link className="mt-6 rounded-full bg-tertiary px-6 py-3 font-bold text-primary hover:bg-tertiary/90 transition shadow-lg shadow-tertiary/20" to={ROUTES.RENTALS}>
           العودة إلى الإيجارات
         </Link>
       </main>
@@ -213,17 +213,17 @@ export function PublicRentalContactPage() {
   }
 
   return (
-    <main className="bg-background pb-16">
+    <main className="pb-16 text-fixed">
       <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
-        <Link className="inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-bold text-primary shadow-sm shadow-primary/5" to={listingDetailHref}>
-          <ChevronRight className="h-5 w-5" />
+        <Link className="inline-flex min-h-11 items-center gap-2 rounded-full border border-outline bg-white/5 hover:bg-white/10 px-4 py-2 text-sm font-bold text-fixed transition shadow-md" to={listingDetailHref}>
+          <ChevronRight className="h-5 w-5 text-tertiary" />
           العودة إلى تفاصيل الوحدة
         </Link>
 
         <div className="mt-5 grid gap-5 lg:grid-cols-[minmax(0,0.85fr)_minmax(420px,1.15fr)] lg:items-start">
           <aside className="space-y-5 lg:sticky lg:top-24">
-            <section className="overflow-hidden rounded-[32px] border border-outline-variant/60 bg-white text-right shadow-xl shadow-primary/5">
-              <div className="relative aspect-[4/3] overflow-hidden bg-surface-container-low">
+            <section className="overflow-hidden rounded-[32px] glass-panel text-right shadow-xl">
+              <div className="relative aspect-[4/3] overflow-hidden bg-surface-dim">
                 <ContactImageFallback title={title} />
                 {coverImage && (
                   <img
@@ -238,57 +238,57 @@ export function PublicRentalContactPage() {
               </div>
               <div className="p-5">
                 <div className="flex flex-wrap gap-2">
-                  <span className="inline-flex items-center gap-2 rounded-full bg-secondary/10 px-3 py-1.5 text-xs font-black text-secondary">
-                    <Building2 className="h-4 w-4" />
+                  <span className="inline-flex items-center gap-2 rounded-full bg-secondary/30 border border-secondary/20 px-3 py-1.5 text-xs font-black text-white">
+                    <Building2 className="h-4 w-4 text-tertiary" />
                     {listingStatusLabels[listing.status]}
                   </span>
                   {listing.isFeatured && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-secondary px-3 py-1.5 text-xs font-black text-white shadow-sm shadow-secondary/15">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-tertiary px-3 py-1.5 text-xs font-black text-primary shadow-sm">
                       <Sparkles className="h-3.5 w-3.5" />
                       مميز
                     </span>
                   )}
-                  <span className="rounded-full bg-primary/10 px-3 py-1.5 text-xs font-black text-primary">{listingTypeLabels[listing.listingType]}</span>
-                  <span className="rounded-full bg-surface-container-low px-3 py-1.5 text-xs font-black text-primary">{furnishingLabels[listing.furnishingStatus]}</span>
+                  <span className="rounded-full bg-white/5 border border-white/10 px-3 py-1.5 text-xs font-black text-fixed">{listingTypeLabels[listing.listingType]}</span>
+                  <span className="rounded-full bg-white/5 border border-white/10 px-3 py-1.5 text-xs font-black text-fixed">{furnishingLabels[listing.furnishingStatus]}</span>
                 </div>
-                <h1 className="mt-4 text-2xl font-black leading-9 text-primary">{title}</h1>
-                <p className="mt-2 flex items-start gap-2 text-sm leading-7 text-on-surface-variant">
-                  <MapPin className="mt-1 h-4 w-4 shrink-0 text-secondary" />
+                <h1 className="mt-4 text-2xl font-black leading-9 text-fixed">{title}</h1>
+                <p className="mt-2 flex items-start gap-2 text-sm leading-7 text-fixed-dim">
+                  <MapPin className="mt-1 h-4 w-4 shrink-0 text-tertiary" />
                   <span>{location}</span>
                 </p>
                 <div className="mt-5 grid grid-cols-2 gap-3">
-                  <div className="rounded-3xl bg-surface-container-low p-4">
-                    <p className="text-xs font-bold text-on-surface-variant">الإيجار الشهري</p>
-                    <p className="mt-1 text-xl font-black text-primary">{formatRentalMoney(listing.monthlyRent)}</p>
+                  <div className="rounded-3xl bg-primary/45 border border-outline/25 p-4">
+                    <p className="text-xs font-bold text-fixed-dim">الايجار الشهري</p>
+                    <p className="mt-1 text-xl font-black text-tertiary">{formatRentalMoney(listing.monthlyRent)}</p>
                   </div>
-                  <div className="rounded-3xl bg-surface-container-low p-4">
-                    <p className="text-xs font-bold text-on-surface-variant">رسوم فتح التواصل</p>
-                    <p className="mt-1 text-xl font-black text-primary">{formatRentalMoney(listing.contactUnlockFee)}</p>
+                  <div className="rounded-3xl bg-primary/45 border border-outline/25 p-4">
+                    <p className="text-xs font-bold text-fixed-dim">رسوم فتح التواصل</p>
+                    <p className="mt-1 text-xl font-black text-tertiary">{formatRentalMoney(listing.contactUnlockFee)}</p>
                   </div>
                 </div>
               </div>
             </section>
 
-            <section className="rounded-[28px] border border-secondary/20 bg-secondary/10 p-5 text-right">
-              <ShieldCheck className="h-6 w-6 text-secondary" />
-              <h2 className="mt-3 text-lg font-black text-primary">حماية للزائر والمالك</h2>
-              <p className="mt-2 text-sm leading-7 text-on-surface-variant">
+            <section className="rounded-[28px] border border-secondary/30 bg-secondary/20 p-5 text-right">
+              <ShieldCheck className="h-6 w-6 text-tertiary" />
+              <h2 className="mt-3 text-lg font-black text-fixed">حماية للزائر والمالك</h2>
+              <p className="mt-2 text-sm leading-7 text-fixed-dim">
                 بيانات التواصل لا تظهر من الواجهة، ولا يتم فتحها إلا بعد تحقق الخادم من دفع رسوم الفتح لهذه الوحدة وهذا الرقم.
               </p>
             </section>
           </aside>
 
           <section className="space-y-5 text-right">
-            <div className="rounded-[32px] border border-outline-variant/60 bg-white p-5 shadow-xl shadow-primary/5 sm:p-7">
-              <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-bold text-primary">
-                <LockKeyhole className="h-4 w-4" />
+            <div className="rounded-[32px] glass-panel p-5 shadow-xl sm:p-7">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold text-tertiary backdrop-blur-md">
+                <LockKeyhole className="h-4 w-4 text-tertiary" />
                 فتح بيانات التواصل
               </span>
-              <h2 className="mt-5 text-3xl font-black leading-[1.35] text-primary">
+              <h2 className="mt-5 text-3xl font-black leading-[1.35] text-fixed">
                 اطلب بيانات المالك بأمان داخل {compoundName}
               </h2>
-              <p className="mt-3 text-base leading-8 text-on-surface-variant">
-                اكتب بياناتك للتحقق أولا من وجود فتح تواصل مدفوع سابقا. إذا لم يكن لديك وصول، يبدأ طلب الدفع من الخادم عند توفر مزود الدفع.
+              <p className="mt-3 text-base leading-8 text-fixed-dim">
+                اكتب بياناتك للتحقق أولًا من وجود فتح تواصل مدفوع سابقًا. إذا لم يكن لديك وصول، يبدأ طلب الدفع من الخادم عند توفر مزود الدفع.
               </p>
 
               <div className="mt-6 grid gap-3 sm:grid-cols-3">
@@ -297,37 +297,37 @@ export function PublicRentalContactPage() {
                   ['٢', 'يتم تأكيد الدفع من الخادم'],
                   ['٣', 'تظهر بيانات التواصل بعد التأكيد فقط'],
                 ].map(([step, label]) => (
-                  <div className="rounded-3xl bg-surface-container-low p-4" key={step}>
-                    <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary text-sm font-black text-white">
+                  <div className="rounded-3xl bg-primary/45 border border-outline/20 p-4" key={step}>
+                    <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-secondary text-sm font-black text-white">
                       {step}
                     </span>
-                    <p className="mt-3 text-sm font-black leading-6 text-primary">{label}</p>
+                    <p className="mt-3 text-sm font-black leading-6 text-fixed">{label}</p>
                   </div>
                 ))}
               </div>
 
               <form className="mt-7 space-y-4" onSubmit={onSubmit}>
                 <label className="block">
-                  <span className="mb-2 block text-sm font-bold text-primary">الاسم بالكامل</span>
+                  <span className="mb-2 block text-sm font-bold text-fixed-dim">الاسم بالكامل</span>
                   <input
-                    className="w-full rounded-2xl border-outline-variant bg-surface-container-low py-3 text-right focus:border-secondary focus:ring-secondary/20"
+                    className="w-full rounded-2xl border-outline bg-primary/40 text-right text-fixed focus:border-tertiary focus:ring-tertiary/20"
                     {...register('tenantName')}
                   />
                   {errors.tenantName && <span className="mt-1 block text-sm font-bold text-error">{errors.tenantName.message}</span>}
                 </label>
                 <label className="block">
-                  <span className="mb-2 block text-sm font-bold text-primary">رقم الموبايل</span>
+                  <span className="mb-2 block text-sm font-bold text-fixed-dim">رقم الموبايل</span>
                   <input
-                    className="w-full rounded-2xl border-outline-variant bg-surface-container-low py-3 text-right focus:border-secondary focus:ring-secondary/20"
+                    className="w-full rounded-2xl border-outline bg-primary/40 text-right text-fixed focus:border-tertiary focus:ring-tertiary/20"
                     inputMode="tel"
                     {...register('tenantPhone')}
                   />
                   {errors.tenantPhone && <span className="mt-1 block text-sm font-bold text-error">{errors.tenantPhone.message}</span>}
                 </label>
                 <label className="block">
-                  <span className="mb-2 block text-sm font-bold text-primary">البريد الإلكتروني اختياري</span>
+                  <span className="mb-2 block text-sm font-bold text-fixed-dim">البريد الإلكتروني اختياري</span>
                   <input
-                    className="w-full rounded-2xl border-outline-variant bg-surface-container-low py-3 text-right focus:border-secondary focus:ring-secondary/20"
+                    className="w-full rounded-2xl border-outline bg-primary/40 text-right text-fixed focus:border-tertiary focus:ring-tertiary/20"
                     type="email"
                     {...register('tenantEmail')}
                   />
@@ -335,23 +335,23 @@ export function PublicRentalContactPage() {
                 </label>
 
                 <button
-                  className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-primary px-5 py-4 text-base font-black text-white shadow-xl shadow-primary/15 transition hover:bg-primary/95 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-tertiary hover:bg-tertiary/90 px-5 py-4 text-base font-black text-primary transition disabled:cursor-not-allowed disabled:opacity-60 shadow-xl shadow-tertiary/20"
                   disabled={isPending}
                   type="submit"
                 >
-                  <CreditCard className="h-5 w-5" />
+                  <CreditCard className="h-5 w-5 text-primary" />
                   {isPending ? 'جاري التحقق...' : 'تحقق وابدأ فتح التواصل'}
                 </button>
               </form>
             </div>
 
-            <section className="rounded-[32px] border border-secondary/20 bg-white p-5 text-right shadow-xl shadow-secondary/10 sm:p-6">
-              <span className="inline-flex items-center gap-2 rounded-full bg-secondary/10 px-4 py-2 text-sm font-black text-secondary">
-                <CalendarCheck className="h-4 w-4" />
+            <section className="rounded-[32px] glass-panel p-5 text-right shadow-xl sm:p-6">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-black text-tertiary backdrop-blur-md">
+                <CalendarCheck className="h-4 w-4 text-tertiary" />
                 بديل آمن بدون دفع
               </span>
-              <h2 className="mt-4 text-2xl font-black leading-9 text-primary">أرسل طلب معاينة للإدارة</h2>
-              <p className="mt-2 text-sm leading-7 text-on-surface-variant">
+              <h2 className="mt-4 text-2xl font-black leading-9 text-fixed">أرسل طلب معاينة للإدارة</h2>
+              <p className="mt-2 text-sm leading-7 text-fixed-dim">
                 بدل فتح بيانات التواصل الآن، يمكنك إرسال طلب معاينة للإدارة وسيتواصل معك فريق كمباوند السبحي لمتابعة الطلب.
               </p>
             </section>
@@ -363,52 +363,52 @@ export function PublicRentalContactPage() {
             />
 
             {ownerContact && (
-              <section className="rounded-[32px] border border-secondary/30 bg-secondary/10 p-5 text-right shadow-xl shadow-secondary/10 sm:p-6">
+              <section className="rounded-[32px] border border-secondary/30 bg-secondary/20 p-5 text-right shadow-xl sm:p-6">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                   <div>
-                    <span className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-xs font-black text-secondary">
-                      <CheckCircle2 className="h-4 w-4" />
+                    <span className="inline-flex items-center gap-2 rounded-full bg-white/10 border border-white/10 px-3 py-1.5 text-xs font-black text-tertiary backdrop-blur-md">
+                      <CheckCircle2 className="h-4 w-4 text-tertiary" />
                       وصول مؤكد من الخادم
                     </span>
-                    <h3 className="mt-4 text-2xl font-black text-primary">تم فتح بيانات التواصل</h3>
-                    <p className="mt-2 text-sm leading-7 text-on-surface-variant">
+                    <h3 className="mt-4 text-2xl font-black text-fixed">تم فتح بيانات التواصل</h3>
+                    <p className="mt-2 text-sm leading-7 text-fixed-dim">
                       تعامل فقط داخل الإجراءات الرسمية للمنصة، ولا تعتمد على أي تأكيد خارج مسار الدفع المعتمد.
                     </p>
                   </div>
-                  <ShieldCheck className="h-10 w-10 text-secondary" />
+                  <ShieldCheck className="h-10 w-10 text-tertiary" />
                 </div>
 
                 <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                  <div className="rounded-3xl bg-white p-4">
-                    <p className="flex items-center gap-2 text-xs font-bold text-on-surface-variant">
-                      <UserRound className="h-4 w-4 text-secondary" />
+                  <div className="rounded-3xl bg-primary/45 border border-outline/20 p-4">
+                    <p className="flex items-center gap-2 text-xs font-bold text-fixed-dim">
+                      <UserRound className="h-4 w-4 text-tertiary" />
                       اسم المالك
                     </p>
-                    <p className="mt-2 text-lg font-black text-primary">{ownerContact.fullName}</p>
+                    <p className="mt-2 text-lg font-black text-fixed">{ownerContact.fullName}</p>
                   </div>
-                  <a className="rounded-3xl bg-white p-4 transition hover:bg-surface-container-low" href={`tel:${ownerContact.phone}`}>
-                    <p className="flex items-center gap-2 text-xs font-bold text-on-surface-variant">
-                      <Phone className="h-4 w-4 text-secondary" />
+                  <a className="rounded-3xl bg-primary/45 border border-outline/20 p-4 transition hover:bg-primary/60" href={`tel:${ownerContact.phone}`}>
+                    <p className="flex items-center gap-2 text-xs font-bold text-fixed-dim">
+                      <Phone className="h-4 w-4 text-tertiary" />
                       رقم الهاتف
                     </p>
-                    <p className="mt-2 text-lg font-black text-primary">{ownerContact.phone}</p>
+                    <p className="mt-2 text-lg font-black text-fixed" dir="ltr">{ownerContact.phone}</p>
                   </a>
                   {whatsappUrl && (
-                    <a className="rounded-3xl bg-white p-4 transition hover:bg-surface-container-low" href={whatsappUrl} rel="noreferrer" target="_blank">
-                      <p className="flex items-center gap-2 text-xs font-bold text-on-surface-variant">
-                        <MessageCircle className="h-4 w-4 text-secondary" />
+                    <a className="rounded-3xl bg-primary/45 border border-outline/20 p-4 transition hover:bg-primary/60" href={whatsappUrl} rel="noreferrer" target="_blank">
+                      <p className="flex items-center gap-2 text-xs font-bold text-fixed-dim">
+                        <MessageCircle className="h-4 w-4 text-tertiary" />
                         واتساب
                       </p>
-                      <p className="mt-2 text-lg font-black text-primary">مراسلة المالك</p>
+                      <p className="mt-2 text-lg font-black text-tertiary">مراسلة المالك</p>
                     </a>
                   )}
                   {ownerContact.email && (
-                    <a className="rounded-3xl bg-white p-4 transition hover:bg-surface-container-low" href={`mailto:${ownerContact.email}`}>
-                      <p className="flex items-center gap-2 text-xs font-bold text-on-surface-variant">
-                        <Mail className="h-4 w-4 text-secondary" />
+                    <a className="rounded-3xl bg-primary/45 border border-outline/20 p-4 transition hover:bg-primary/60" href={`mailto:${ownerContact.email}`}>
+                      <p className="flex items-center gap-2 text-xs font-bold text-fixed-dim">
+                        <Mail className="h-4 w-4 text-tertiary" />
                         البريد الإلكتروني
                       </p>
-                      <p className="mt-2 break-all text-lg font-black text-primary">{ownerContact.email}</p>
+                      <p className="mt-2 break-all text-lg font-black text-fixed">{ownerContact.email}</p>
                     </a>
                   )}
                 </div>
@@ -416,24 +416,24 @@ export function PublicRentalContactPage() {
             )}
 
             {!ownerContact && (notice || checkoutUrl) && (
-              <section className="rounded-[32px] border border-outline-variant/60 bg-white p-5 text-right shadow-xl shadow-primary/5 sm:p-6">
-                <span className="inline-flex items-center gap-2 rounded-full bg-tertiary/10 px-3 py-1.5 text-xs font-black text-tertiary">
-                  <CreditCard className="h-4 w-4" />
+              <section className="rounded-[32px] glass-panel p-5 text-right shadow-xl sm:p-6">
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-black text-tertiary">
+                  <CreditCard className="h-4 w-4 text-tertiary" />
                   حالة طلب فتح التواصل
                 </span>
-                <h3 className="mt-4 text-2xl font-black text-primary">
+                <h3 className="mt-4 text-2xl font-black text-fixed">
                   {checkoutUrl ? 'رابط الدفع جاهز' : 'الدفع الإلكتروني قيد التجهيز'}
                 </h3>
-                <p className="mt-2 text-sm leading-7 text-on-surface-variant">
+                <p className="mt-2 text-sm leading-7 text-fixed-dim">
                   {notice ??
                     'لن تظهر بيانات المالك قبل نجاح الدفع وتأكيده من الخادم. لا يوجد فتح تواصل وهمي أو اعتماد على حالة من المتصفح.'}
                 </p>
-                <Link className="mt-3 inline-flex text-sm font-black text-secondary hover:underline" to={ROUTES.REFUND_POLICY}>
+                <Link className="mt-3 inline-flex text-sm font-black text-tertiary hover:underline" to={ROUTES.REFUND_POLICY}>
                   سياسة الاسترجاع وشروط الدفع
                 </Link>
                 {checkoutUrl && (
                   <a
-                    className="mt-5 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-secondary px-5 py-3 text-sm font-black text-white shadow-lg shadow-secondary/15 sm:w-auto"
+                    className="mt-5 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-secondary hover:bg-secondary/90 px-5 py-3 text-sm font-black text-white shadow-lg shadow-secondary/20 sm:w-auto"
                     href={checkoutUrl}
                     rel="noreferrer"
                     target="_blank"
@@ -446,7 +446,7 @@ export function PublicRentalContactPage() {
             )}
 
             <Link
-              className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border border-outline-variant bg-white px-5 py-3 text-sm font-black text-primary sm:w-auto"
+              className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border border-outline bg-white/5 hover:bg-white/10 px-5 py-3 text-sm font-black text-fixed sm:w-auto transition"
               to={listingDetailHref}
             >
               العودة للوحدة

@@ -167,25 +167,25 @@ export function OwnerListUnitPage() {
   const success = submissionMutation.data;
 
   return (
-    <main className="bg-background pb-16">
-      <section className="border-b border-outline-variant/50 bg-white">
+    <main className="pb-16 text-fixed">
+      <section className="border-b border-outline/30 bg-primary/20">
         <div className="mx-auto grid min-h-[330px] w-full max-w-7xl items-end gap-6 px-4 py-10 text-right sm:px-6 lg:grid-cols-[1fr_380px] lg:px-8">
           <div>
-            <span className="inline-flex items-center gap-2 rounded-full bg-secondary/10 px-4 py-2 text-sm font-black text-secondary">
-              <Home className="h-4 w-4" />
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold text-tertiary backdrop-blur-md">
+              <Home className="h-4 w-4 text-tertiary" />
               أعلن عن وحدتك
             </span>
-            <h1 className="mt-5 text-3xl font-black leading-[1.35] text-primary sm:text-5xl">
+            <h1 className="mt-5 text-3xl font-black leading-[1.35] text-fixed sm:text-5xl">
               أعلن عن وحدتك داخل {publicRentalBrand.compoundAr}
             </h1>
-            <p className="mt-4 max-w-3xl text-base leading-8 text-on-surface-variant">
+            <p className="mt-4 max-w-3xl text-base leading-8 text-fixed-dim">
               أرسل بيانات وحدتك للإدارة، وسيتم مراجعتها قبل النشر. لا يتم نشر أي إعلان إلا بعد موافقة الإدارة.
             </p>
           </div>
-          <div className="rounded-[28px] border border-secondary/20 bg-secondary/10 p-5">
-            <ShieldCheck className="h-8 w-8 text-secondary" />
-            <p className="mt-3 text-lg font-black text-primary">الدفع الإلكتروني قيد التجهيز</p>
-            <p className="mt-2 text-sm leading-7 text-on-surface-variant">
+          <div className="rounded-[28px] border border-secondary/35 bg-secondary/20 p-5">
+            <ShieldCheck className="h-8 w-8 text-tertiary" />
+            <p className="mt-3 text-lg font-black text-fixed">الدفع الإلكتروني قيد التجهيز</p>
+            <p className="mt-2 text-sm leading-7 text-fixed-dim">
               رسوم نشر الإعلان لا يتم تحصيلها داخل المنصة حاليا، وسيتم تفعيلها بعد اعتماد بوابة الدفع.
             </p>
           </div>
@@ -194,9 +194,9 @@ export function OwnerListUnitPage() {
 
       <section className="mx-auto grid w-full max-w-7xl gap-6 px-4 py-8 sm:px-6 lg:grid-cols-[360px_1fr] lg:px-8">
         <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
-          <div className="rounded-[28px] border border-outline-variant/60 bg-white p-5 text-right shadow-xl shadow-primary/5">
-            <h2 className="text-xl font-black text-primary">خطوات النشر</h2>
-            <ol className="mt-5 space-y-3 text-sm leading-7 text-on-surface-variant">
+          <div className="rounded-[28px] glass-panel p-5 text-right shadow-xl">
+            <h2 className="text-xl font-black text-fixed">خطوات النشر</h2>
+            <ol className="mt-5 space-y-3 text-sm leading-7 text-fixed-dim">
               {[
                 'أرسل بيانات الوحدة',
                 'الإدارة تراجع الطلب',
@@ -204,7 +204,7 @@ export function OwnerListUnitPage() {
                 'يتم نشر الإعلان بعد الموافقة',
               ].map((step, index) => (
                 <li key={step} className="flex gap-3">
-                  <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-primary text-xs font-black text-white">
+                  <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-secondary text-xs font-black text-white">
                     {index + 1}
                   </span>
                   <span>{step}</span>
@@ -212,10 +212,10 @@ export function OwnerListUnitPage() {
               ))}
             </ol>
           </div>
-          <div className="rounded-[28px] border border-outline-variant/60 bg-white p-5 text-sm leading-7 text-on-surface-variant shadow-xl shadow-primary/5">
-            <p className="font-black text-primary">سياسة الاسترجاع</p>
+          <div className="rounded-[28px] glass-panel p-5 text-sm leading-7 text-fixed-dim shadow-xl">
+            <p className="font-black text-fixed">سياسة الاسترجاع</p>
             <p className="mt-2">رسوم نشر الإعلان، عند تفعيل الدفع الإلكتروني، لا تكون مستردة بعد نشر الإعلان.</p>
-            <Link className="mt-3 inline-flex font-black text-secondary hover:underline" to={ROUTES.REFUND_POLICY}>
+            <Link className="mt-3 inline-flex font-black text-tertiary hover:underline" to={ROUTES.REFUND_POLICY}>
               قراءة السياسة كاملة
             </Link>
           </div>
@@ -223,13 +223,13 @@ export function OwnerListUnitPage() {
 
         <div className="space-y-6">
           {success && (
-            <section className="rounded-[28px] border border-secondary/25 bg-secondary/10 p-6 text-right">
-              <CheckCircle2 className="h-10 w-10 text-secondary" />
-              <h2 className="mt-4 text-2xl font-black text-primary">تم إرسال طلب إعلان وحدتك بنجاح.</h2>
-              <p className="mt-2 text-sm leading-7 text-on-surface-variant">
-                رقم الطلب: <span className="font-mono font-black" dir="ltr">{success.id}</span>
+            <section className="rounded-[28px] border border-secondary/35 bg-secondary/20 p-6 text-right">
+              <CheckCircle2 className="h-10 w-10 text-tertiary" />
+              <h2 className="mt-4 text-2xl font-black text-fixed">تم إرسال طلب إعلان وحدتك بنجاح.</h2>
+              <p className="mt-2 text-sm leading-7 text-fixed-dim">
+                رقم الطلب: <span className="font-mono font-black text-tertiary" dir="ltr">{success.id}</span>
               </p>
-              <p className="mt-2 text-sm leading-7 text-on-surface-variant">
+              <p className="mt-2 text-sm leading-7 text-fixed-dim">
                 ستتواصل الإدارة معك لمراجعة البيانات واستكمال خطوات النشر.
               </p>
             </section>
@@ -307,10 +307,10 @@ export function OwnerListUnitPage() {
             </FormSection>
 
             <FormSection title="صور الوحدة">
-              <label className="flex min-h-40 cursor-pointer flex-col items-center justify-center rounded-3xl border-2 border-dashed border-outline-variant bg-surface-container-low p-6 text-center">
-                {isUploading ? <Loader2 className="h-9 w-9 animate-spin text-secondary" /> : <UploadCloud className="h-9 w-9 text-secondary" />}
-                <span className="mt-3 text-sm font-black text-primary">رفع صور حقيقية للوحدة</span>
-                <span className="mt-1 text-xs leading-6 text-on-surface-variant">
+              <label className="flex min-h-40 cursor-pointer flex-col items-center justify-center rounded-3xl border-2 border-dashed border-outline/30 bg-primary/40 p-6 text-center hover:border-tertiary/40 transition">
+                {isUploading ? <Loader2 className="h-9 w-9 animate-spin text-tertiary" /> : <UploadCloud className="h-9 w-9 text-tertiary" />}
+                <span className="mt-3 text-sm font-black text-fixed">رفع صور حقيقية للوحدة</span>
+                <span className="mt-1 text-xs leading-6 text-fixed-dim">
                   يتم الرفع إلى Cloudinary عند تفعيل إعدادات التخزين في الخادم.
                 </span>
                 <input
@@ -324,7 +324,7 @@ export function OwnerListUnitPage() {
               </label>
 
               {uploadError && (
-                <p className="rounded-2xl border border-error/25 bg-error-container/30 p-4 text-sm font-bold leading-7 text-error">
+                <p className="rounded-2xl border border-error/25 bg-error/10 p-4 text-sm font-bold leading-7 text-error">
                   {uploadError}
                 </p>
               )}
@@ -332,13 +332,13 @@ export function OwnerListUnitPage() {
               {images.length > 0 && (
                 <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                   {images.map((image, index) => (
-                    <div key={image.url} className="overflow-hidden rounded-2xl border border-outline-variant bg-white">
+                    <div key={image.url} className="overflow-hidden rounded-2xl border border-outline bg-primary/45">
                       <img alt={image.altText ?? 'صورة الوحدة'} src={image.url} className="aspect-[4/3] w-full object-cover" />
                       <div className="flex items-center justify-between gap-2 p-3">
-                        <button type="button" onClick={() => markCover(index)} className="rounded-full bg-secondary/10 px-3 py-1 text-xs font-black text-secondary">
+                        <button type="button" onClick={() => markCover(index)} className={image.isCover ? "rounded-full bg-secondary/35 border border-secondary/20 px-3 py-1 text-xs font-black text-white" : "rounded-full bg-white/5 border border-white/10 px-3 py-1 text-xs font-black text-fixed hover:bg-white/10"}>
                           {image.isCover ? 'صورة الغلاف' : 'اختيار كغلاف'}
                         </button>
-                        <button type="button" onClick={() => removeImage(index)} className="rounded-full p-2 text-error hover:bg-error-container/30" aria-label="حذف الصورة">
+                        <button type="button" onClick={() => removeImage(index)} className="rounded-full p-2 text-error hover:bg-error/10 transition" aria-label="حذف الصورة">
                           <Trash2 className="h-4 w-4" />
                         </button>
                       </div>
@@ -348,19 +348,19 @@ export function OwnerListUnitPage() {
               )}
             </FormSection>
 
-            <section className="rounded-[28px] border border-outline-variant/60 bg-white p-5 text-right shadow-xl shadow-primary/5">
-              <label className="flex items-start gap-3 text-sm font-bold leading-7 text-on-surface-variant">
-                <input className="mt-1 rounded border-outline-variant text-secondary focus:ring-secondary/20" type="checkbox" {...register('policyAccepted')} disabled={isPending} />
+            <section className="rounded-[28px] glass-panel p-5 text-right shadow-xl">
+              <label className="flex items-start gap-3 text-sm font-bold leading-7 text-fixed-dim">
+                <input className="mt-1.5 rounded border-outline bg-primary/45 text-secondary focus:ring-secondary/20" type="checkbox" {...register('policyAccepted')} disabled={isPending} />
                 <span>
                   أوافق على سياسة الاسترجاع وشروط نشر الإعلان، وأقر بأن نشر الإعلان لا يتم إلا بعد مراجعة وموافقة الإدارة.
-                  <Link className="mx-1 text-secondary hover:underline" to={ROUTES.REFUND_POLICY}>سياسة الاسترجاع</Link>
+                  <Link className="mx-1 text-tertiary hover:underline font-black" to={ROUTES.REFUND_POLICY}>سياسة الاسترجاع</Link>
                 </span>
               </label>
               {errors.policyAccepted && <p className="mt-2 text-sm font-bold text-error">{errors.policyAccepted.message}</p>}
             </section>
 
             {submissionMutation.isError && (
-              <p className="rounded-2xl border border-error/25 bg-error-container/30 p-4 text-sm font-bold leading-7 text-error">
+              <p className="rounded-2xl border border-error/25 bg-error/10 p-4 text-sm font-bold leading-7 text-error">
                 {submissionMutation.error instanceof Error ? submissionMutation.error.message : 'تعذر إرسال طلب الإعلان.'}
               </p>
             )}
@@ -368,9 +368,9 @@ export function OwnerListUnitPage() {
             <button
               type="submit"
               disabled={isPending}
-              className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-secondary px-6 py-4 text-base font-black text-white shadow-xl shadow-secondary/15 disabled:cursor-not-allowed disabled:opacity-60"
+              className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-tertiary hover:bg-tertiary/90 px-6 py-4 text-base font-black text-primary transition shadow-xl shadow-tertiary/20 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {isPending ? <Loader2 className="h-5 w-5 animate-spin" /> : <FileImage className="h-5 w-5" />}
+              {isPending ? <Loader2 className="h-5 w-5 animate-spin text-primary" /> : <FileImage className="h-5 w-5 text-primary" />}
               {isPending ? 'جار إرسال الطلب...' : 'إرسال طلب الإعلان'}
             </button>
           </form>
@@ -382,8 +382,8 @@ export function OwnerListUnitPage() {
 
 function FormSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="space-y-4 rounded-[28px] border border-outline-variant/60 bg-white p-5 text-right shadow-xl shadow-primary/5 sm:p-6">
-      <h2 className="text-2xl font-black text-primary">{title}</h2>
+    <section className="space-y-4 rounded-[28px] glass-panel p-5 text-right shadow-xl sm:p-6">
+      <h2 className="text-2xl font-black text-fixed">{title}</h2>
       {children}
     </section>
   );
@@ -392,7 +392,7 @@ function FormSection({ title, children }: { title: string; children: React.React
 function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="mb-2 block text-sm font-bold text-primary">{label}</span>
+      <span className="mb-2 block text-sm font-bold text-fixed-dim">{label}</span>
       {children}
       {error && <span className="mt-1 block text-sm font-bold text-error">{error}</span>}
     </label>

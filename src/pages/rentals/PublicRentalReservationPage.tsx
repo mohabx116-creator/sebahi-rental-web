@@ -32,7 +32,7 @@ const negativeStatuses: ReservationStatus[] = ['CANCELLED', 'EXPIRED', 'REJECTED
 
 function StatusIcon({ status }: { status: ReservationStatus }) {
   if (positiveStatuses.includes(status)) {
-    return <CheckCircle2 className="h-12 w-12 text-secondary" />;
+    return <CheckCircle2 className="h-12 w-12 text-tertiary" />;
   }
   if (negativeStatuses.includes(status)) {
     return <XCircle className="h-12 w-12 text-error" />;
@@ -41,9 +41,9 @@ function StatusIcon({ status }: { status: ReservationStatus }) {
 }
 
 function statusTone(status: ReservationStatus) {
-  if (positiveStatuses.includes(status)) return 'border-secondary/30 bg-secondary/10 text-secondary';
-  if (negativeStatuses.includes(status)) return 'border-error/25 bg-error/10 text-error';
-  return 'border-tertiary/25 bg-tertiary/10 text-tertiary';
+  if (positiveStatuses.includes(status)) return 'border-secondary/40 bg-secondary/30 text-white';
+  if (negativeStatuses.includes(status)) return 'border-error/25 bg-error/15 text-error';
+  return 'border-tertiary/25 bg-tertiary/15 text-tertiary';
 }
 
 function statusDescription(status: ReservationStatus) {
@@ -95,8 +95,8 @@ export function PublicRentalReservationPage() {
     return (
       <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_360px]">
-          <div className="h-[420px] animate-pulse rounded-[32px] bg-white shadow-xl shadow-primary/5" />
-          <div className="h-[320px] animate-pulse rounded-[32px] bg-white shadow-xl shadow-primary/5" />
+          <div className="h-[420px] animate-pulse rounded-[32px] bg-primary/30 border border-outline/25 shadow-xl" />
+          <div className="h-[320px] animate-pulse rounded-[32px] bg-primary/30 border border-outline/25 shadow-xl" />
         </div>
       </main>
     );
@@ -104,13 +104,13 @@ export function PublicRentalReservationPage() {
 
   if (reservationQuery.isError || !reservationQuery.data) {
     return (
-      <main className="mx-auto flex min-h-[70dvh] w-full max-w-3xl flex-col items-center justify-center px-4 py-12 text-center">
-        <CalendarClock className="h-14 w-14 text-secondary" />
-        <h1 className="mt-5 text-3xl font-black text-primary">طلب الحجز غير موجود</h1>
-        <p className="mt-3 leading-8 text-on-surface-variant">
+      <main className="mx-auto flex min-h-[70dvh] w-full max-w-3xl flex-col items-center justify-center px-4 py-12 text-center text-fixed">
+        <CalendarClock className="h-14 w-14 text-tertiary" />
+        <h1 className="mt-5 text-3xl font-black text-fixed">طلب الحجز غير موجود</h1>
+        <p className="mt-3 leading-8 text-fixed-dim">
           قد يكون رقم الطلب غير صحيح أو لم يعد متاحا للعرض. ارجع إلى سوق إيجارات السبحي لاختيار وحدة مناسبة.
         </p>
-        <Link className="mt-6 rounded-full bg-primary px-6 py-3 font-bold text-white" to={ROUTES.RENTALS}>
+        <Link className="mt-6 rounded-full bg-tertiary px-6 py-3 font-bold text-primary hover:bg-tertiary/90 transition shadow-lg shadow-tertiary/20" to={ROUTES.RENTALS}>
           العودة إلى الإيجارات
         </Link>
       </main>
@@ -124,27 +124,27 @@ export function PublicRentalReservationPage() {
   const isPaymentPending = paymentPendingStatuses.includes(reservation.status);
 
   return (
-    <main className="bg-background pb-16">
+    <main className="pb-16 text-fixed">
       <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
-        <Link className="inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-bold text-primary shadow-sm shadow-primary/5" to={ROUTES.RENTALS}>
-          <Home className="h-4 w-4" />
+        <Link className="inline-flex min-h-11 items-center gap-2 rounded-full border border-outline bg-white/5 hover:bg-white/10 px-4 py-2 text-sm font-bold text-fixed transition shadow-md" to={ROUTES.RENTALS}>
+          <Home className="h-4 w-4 text-tertiary" />
           العودة إلى الإيجارات
         </Link>
 
-        <section className="mt-5 overflow-hidden rounded-[32px] border border-outline-variant/60 bg-white text-right shadow-2xl shadow-primary/10">
+        <section className="mt-5 overflow-hidden rounded-[32px] glass-panel text-right shadow-xl">
           <div className="bg-primary p-6 text-white sm:p-8">
             <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <p className="text-sm font-bold text-secondary-fixed">{publicRentalBrand.rentalsTitle}</p>
-                <h1 className="mt-2 text-3xl font-black leading-[1.35] sm:text-4xl">حالة الحجز المؤقت</h1>
-                <p className="mt-3 max-w-2xl text-sm leading-7 text-white/80">
+                <p className="text-sm font-bold text-tertiary">{publicRentalBrand.rentalsTitle}</p>
+                <h1 className="mt-2 text-3xl font-black leading-[1.35] sm:text-4xl text-fixed">حالة الحجز المؤقت</h1>
+                <p className="mt-3 max-w-2xl text-sm leading-7 text-fixed-dim/95">
                   هذه الصفحة تعرض الحالة القادمة من الخادم فقط. لا توجد حالة نجاح محلية أو تأكيد خارج مسار الدفع الرسمي.
                 </p>
               </div>
-              <div className="inline-flex w-fit items-center gap-3 rounded-3xl bg-white/10 p-4">
+              <div className="inline-flex w-fit items-center gap-3 rounded-3xl bg-white/5 border border-white/10 p-4">
                 <StatusIcon status={reservation.status} />
                 <div>
-                  <p className="text-xs font-bold text-white/70">رقم الطلب</p>
+                  <p className="text-xs font-bold text-fixed-dim">رقم الطلب</p>
                   <p className="font-mono text-lg font-black tracking-wide text-white">#{shortId(reservation.id)}</p>
                 </div>
               </div>
@@ -155,24 +155,24 @@ export function PublicRentalReservationPage() {
             <div className="space-y-5">
               <section className={`rounded-[28px] border p-5 ${statusTone(reservation.status)}`}>
                 <p className="text-sm font-black opacity-80">الحالة الحالية</p>
-                <h2 className="mt-2 text-3xl font-black text-primary">
+                <h2 className="mt-2 text-3xl font-black text-fixed">
                   {reservationStatusLabels[reservation.status] ?? reservation.status}
                 </h2>
-                <p className="mt-3 text-sm leading-7 text-on-surface-variant">{statusDescription(reservation.status)}</p>
+                <p className="mt-3 text-sm leading-7 text-fixed-dim">{statusDescription(reservation.status)}</p>
               </section>
 
               {isPaymentPending && (
-                <section className="rounded-[28px] border border-tertiary/25 bg-tertiary/10 p-5">
+                <section className="rounded-[28px] border border-tertiary/30 bg-tertiary/20 p-5">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div>
                       <p className="flex items-center gap-2 text-sm font-black text-tertiary">
-                        <CreditCard className="h-4 w-4" />
+                        <CreditCard className="h-4 w-4 text-tertiary" />
                         الدفع الإلكتروني قيد التجهيز
                       </p>
-                      <h3 className="mt-3 text-2xl font-black text-primary">
+                      <h3 className="mt-3 text-2xl font-black text-fixed">
                         {paymentUrl ? 'رابط الدفع متاح لهذا الطلب' : 'لا يوجد رابط دفع متاح حاليا'}
                       </h3>
-                      <p className="mt-2 text-sm leading-7 text-on-surface-variant">
+                      <p className="mt-2 text-sm leading-7 text-fixed-dim">
                         لن يتم اعتبار الحجز ناجحا إلا بعد تأكيد الدفع من الخادم. إذا لم يظهر رابط دفع، فهذا يعني أن مزود الدفع لم يجهز بعد.
                       </p>
                     </div>
@@ -180,7 +180,7 @@ export function PublicRentalReservationPage() {
                   </div>
                   {paymentUrl && (
                     <a
-                      className="mt-5 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-secondary px-5 py-3 text-sm font-black text-white sm:w-auto"
+                      className="mt-5 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-secondary hover:bg-secondary/90 px-5 py-3 text-sm font-black text-white shadow-lg shadow-secondary/20"
                       href={paymentUrl}
                       rel="noreferrer"
                       target="_blank"
@@ -193,58 +193,58 @@ export function PublicRentalReservationPage() {
               )}
 
               {reservation.listing && (
-                <section className="rounded-[28px] border border-outline-variant/60 bg-white p-5 shadow-sm shadow-primary/5">
-                  <p className="text-sm font-bold text-secondary">الوحدة المرتبطة</p>
-                  <h2 className="mt-2 text-2xl font-black leading-9 text-primary">{listingTitle}</h2>
-                  <p className="mt-2 text-sm text-on-surface-variant">
+                <section className="rounded-[28px] bg-primary/45 border border-outline/25 p-5 shadow-md">
+                  <p className="text-sm font-bold text-tertiary">الوحدة المرتبطة</p>
+                  <h2 className="mt-2 text-2xl font-black leading-9 text-fixed">{listingTitle}</h2>
+                  <p className="mt-2 text-sm text-fixed-dim">
                     حالة الوحدة: {listingStatusLabels[reservation.listing.status] ?? reservation.listing.status}
                   </p>
                   {listingHref && (
-                    <Link className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-white" to={listingHref}>
+                    <Link className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-full bg-tertiary hover:bg-tertiary/90 px-5 py-2.5 text-sm font-bold text-primary transition shadow-lg shadow-tertiary/20" to={listingHref}>
                       عرض الوحدة
-                      <ArrowLeft className="h-4 w-4" />
+                      <ArrowLeft className="h-4 w-4 text-primary" />
                     </Link>
                   )}
                 </section>
               )}
             </div>
 
-            <aside className="space-y-4 rounded-[28px] border border-outline-variant/60 bg-surface-container-low p-5 lg:sticky lg:top-24">
+            <aside className="space-y-4 rounded-[28px] bg-primary/40 border border-outline/20 p-5 lg:sticky lg:top-24">
               <div>
-                <p className="text-sm font-bold text-on-surface-variant">قيمة رسوم الحجز</p>
-                <p className="mt-1 text-3xl font-black text-primary">{formatRentalMoney(reservation.amount)}</p>
+                <p className="text-sm font-bold text-fixed-dim">قيمة رسوم الحجز</p>
+                <p className="mt-1 text-3xl font-black text-tertiary">{formatRentalMoney(reservation.amount)}</p>
               </div>
-              <div className="h-px bg-outline-variant/60" />
+              <div className="h-px bg-outline/20" />
               <div className="grid gap-3">
-                <div className="rounded-3xl bg-white p-4">
-                  <p className="text-xs font-bold text-on-surface-variant">رقم الطلب الكامل</p>
-                  <p className="mt-1 break-all font-mono text-sm font-black text-primary">{reservation.id}</p>
+                <div className="rounded-3xl bg-white/5 border border-white/10 p-4">
+                  <p className="text-xs font-bold text-fixed-dim">رقم الطلب الكامل</p>
+                  <p className="mt-1 break-all font-mono text-sm font-black text-fixed">{reservation.id}</p>
                 </div>
-                <div className="rounded-3xl bg-white p-4">
-                  <p className="text-xs font-bold text-on-surface-variant">تاريخ الطلب</p>
-                  <p className="mt-1 font-black text-primary">{formatRentalDate(reservation.createdAt)}</p>
+                <div className="rounded-3xl bg-white/5 border border-white/10 p-4">
+                  <p className="text-xs font-bold text-fixed-dim">تاريخ الطلب</p>
+                  <p className="mt-1 font-black text-fixed">{formatRentalDate(reservation.createdAt)}</p>
                 </div>
-                <div className="rounded-3xl bg-white p-4">
-                  <p className="text-xs font-bold text-on-surface-variant">انتهاء مهلة الحجز</p>
-                  <p className="mt-1 font-black text-primary">{formatRentalDate(reservation.reservedUntil)}</p>
+                <div className="rounded-3xl bg-white/5 border border-white/10 p-4">
+                  <p className="text-xs font-bold text-fixed-dim">انتهاء مهلة الحجز</p>
+                  <p className="mt-1 font-black text-fixed">{formatRentalDate(reservation.reservedUntil)}</p>
                 </div>
               </div>
-              <div className="rounded-2xl bg-secondary/10 p-4 text-sm leading-7 text-secondary">
-                <ShieldCheck className="mb-2 h-5 w-5" />
+              <div className="rounded-2xl bg-secondary/20 border border-secondary/30 p-4 text-sm leading-7 text-fixed-dim">
+                <ShieldCheck className="mb-2 h-5 w-5 text-tertiary" />
                 الحجز والدفع يعالجان من خلال الخادم فقط. الواجهة لا تصنع تأكيدا وهميا ولا تغير حالة الطلب محليا.
               </div>
             </aside>
           </div>
 
-          <div className="flex flex-col gap-3 border-t border-outline-variant/60 bg-surface-container-low p-5 sm:flex-row sm:justify-between">
-            <Link className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-outline-variant bg-white px-5 py-3 text-sm font-bold text-primary" to={ROUTES.RENTALS}>
-              <Home className="h-4 w-4" />
+          <div className="flex flex-col gap-3 border-t border-outline/20 bg-primary/50 p-5 sm:flex-row sm:justify-between">
+            <Link className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-outline bg-white/5 hover:bg-white/10 px-5 py-3 text-sm font-bold text-fixed transition" to={ROUTES.RENTALS}>
+              <Home className="h-4 w-4 text-tertiary" />
               العودة إلى سوق الإيجارات
             </Link>
             {listingHref && (
-              <Link className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-primary px-5 py-3 text-sm font-bold text-white" to={listingHref}>
+              <Link className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-tertiary hover:bg-tertiary/90 px-5 py-3 text-sm font-bold text-primary transition shadow-lg shadow-tertiary/20" to={listingHref}>
                 عرض تفاصيل الوحدة
-                <ArrowLeft className="h-4 w-4" />
+                <ArrowLeft className="h-4 w-4 text-primary" />
               </Link>
             )}
           </div>
