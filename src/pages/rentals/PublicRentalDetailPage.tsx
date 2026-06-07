@@ -1,9 +1,12 @@
+import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
   Bath,
   BedDouble,
   Building2,
   ChevronRight,
+  ChevronLeft,
+  X,
   LockKeyhole,
   MapPin,
   Ruler,
@@ -13,6 +16,7 @@ import { Link, useParams } from 'react-router-dom';
 import { rentalApiService } from '../../lib/api/rental-service';
 import type { RentalListing } from '../../lib/api/types';
 import { ROUTES } from '../../lib/constants/routes';
+import { cn } from '../../lib/utils/cn';
 import {
   formatRentalDate,
   formatRentalMoney,
@@ -71,12 +75,52 @@ function DetailError({ title, message }: { title: string; message: string }) {
 
 export function PublicRentalDetailPage() {
   const { slug } = useParams();
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
   const listingQuery = useQuery({
     queryKey: ['rentals', 'public', 'listing', slug],
     queryFn: () => rentalApiService.getPublicRentalListingBySlug(slug ?? ''),
     enabled: Boolean(slug),
   });
+
+  const listing = listingQuery.data;
+  const coverImage = listing ? getListingCoverImage(listing) : null;
+  const gallery = listing ? sortListingImages(listing) : [];
+
+  useEffect(() => {
+    setSelectedImageIndex(0);
+  }, [slug]);
+
+  useEffect(() => {
+    if (!isLightboxOpen || gallery.length === 0) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsLightboxOpen(false);
+      } else if (event.key === 'ArrowRight') {
+        setSelectedImageIndex((prev) => (prev - 1 + gallery.length) % gallery.length);
+      } else if (event.key === 'ArrowLeft') {
+        setSelectedImageIndex((prev) => (prev + 1) % gallery.length);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isLightboxOpen, gallery.length]);
+
+  useEffect(() => {
+    if (isLightboxOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isLightboxOpen]);
 
   if (listingQuery.isLoading) {
     return (
@@ -86,7 +130,7 @@ export function PublicRentalDetailPage() {
     );
   }
 
-  if (listingQuery.isError || !listingQuery.data) {
+  if (listingQuery.isError || !listing) {
     return (
       <DetailError
         title="الوحدة غير موجودة أو تم تحديث رابطها"
@@ -95,9 +139,6 @@ export function PublicRentalDetailPage() {
     );
   }
 
-  const listing = listingQuery.data;
-  const coverImage = getListingCoverImage(listing);
-  const gallery = sortListingImages(listing);
   const amenities = optionalAmenities(listing);
   const title = publicRentalText(listing.title);
   const description = publicRentalText(listing.description);
@@ -115,6 +156,8 @@ export function PublicRentalDetailPage() {
     { label: 'التأمين', value: listing.depositAmount ? formatRentalMoney(listing.depositAmount) : 'غير محدد' },
   ];
 
+  const activeImage = gallery[selectedImageIndex] || coverImage;
+
   return (
     <main className="pb-16 text-fixed">
       <section className="border-b border-outline/30 bg-primary/20">
@@ -127,22 +170,50 @@ export function PublicRentalDetailPage() {
           <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_420px] xl:items-start">
             <div className="min-w-0 space-y-4">
               <div className="relative overflow-hidden rounded-[32px] glass-panel">
-                <div className="relative aspect-[4/3] sm:aspect-[16/10] lg:aspect-[16/8.5] bg-surface-dim">
+                <div
+                  className="relative aspect-[4/3] sm:aspect-[16/10] lg:aspect-[16/8.5] bg-surface-dim cursor-pointer group"
+                  onClick={() => setIsLightboxOpen(true)}
+                >
                   <DetailImageFallback title={title} />
-                  {coverImage && (
+                  {activeImage && (
                     <img
-                      alt={getListingImageAlt(listing, coverImage)}
-                      className="relative h-full w-full object-cover"
+                      alt={getListingImageAlt(listing, activeImage)}
+                      className="relative h-full w-full object-cover transition duration-300 group-hover:opacity-90"
                       decoding="async"
-                      src={getOptimizedListingImageUrl(coverImage, 'hero')}
+                      src={getOptimizedListingImageUrl(activeImage, 'hero')}
                       onError={(event) => {
                         event.currentTarget.style.display = 'none';
                       }}
                     />
                   )}
+
+                  {gallery.length > 1 && (
+                    <>
+                      <button
+                        aria-label="الصورة السابقة"
+                        className="absolute right-4 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full bg-primary/60 text-white hover:bg-primary/80 transition backdrop-blur-sm z-10"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedImageIndex((prev) => (prev - 1 + gallery.length) % gallery.length);
+                        }}
+                      >
+                        <ChevronRight className="h-6 w-6" />
+                      </button>
+                      <button
+                        aria-label="الصورة التالية"
+                        className="absolute left-4 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full bg-primary/60 text-white hover:bg-primary/80 transition backdrop-blur-sm z-10"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedImageIndex((prev) => (prev + 1) % gallery.length);
+                        }}
+                      >
+                        <ChevronLeft className="h-6 w-6" />
+                      </button>
+                    </>
+                  )}
                 </div>
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-primary/90 via-primary/30 to-transparent p-5 text-white sm:p-7">
-                  <div className="flex flex-wrap items-center gap-2">
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-primary/90 via-primary/30 to-transparent p-5 text-white sm:p-7 pointer-events-none">
+                  <div className="flex flex-wrap items-center gap-2 pointer-events-auto">
                     <span className="rounded-full bg-primary/80 border border-outline px-3 py-1 text-xs font-bold text-fixed backdrop-blur-md">{listingStatusLabels[listing.status]}</span>
                     {listing.isFeatured && (
                       <span className="inline-flex items-center gap-1 rounded-full bg-tertiary px-3 py-1 text-xs font-bold text-primary shadow-md">
@@ -153,8 +224,8 @@ export function PublicRentalDetailPage() {
                     <span className="rounded-full bg-white/5 border border-white/10 px-3 py-1 text-xs font-bold text-fixed backdrop-blur-md">{listingTypeLabels[listing.listingType]}</span>
                     <span className="rounded-full bg-white/5 border border-white/10 px-3 py-1 text-xs font-bold text-fixed backdrop-blur-md">{listing.unitCondition || furnishingLabels[listing.furnishingStatus]}</span>
                   </div>
-                  <h1 className="mt-3 max-w-4xl text-2xl font-black leading-[1.35] sm:text-4xl lg:text-5xl text-fixed">{title}</h1>
-                  <p className="mt-2 flex max-w-3xl items-center gap-2 text-sm text-fixed-dim sm:text-base">
+                  <h1 className="mt-3 max-w-4xl text-2xl font-black leading-[1.35] sm:text-4xl lg:text-5xl text-fixed pointer-events-auto">{title}</h1>
+                  <p className="mt-2 flex max-w-3xl items-center gap-2 text-sm text-fixed-dim sm:text-base pointer-events-auto">
                     <MapPin className="h-5 w-5 shrink-0 text-tertiary" />
                     {location}
                   </p>
@@ -162,19 +233,30 @@ export function PublicRentalDetailPage() {
               </div>
 
               {gallery.length > 1 && (
-                <div className="grid grid-cols-4 gap-2 sm:gap-3">
-                  {gallery.slice(0, 4).map((image) => (
-                    <img
+                <div className="flex gap-2 sm:gap-3 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-white/10 snap-x">
+                  {gallery.map((image, index) => (
+                    <button
                       key={image.id}
-                      alt={getListingImageAlt(listing, image)}
-                      className="aspect-[4/3] rounded-2xl border border-outline/50 object-cover shadow-md"
-                      decoding="async"
-                      loading="lazy"
-                      src={getOptimizedListingImageUrl(image, 'thumbnail')}
-                      onError={(event) => {
-                        event.currentTarget.style.display = 'none';
-                      }}
-                    />
+                      aria-label={`عرض الصورة ${index + 1}`}
+                      className={cn(
+                        "relative shrink-0 aspect-[4/3] w-24 sm:w-28 rounded-2xl overflow-hidden border-2 bg-surface-dim snap-start transition",
+                        selectedImageIndex === index
+                          ? "border-tertiary shadow-lg shadow-tertiary/20 scale-95"
+                          : "border-outline/50 hover:border-white/30"
+                      )}
+                      onClick={() => setSelectedImageIndex(index)}
+                    >
+                      <img
+                        alt={getListingImageAlt(listing, image)}
+                        className="h-full w-full object-cover"
+                        decoding="async"
+                        loading="lazy"
+                        src={getOptimizedListingImageUrl(image, 'thumbnail')}
+                        onError={(event) => {
+                          event.currentTarget.style.display = 'none';
+                        }}
+                      />
+                    </button>
                   ))}
                 </div>
               )}
@@ -258,6 +340,62 @@ export function PublicRentalDetailPage() {
           </section>
         </div>
       </section>
+
+      {isLightboxOpen && activeImage && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 sm:p-6 backdrop-blur-sm transition-opacity duration-300"
+          onClick={() => setIsLightboxOpen(false)}
+        >
+          <button
+            aria-label="إغلاق المعرض"
+            className="absolute top-4 right-4 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition backdrop-blur-sm z-50"
+            onClick={() => setIsLightboxOpen(false)}
+          >
+            <X className="h-6 w-6" />
+          </button>
+
+          {gallery.length > 1 && (
+            <>
+              <button
+                aria-label="الصورة السابقة"
+                className="absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition backdrop-blur-sm z-50"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedImageIndex((prev) => (prev - 1 + gallery.length) % gallery.length);
+                }}
+              >
+                <ChevronRight className="h-8 w-8" />
+              </button>
+              <button
+                aria-label="الصورة التالية"
+                className="absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition backdrop-blur-sm z-50"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedImageIndex((prev) => (prev + 1) % gallery.length);
+                }}
+              >
+                <ChevronLeft className="h-8 w-8" />
+              </button>
+            </>
+          )}
+
+          <div
+            className="relative max-h-full max-w-full flex items-center justify-center select-none"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              alt={getListingImageAlt(listing, activeImage)}
+              className="max-h-[85vh] max-w-[90vw] object-contain rounded-2xl shadow-2xl border border-white/5"
+              src={getOptimizedListingImageUrl(activeImage, 'hero')}
+            />
+            {gallery.length > 1 && (
+              <div className="absolute bottom-[-40px] left-1/2 -translate-x-1/2 text-sm font-bold text-white/75 bg-black/40 px-3 py-1 rounded-full backdrop-blur-sm">
+                {selectedImageIndex + 1} / {gallery.length}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </main>
   );
 }
