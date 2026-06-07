@@ -8,9 +8,9 @@ import type {
 } from '../../lib/api/types';
 
 export const publicRentalBrand = {
-  compoundAr: 'كمباوند السبحي',
+  compoundAr: 'كمبوند السبحي',
   compoundEn: 'Sebahi Compound',
-  rentalsTitle: 'إيجارات كمباوند السبحي',
+  rentalsTitle: 'إيجارات كمبوند السبحي',
   marketplaceLabel: 'سوق إيجارات السبحي',
 } as const;
 
@@ -117,7 +117,7 @@ export function getListingCoverImage(listing: RentalListing | null | undefined) 
 }
 
 export function getListingImageAlt(listing: RentalListing, image: RentalListingImage | null | undefined) {
-  return publicRentalText(image?.altText, `صورة ${publicRentalText(listing.title, 'وحدة للإيجار في كمباوند السبحي')}`);
+  return publicRentalText(image?.altText, `صورة ${publicRentalText(listing.title, 'وحدة للإيجار في كمبوند السبحي')}`);
 }
 
 type RentalImageVariant = 'card' | 'hero' | 'thumbnail';

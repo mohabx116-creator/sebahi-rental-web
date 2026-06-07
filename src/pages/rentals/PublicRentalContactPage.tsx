@@ -88,7 +88,7 @@ function ContactImageFallback({ title }: { title: string }) {
           فتح بيانات التواصل
         </span>
         <div>
-          <p className="text-sm font-bold text-tertiary">كمباوند السبحي</p>
+          <p className="text-sm font-bold text-tertiary">كمبوند السبحي</p>
           <p className="mt-2 text-2xl font-black leading-9 text-fixed">{title}</p>
         </div>
       </div>
@@ -355,14 +355,14 @@ export function PublicRentalContactPage() {
               </span>
               <h2 className="mt-4 text-2xl font-black leading-9 text-fixed">أرسل طلب معاينة للإدارة</h2>
               <p className="mt-2 text-sm leading-7 text-fixed-dim">
-                بدل فتح بيانات التواصل الآن، يمكنك إرسال طلب معاينة للإدارة وسيتواصل معك فريق كمباوند السبحي لمتابعة الطلب.
+                بدل فتح بيانات التواصل الآن، يمكنك إرسال طلب معاينة للإدارة وسيتواصل معك فريق كمبوند السبحي لمتابعة الطلب.
               </p>
             </section>
 
             <RentalInquiryForm
               listingId={listing.id}
               listingTitle={title}
-              intro="هذا الطلب لا يفتح بيانات المالك ولا يبدأ أي دفع. فريق كمباوند السبحي يستلم الطلب ويراجعه للمتابعة."
+              intro="هذا الطلب لا يفتح بيانات المالك ولا يبدأ أي دفع. فريق كمبوند السبحي يستلم الطلب ويراجعه للمتابعة."
             />
 
             {ownerContact && (

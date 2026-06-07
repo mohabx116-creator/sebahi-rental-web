@@ -51,7 +51,7 @@ function ListingImageFallback({ title }: { title: string }) {
           {publicRentalBrand.marketplaceLabel}
         </span>
         <div>
-          <p className="text-sm font-bold text-tertiary">كمباوند السبحي</p>
+          <p className="text-sm font-bold text-tertiary">كمبوند السبحي</p>
           <p className="mt-2 text-2xl font-black leading-9 text-fixed">{title}</p>
         </div>
       </div>
@@ -225,7 +225,7 @@ export function PublicRentalsPage() {
               {publicRentalBrand.marketplaceLabel}
             </span>
             <h1 className="mt-5 text-4xl font-black leading-[1.25] sm:text-5xl lg:text-6xl text-fixed">
-              وحدات مختارة للإيجار داخل كمباوند السبحي
+              وحدات مختارة للإيجار داخل كمبوند السبحي
             </h1>
             <p className="mt-5 max-w-2xl text-lg leading-9 text-fixed-dim">
               تصفح الوحدات المنشورة، قارن السعر والمساحة والتجهيز، وابدأ طلب التواصل أو الحجز من خلال تدفقات دفع آمنة لا تعتمد على حالة المتصفح.
@@ -329,7 +329,7 @@ export function PublicRentalsPage() {
             <Building2 className="mx-auto h-12 w-12 text-tertiary" />
             <h3 className="mt-4 text-2xl font-black text-fixed">لا توجد وحدات منشورة حاليا</h3>
             <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-fixed-dim">
-              لم نجد وحدات تطابق الفلاتر الحالية داخل كمباوند السبحي. جرب إزالة بعض الفلاتر أو العودة لاحقا بعد نشر وحدات جديدة.
+              لم نجد وحدات تطابق الفلاتر الحالية داخل كمبوند السبحي. جرب إزالة بعض الفلاتر أو العودة لاحقا بعد نشر وحدات جديدة.
             </p>
             <Link className="mt-5 inline-flex min-h-11 items-center justify-center rounded-full bg-tertiary px-5 py-3 text-sm font-black text-primary shadow-lg shadow-tertiary/10" to={ROUTES.RENTALS}>
               عرض كل الوحدات
