@@ -79,6 +79,9 @@ export interface RentalListing {
   description: string;
   listingType: RentalListingType;
   furnishingStatus: RentalFurnishingStatus;
+  unitCondition?: string | null;
+  basics?: string | null;
+  amenities?: string | null;
   bedrooms: number;
   bathrooms: number;
   areaSqm: number | string;
@@ -204,21 +207,21 @@ export interface OwnerSubmissionImageInput {
 export interface CreateOwnerSubmissionInput {
   ownerName: string;
   ownerPhone: string;
-  ownerEmail?: string;
+  ownerWhatsapp: string;
   ownerNationalId?: string;
-  preferredContactMethod?: string;
   listingType: RentalListingType;
-  title: string;
-  description: string;
-  addressText?: string;
-  locationText?: string;
+  title?: string;
+  description?: string;
   floor?: number | null;
   areaSqm?: number;
   bedrooms?: number;
-  bathrooms?: number;
-  furnishingStatus: RentalFurnishingStatus;
+  bathrooms: number;
+  furnishingStatus?: RentalFurnishingStatus;
+  unitCondition?: string;
+  basics?: string;
+  amenities?: string;
   monthlyRent: number;
-  depositAmount?: number;
+  depositAmount: number;
   images: OwnerSubmissionImageInput[];
   policyAccepted: true;
 }
