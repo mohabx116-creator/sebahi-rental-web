@@ -116,6 +116,7 @@ export interface CreateRentalInquiryInput {
   tenantName: string;
   tenantPhone: string;
   tenantEmail?: string;
+  tenantNationalId?: string;
   message?: string;
   inquiryType?: RentalInquiryType;
 }

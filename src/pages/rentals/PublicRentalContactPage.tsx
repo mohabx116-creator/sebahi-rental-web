@@ -1,30 +1,20 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import {
   ArrowLeft,
   Building2,
-  CalendarCheck,
   CheckCircle2,
   ChevronRight,
-  CreditCard,
-  ExternalLink,
-  LockKeyhole,
-  Mail,
-  MapPin,
+  Home,
   MessageCircle,
-  Phone,
-  ShieldCheck,
   Sparkles,
-  UserRound,
 } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useParams } from 'react-router-dom';
 import { z } from 'zod';
-import { RentalInquiryForm } from '../../components/rentals/RentalInquiryForm';
 import { ApiClientError } from '../../lib/api/api-client';
 import { rentalApiService } from '../../lib/api/rental-service';
-import type { ContactAccessResponse, StartContactUnlockResponse } from '../../lib/api/types';
 import { ROUTES } from '../../lib/constants/routes';
 import {
   formatRentalMoney,
@@ -35,47 +25,58 @@ import {
   listingStatusLabels,
   listingTypeLabels,
   publicCompoundName,
-  publicRentalBrand,
   publicRentalText,
 } from './rental-format';
 
 const contactSchema = z.object({
-  tenantName: z.string().trim().min(2, 'اكتب الاسم بالكامل'),
+  tenantName: z.string().trim()
+    .min(1, 'الاسم بالكامل مطلوب')
+    .regex(/^[\u0621-\u064A\s]+$/, 'الاسم يجب أن يكون باللغة العربية فقط.')
+    .refine((value) => {
+      const words = value.split(/\s+/).filter(Boolean);
+      return words.length >= 2;
+    }, 'الاسم يجب أن يكون باللغة العربية ويتكون من اسمين على الأقل.'),
   tenantPhone: z.string().trim().min(5, 'اكتب رقم موبايل صحيح'),
-  tenantEmail: z.string().trim().email('اكتب بريد إلكتروني صحيح').optional().or(z.literal('')),
+  tenantNationalId: z.string().trim().regex(/^[0-9]{14}$/, 'الرقم القومي يجب أن يكون 14 رقمًا باللغة الإنجليزية.'),
 });
 
 type ContactFormValues = z.infer<typeof contactSchema>;
 
-function isPaymentProviderPending(error: unknown) {
-  if (!(error instanceof ApiClientError)) return false;
-  const details = error.details as { code?: string; error?: { code?: string } } | undefined;
-  return (
-    error.status === 503 ||
-    details?.code === 'PAYMENT_PROVIDER_NOT_CONFIGURED' ||
-    details?.error?.code === 'PAYMENT_PROVIDER_NOT_CONFIGURED'
-  );
+async function copyToClipboard(text: string): Promise<boolean> {
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch (err) {
+    console.error('Failed to copy text: ', err);
+  }
+  return false;
 }
 
-function readableContactError(error: unknown) {
-  if (isPaymentProviderPending(error)) {
-    return 'الدفع الإلكتروني قيد التجهيز. لن تظهر بيانات المالك قبل تفعيل مزود الدفع وتأكيد العملية من الخادم.';
-  }
-
-  if (error instanceof ApiClientError && error.message) {
-    return `تعذر بدء طلب فتح التواصل. ${error.message}`;
-  }
-
-  if (error instanceof Error && error.message) {
-    return `تعذر بدء طلب فتح التواصل. ${error.message}`;
-  }
-
-  return 'تعذر بدء طلب فتح التواصل. حاول مرة أخرى بعد قليل.';
-}
-
-function whatsappHref(phone: string | null | undefined) {
-  const digits = phone?.replace(/[^\d]/g, '');
-  return digits ? `https://wa.me/${digits}` : null;
+function generateMessageContent({
+  tenantName,
+  tenantPhone,
+  tenantNationalId,
+  listing,
+}: {
+  tenantName: string;
+  tenantPhone: string;
+  tenantNationalId: string;
+  listing: any;
+}) {
+  const listingUrl = `${window.location.origin}/rentals/${listing.slug}`;
+  return `طلب تواصل لوحدة سكنية:
+- الاسم بالكامل: ${tenantName}
+- رقم الموبايل: ${tenantPhone}
+- الرقم القومي: ${tenantNationalId}
+- عنوان الإعلان: ${listing.title}
+- معرف الإعلان (ID): ${listing.id}
+- معرف الوحدة (Unit ID): ${listing.unitId || 'غير متوفر'}
+- رابط الإعلان: ${listingUrl}
+- الإيجار الشهري: ${listing.monthlyRent}
+- مبلغ التأمين: ${listing.depositAmount}
+- حالة الوحدة: ${listing.unitCondition || 'غير متوفر'}`;
 }
 
 function ContactImageFallback({ title }: { title: string }) {
@@ -84,8 +85,8 @@ function ContactImageFallback({ title }: { title: string }) {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_22%_18%,rgba(214,178,94,0.35),transparent_32%),linear-gradient(135deg,rgba(255,255,255,0.08),transparent_40%)]" />
       <div className="relative flex h-full flex-col justify-between">
         <span className="inline-flex w-fit items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-black text-tertiary backdrop-blur-md">
-          <LockKeyhole className="h-4 w-4 text-tertiary" />
-          فتح بيانات التواصل
+          <MessageCircle className="h-4 w-4 text-tertiary" />
+          طلب تواصل بالواتساب
         </span>
         <div>
           <p className="text-sm font-bold text-tertiary">كمبوند السبحي</p>
@@ -98,9 +99,11 @@ function ContactImageFallback({ title }: { title: string }) {
 
 export function PublicRentalContactPage() {
   const { slug } = useParams();
-  const [access, setAccess] = useState<ContactAccessResponse | null>(null);
-  const [unlockResult, setUnlockResult] = useState<StartContactUnlockResponse | null>(null);
-  const [notice, setNotice] = useState<string | null>(null);
+  const [isSubmitPending, setIsSubmitPending] = useState(false);
+  const [inquirySuccess, setInquirySuccess] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [generatedMessage, setGeneratedMessage] = useState('');
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const listingQuery = useQuery({
     queryKey: ['rentals', 'public', 'listing', slug],
@@ -108,22 +111,8 @@ export function PublicRentalContactPage() {
     enabled: Boolean(slug),
   });
 
-  const accessMutation = useMutation({
-    mutationFn: ({ listingId, tenantPhone }: { listingId: string; tenantPhone: string }) =>
-      rentalApiService.getContactAccess(listingId, tenantPhone),
-  });
-
-  const unlockMutation = useMutation({
-    mutationFn: ({ listingId, values }: { listingId: string; values: ContactFormValues }) =>
-      rentalApiService.startContactUnlock(listingId, {
-        tenantName: values.tenantName,
-        tenantPhone: values.tenantPhone,
-        tenantEmail: values.tenantEmail || undefined,
-      }),
-  });
-
   const {
-    formState: { errors, isSubmitting },
+    formState: { errors },
     handleSubmit,
     register,
   } = useForm<ContactFormValues>({
@@ -131,59 +120,62 @@ export function PublicRentalContactPage() {
     defaultValues: {
       tenantName: '',
       tenantPhone: '',
-      tenantEmail: '',
+      tenantNationalId: '',
     },
   });
 
   const listing = listingQuery.data;
   const listingDetailHref = listing ? `/rentals/${listing.slug}` : ROUTES.RENTALS;
   const title = listing ? publicRentalText(listing.title) : '';
-  const location = listing
-    ? publicRentalText(
-        listing.locationText ?? listing.addressText ?? listing.compound?.name,
-        publicRentalBrand.compoundAr,
-      )
-    : publicRentalBrand.compoundAr;
   const compoundName = publicCompoundName(listing?.compound?.name);
   const coverImage = listing ? getListingCoverImage(listing) : null;
-  const checkoutUrl = unlockResult?.paymentUrl ?? unlockResult?.payment?.paymentUrl ?? null;
-  const ownerContact = access?.unlocked === true ? access.ownerContact : null;
-  const whatsappUrl = ownerContact ? whatsappHref(ownerContact.phone) : null;
-  const isPending = isSubmitting || accessMutation.isPending || unlockMutation.isPending;
 
   const onSubmit = handleSubmit(async (values) => {
-    if (!listing) return;
-    setNotice(null);
-    setAccess(null);
-    setUnlockResult(null);
+    if (!listing || isSubmitPending) return;
+    setSubmitError(null);
+    setIsSubmitPending(true);
+
+    const messageText = generateMessageContent({
+      tenantName: values.tenantName,
+      tenantPhone: values.tenantPhone,
+      tenantNationalId: values.tenantNationalId,
+      listing,
+    });
 
     try {
-      const currentAccess = await accessMutation.mutateAsync({
-        listingId: listing.id,
+      await rentalApiService.createRentalInquiry(listing.id, {
+        tenantName: values.tenantName,
         tenantPhone: values.tenantPhone,
+        tenantNationalId: values.tenantNationalId,
+        message: messageText,
       });
 
-      setAccess(currentAccess);
+      setGeneratedMessage(messageText);
+      setInquirySuccess(true);
 
-      if (currentAccess.unlocked) {
-        setNotice('تم التحقق من الدفع السابق، وبيانات التواصل متاحة الآن لهذا الرقم.');
-        return;
-      }
+      const copySuccess = await copyToClipboard(messageText);
+      setCopied(copySuccess);
 
-      const result = await unlockMutation.mutateAsync({ listingId: listing.id, values });
-      setUnlockResult(result);
-
-      const paymentUrl = result.paymentUrl ?? result.payment?.paymentUrl;
-
-      if (paymentUrl) {
-        setNotice('تم تجهيز رابط الدفع. تظهر بيانات التواصل فقط بعد تأكيد الدفع من الخادم.');
-      } else if (result.alreadyUnlocked) {
-        setNotice('تم العثور على فتح تواصل سابق. تحقق من بيانات التواصل مرة أخرى بنفس رقم الهاتف.');
-      } else {
-        setNotice('الدفع الإلكتروني قيد التجهيز. لن تظهر بيانات المالك قبل تفعيل مزود الدفع وتأكيد العملية من الخادم.');
-      }
+      window.open('https://chat.whatsapp.com/ECEZfbsvjlU43eDvKa9XUu', '_blank');
     } catch (error) {
-      setNotice(readableContactError(error));
+      console.error(error);
+      let errorMessage = 'تعذر إرسال الطلب. حاول مرة أخرى.';
+      if (error instanceof ApiClientError) {
+        if (
+          error.status === 409 ||
+          error.status === 410 ||
+          error.message?.includes('not available') ||
+          error.message?.includes('unavailable') ||
+          error.message?.includes('متاحة')
+        ) {
+          errorMessage = 'هذه الوحدة لم تعد متاحة حاليًا.';
+        } else if (error.message) {
+          errorMessage = error.message;
+        }
+      }
+      setSubmitError(errorMessage);
+    } finally {
+      setIsSubmitPending(false);
     }
   });
 
@@ -201,7 +193,7 @@ export function PublicRentalContactPage() {
   if (listingQuery.isError || !listing) {
     return (
       <main className="mx-auto flex min-h-[70dvh] w-full max-w-3xl flex-col items-center justify-center px-4 py-12 text-center text-fixed">
-        <LockKeyhole className="h-14 w-14 text-tertiary" />
+        <Home className="h-14 w-14 text-tertiary" />
         <h1 className="mt-5 text-3xl font-black text-fixed">الوحدة غير موجودة أو تم تحديث رابطها</h1>
         <p className="mt-3 leading-8 text-fixed-dim">
           الوحدة غير موجودة أو تم تحديث رابطها. يمكنك الرجوع إلى سوق إيجارات السبحي واختيار الرابط الحالي من قائمة الوحدات.
@@ -255,50 +247,31 @@ export function PublicRentalContactPage() {
                   <span className="rounded-full bg-white/5 border border-white/10 px-3 py-1.5 text-xs font-black text-fixed">{listing.unitCondition || furnishingLabels[listing.furnishingStatus]}</span>
                 </div>
                 <h1 className="mt-4 text-2xl font-black leading-9 text-fixed">{title}</h1>
-                <p className="mt-2 flex items-start gap-2 text-sm leading-7 text-fixed-dim">
-                  <MapPin className="mt-1 h-4 w-4 shrink-0 text-tertiary" />
-                  <span>{location}</span>
-                </p>
-                <div className="mt-5 grid grid-cols-2 gap-3">
+                <div className="mt-5">
                   <div className="rounded-3xl bg-primary/45 border border-outline/25 p-4">
                     <p className="text-xs font-bold text-fixed-dim">الايجار الشهري</p>
                     <p className="mt-1 text-xl font-black text-tertiary">{formatRentalMoney(listing.monthlyRent)}</p>
                   </div>
-                  <div className="rounded-3xl bg-primary/45 border border-outline/25 p-4">
-                    <p className="text-xs font-bold text-fixed-dim">رسوم فتح التواصل</p>
-                    <p className="mt-1 text-xl font-black text-tertiary">{formatRentalMoney(listing.contactUnlockFee)}</p>
-                  </div>
                 </div>
               </div>
-            </section>
-
-            <section className="rounded-[28px] border border-secondary/30 bg-secondary/20 p-5 text-right">
-              <ShieldCheck className="h-6 w-6 text-tertiary" />
-              <h2 className="mt-3 text-lg font-black text-fixed">حماية للزائر والمالك</h2>
-              <p className="mt-2 text-sm leading-7 text-fixed-dim">
-                بيانات التواصل لا تظهر من الواجهة، ولا يتم فتحها إلا بعد تحقق الخادم من دفع رسوم الفتح لهذه الوحدة وهذا الرقم.
-              </p>
             </section>
           </aside>
 
           <section className="space-y-5 text-right">
             <div className="rounded-[32px] glass-panel p-5 shadow-xl sm:p-7">
               <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold text-tertiary backdrop-blur-md">
-                <LockKeyhole className="h-4 w-4 text-tertiary" />
-                فتح بيانات التواصل
+                <MessageCircle className="h-4 w-4 text-tertiary" />
+                طلب تواصل عبر الواتساب
               </span>
               <h2 className="mt-5 text-3xl font-black leading-[1.35] text-fixed">
-                اطلب بيانات المالك بأمان داخل {compoundName}
+                اطلب معاينة أو تواصل داخل {compoundName}
               </h2>
-              <p className="mt-3 text-base leading-8 text-fixed-dim">
-                اكتب بياناتك للتحقق أولًا من وجود فتح تواصل مدفوع سابقًا. إذا لم يكن لديك وصول، يبدأ طلب الدفع من الخادم عند توفر مزود الدفع.
-              </p>
 
               <div className="mt-6 grid gap-3 sm:grid-cols-3">
                 {[
-                  ['١', 'ادفع رسوم فتح التواصل'],
-                  ['٢', 'يتم تأكيد الدفع من الخادم'],
-                  ['٣', 'تظهر بيانات التواصل بعد التأكيد فقط'],
+                  ['١', 'املأ البيانات كاملة'],
+                  ['٢', 'تواصل عن طريق الواتساب'],
+                  ['٣', 'سيتم التواصل عن طريق الرد على الخاص'],
                 ].map(([step, label]) => (
                   <div className="rounded-3xl bg-primary/45 border border-outline/20 p-4" key={step}>
                     <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-secondary text-sm font-black text-white">
@@ -309,144 +282,109 @@ export function PublicRentalContactPage() {
                 ))}
               </div>
 
-              <form className="mt-7 space-y-4" onSubmit={onSubmit}>
-                <label className="block">
-                  <span className="mb-2 block text-sm font-bold text-fixed-dim">الاسم بالكامل</span>
-                  <input
-                    className="w-full rounded-2xl border-outline bg-primary/40 text-right text-fixed focus:border-tertiary focus:ring-tertiary/20"
-                    {...register('tenantName')}
-                  />
-                  {errors.tenantName && <span className="mt-1 block text-sm font-bold text-error">{errors.tenantName.message}</span>}
-                </label>
-                <label className="block">
-                  <span className="mb-2 block text-sm font-bold text-fixed-dim">رقم الموبايل</span>
-                  <input
-                    className="w-full rounded-2xl border-outline bg-primary/40 text-right text-fixed focus:border-tertiary focus:ring-tertiary/20"
-                    inputMode="tel"
-                    {...register('tenantPhone')}
-                  />
-                  {errors.tenantPhone && <span className="mt-1 block text-sm font-bold text-error">{errors.tenantPhone.message}</span>}
-                </label>
-                <label className="block">
-                  <span className="mb-2 block text-sm font-bold text-fixed-dim">البريد الإلكتروني اختياري</span>
-                  <input
-                    className="w-full rounded-2xl border-outline bg-primary/40 text-right text-fixed focus:border-tertiary focus:ring-tertiary/20"
-                    type="email"
-                    {...register('tenantEmail')}
-                  />
-                  {errors.tenantEmail && <span className="mt-1 block text-sm font-bold text-error">{errors.tenantEmail.message}</span>}
-                </label>
-
-                <button
-                  className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-tertiary hover:bg-tertiary/90 px-5 py-4 text-base font-black text-primary transition disabled:cursor-not-allowed disabled:opacity-60 shadow-xl shadow-tertiary/20"
-                  disabled={isPending}
-                  type="submit"
-                >
-                  <CreditCard className="h-5 w-5 text-primary" />
-                  {isPending ? 'جاري التحقق...' : 'تحقق وابدأ فتح التواصل'}
-                </button>
-              </form>
-            </div>
-
-            <section className="rounded-[32px] glass-panel p-5 text-right shadow-xl sm:p-6">
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-black text-tertiary backdrop-blur-md">
-                <CalendarCheck className="h-4 w-4 text-tertiary" />
-                بديل آمن بدون دفع
-              </span>
-              <h2 className="mt-4 text-2xl font-black leading-9 text-fixed">أرسل طلب معاينة للإدارة</h2>
-              <p className="mt-2 text-sm leading-7 text-fixed-dim">
-                بدل فتح بيانات التواصل الآن، يمكنك إرسال طلب معاينة للإدارة وسيتواصل معك فريق كمبوند السبحي لمتابعة الطلب.
-              </p>
-            </section>
-
-            <RentalInquiryForm
-              listingId={listing.id}
-              listingTitle={title}
-              intro="هذا الطلب لا يفتح بيانات المالك ولا يبدأ أي دفع. فريق كمبوند السبحي يستلم الطلب ويراجعه للمتابعة."
-            />
-
-            {ownerContact && (
-              <section className="rounded-[32px] border border-secondary/30 bg-secondary/20 p-5 text-right shadow-xl sm:p-6">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                  <div>
-                    <span className="inline-flex items-center gap-2 rounded-full bg-white/10 border border-white/10 px-3 py-1.5 text-xs font-black text-tertiary backdrop-blur-md">
-                      <CheckCircle2 className="h-4 w-4 text-tertiary" />
-                      وصول مؤكد من الخادم
+              {inquirySuccess ? (
+                <div className="mt-7 space-y-6 text-right">
+                  <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-5">
+                    <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500 text-white">
+                      <CheckCircle2 className="h-6 w-6" />
                     </span>
-                    <h3 className="mt-4 text-2xl font-black text-fixed">تم فتح بيانات التواصل</h3>
+                    <h3 className="mt-4 text-xl font-black text-emerald-400">تم إرسال طلبك بنجاح!</h3>
                     <p className="mt-2 text-sm leading-7 text-fixed-dim">
-                      تعامل فقط داخل الإجراءات الرسمية للمنصة، ولا تعتمد على أي تأكيد خارج مسار الدفع المعتمد.
+                      تم تسجيل طلبك في النظام بنجاح. سيتم التواصل معك عبر الواتساب.
                     </p>
                   </div>
-                  <ShieldCheck className="h-10 w-10 text-tertiary" />
-                </div>
 
-                <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                  <div className="rounded-3xl bg-primary/45 border border-outline/20 p-4">
-                    <p className="flex items-center gap-2 text-xs font-bold text-fixed-dim">
-                      <UserRound className="h-4 w-4 text-tertiary" />
-                      اسم المالك
+                  <div className="rounded-[24px] border border-tertiary/30 bg-tertiary/5 p-5">
+                    <h4 className="text-base font-black text-tertiary">الخطوة التالية الهامة:</h4>
+                    <p className="mt-2 text-sm leading-6 text-fixed-dim">
+                      {copied
+                        ? 'تم نسخ رسالة الطلب تلقائيًا إلى الحافظة. يرجى الدخول لجروب الواتساب ولصق الرسالة.'
+                        : 'يرجى نسخ رسالة الطلب بالزر أدناه، ثم الدخول لجروب الواتساب ولصق الرسالة لتأكيد التواصل.'}
                     </p>
-                    <p className="mt-2 text-lg font-black text-fixed">{ownerContact.fullName}</p>
+
+                    <div className="mt-4">
+                      <textarea
+                        readOnly
+                        value={generatedMessage}
+                        className="w-full h-44 rounded-xl border border-outline/20 bg-primary/60 p-3 text-right text-xs font-mono text-fixed focus:ring-0 focus:outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          const ok = await copyToClipboard(generatedMessage);
+                          if (ok) {
+                            setCopied(true);
+                          }
+                        }}
+                        className="mt-2 inline-flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 px-4 py-2 text-xs font-bold text-fixed transition cursor-pointer"
+                      >
+                        {copied ? 'تم النسخ بنجاح!' : 'نسخ الرسالة'}
+                      </button>
+                    </div>
+
+                    <a
+                      href="https://chat.whatsapp.com/ECEZfbsvjlU43eDvKa9XUu"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="mt-5 flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 hover:bg-emerald-600 px-5 py-4 text-base font-black text-white transition shadow-lg shadow-emerald-500/20"
+                    >
+                      <MessageCircle className="h-5 w-5" />
+                      فتح جروب الواتساب ولصق الرسالة
+                    </a>
                   </div>
-                  <a className="rounded-3xl bg-primary/45 border border-outline/20 p-4 transition hover:bg-primary/60" href={`tel:${ownerContact.phone}`}>
-                    <p className="flex items-center gap-2 text-xs font-bold text-fixed-dim">
-                      <Phone className="h-4 w-4 text-tertiary" />
-                      رقم الهاتف
-                    </p>
-                    <p className="mt-2 text-lg font-black text-fixed" dir="ltr">{ownerContact.phone}</p>
-                  </a>
-                  {whatsappUrl && (
-                    <a className="rounded-3xl bg-primary/45 border border-outline/20 p-4 transition hover:bg-primary/60" href={whatsappUrl} rel="noreferrer" target="_blank">
-                      <p className="flex items-center gap-2 text-xs font-bold text-fixed-dim">
-                        <MessageCircle className="h-4 w-4 text-tertiary" />
-                        واتساب
-                      </p>
-                      <p className="mt-2 text-lg font-black text-tertiary">مراسلة المالك</p>
-                    </a>
-                  )}
-                  {ownerContact.email && (
-                    <a className="rounded-3xl bg-primary/45 border border-outline/20 p-4 transition hover:bg-primary/60" href={`mailto:${ownerContact.email}`}>
-                      <p className="flex items-center gap-2 text-xs font-bold text-fixed-dim">
-                        <Mail className="h-4 w-4 text-tertiary" />
-                        البريد الإلكتروني
-                      </p>
-                      <p className="mt-2 break-all text-lg font-black text-fixed">{ownerContact.email}</p>
-                    </a>
-                  )}
                 </div>
-              </section>
-            )}
+              ) : (
+                <form className="mt-7 space-y-4" onSubmit={onSubmit}>
+                  <label className="block">
+                    <span className="mb-2 block text-sm font-bold text-fixed-dim">الاسم بالكامل</span>
+                    <input
+                      className="w-full rounded-2xl border-outline bg-primary/40 text-right text-fixed focus:border-tertiary focus:ring-tertiary/20"
+                      disabled={isSubmitPending}
+                      {...register('tenantName')}
+                    />
+                    {errors.tenantName && <span className="mt-1 block text-sm font-bold text-error">{errors.tenantName.message}</span>}
+                  </label>
 
-            {!ownerContact && (notice || checkoutUrl) && (
-              <section className="rounded-[32px] glass-panel p-5 text-right shadow-xl sm:p-6">
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-black text-tertiary">
-                  <CreditCard className="h-4 w-4 text-tertiary" />
-                  حالة طلب فتح التواصل
-                </span>
-                <h3 className="mt-4 text-2xl font-black text-fixed">
-                  {checkoutUrl ? 'رابط الدفع جاهز' : 'الدفع الإلكتروني قيد التجهيز'}
-                </h3>
-                <p className="mt-2 text-sm leading-7 text-fixed-dim">
-                  {notice ??
-                    'لن تظهر بيانات المالك قبل نجاح الدفع وتأكيده من الخادم. لا يوجد فتح تواصل وهمي أو اعتماد على حالة من المتصفح.'}
-                </p>
-                <Link className="mt-3 inline-flex text-sm font-black text-tertiary hover:underline" to={ROUTES.REFUND_POLICY}>
-                  سياسة الاسترجاع وشروط الدفع
-                </Link>
-                {checkoutUrl && (
-                  <a
-                    className="mt-5 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-secondary hover:bg-secondary/90 px-5 py-3 text-sm font-black text-white shadow-lg shadow-secondary/20 sm:w-auto"
-                    href={checkoutUrl}
-                    rel="noreferrer"
-                    target="_blank"
+                  <label className="block">
+                    <span className="mb-2 block text-sm font-bold text-fixed-dim">رقم الموبايل</span>
+                    <input
+                      className="w-full rounded-2xl border-outline bg-primary/40 text-right text-fixed focus:border-tertiary focus:ring-tertiary/20"
+                      disabled={isSubmitPending}
+                      inputMode="tel"
+                      {...register('tenantPhone')}
+                    />
+                    {errors.tenantPhone && <span className="mt-1 block text-sm font-bold text-error">{errors.tenantPhone.message}</span>}
+                  </label>
+
+                  <label className="block">
+                    <span className="mb-2 block text-sm font-bold text-fixed-dim">الرقم القومي</span>
+                    <input
+                      className="w-full rounded-2xl border-outline bg-primary/40 text-right text-fixed focus:border-tertiary focus:ring-tertiary/20"
+                      disabled={isSubmitPending}
+                      maxLength={14}
+                      placeholder="14 رقم باللغة الإنجليزية"
+                      {...register('tenantNationalId')}
+                    />
+                    {errors.tenantNationalId && <span className="mt-1 block text-sm font-bold text-error">{errors.tenantNationalId.message}</span>}
+                  </label>
+
+                  {submitError && (
+                    <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm font-bold text-error">
+                      {submitError}
+                    </div>
+                  )}
+
+                  <button
+                    className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-tertiary hover:bg-tertiary/90 px-5 py-4 text-base font-black text-primary transition disabled:cursor-not-allowed disabled:opacity-60 shadow-xl shadow-tertiary/20"
+                    disabled={isSubmitPending}
+                    type="submit"
                   >
-                    إتمام الدفع
-                    <ExternalLink className="h-4 w-4" />
-                  </a>
-                )}
-              </section>
-            )}
+                    <MessageCircle className="h-5 w-5 text-primary" />
+                    {isSubmitPending ? 'جاري إرسال الطلب...' : 'تواصل عن طريق الواتساب'}
+                  </button>
+                </form>
+              )}
+            </div>
 
             <Link
               className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border border-outline bg-white/5 hover:bg-white/10 px-5 py-3 text-sm font-black text-fixed sm:w-auto transition"
