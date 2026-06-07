@@ -66,6 +66,7 @@ function generateMessageContent({
   listing: any;
 }) {
   const listingUrl = `${window.location.origin}/rentals/${listing.slug}`;
+  const adminUrl = `https://compound-os-admin.vercel.app/rentals/${listing.id}`;
   return `طلب تواصل لوحدة سكنية:
 - الاسم بالكامل: ${tenantName}
 - رقم الموبايل: ${tenantPhone}
@@ -73,7 +74,9 @@ function generateMessageContent({
 - عنوان الإعلان: ${listing.title}
 - معرف الإعلان (ID): ${listing.id}
 - معرف الوحدة (Unit ID): ${listing.unitId || 'غير متوفر'}
-- رابط الإعلان: ${listingUrl}
+- رابط الإعلان العام: ${listingUrl}
+- رابط الإعلان في لوحة التحكم:
+${adminUrl}
 - الإيجار الشهري: ${listing.monthlyRent}
 - مبلغ التأمين: ${listing.depositAmount}
 - حالة الوحدة: ${listing.unitCondition || 'غير متوفر'}`;
@@ -296,11 +299,15 @@ export function PublicRentalContactPage() {
 
                   <div className="rounded-[24px] border border-tertiary/30 bg-tertiary/5 p-5">
                     <h4 className="text-base font-black text-tertiary">الخطوة التالية الهامة:</h4>
-                    <p className="mt-2 text-sm leading-6 text-fixed-dim">
-                      {copied
-                        ? 'تم نسخ رسالة الطلب تلقائيًا إلى الحافظة. يرجى الدخول لجروب الواتساب ولصق الرسالة.'
-                        : 'يرجى نسخ رسالة الطلب بالزر أدناه، ثم الدخول لجروب الواتساب ولصق الرسالة لتأكيد التواصل.'}
-                    </p>
+                    {copied ? (
+                      <p className="mt-2 text-sm leading-6 text-emerald-400 font-bold">
+                        تم نسخ رسالة الطلب. افتح الواتساب والصق الرسالة داخل الجروب.
+                      </p>
+                    ) : (
+                      <p className="mt-2 text-sm leading-6 text-amber-400 font-bold">
+                        انسخ الرسالة يدويًا ثم افتح جروب الواتساب.
+                      </p>
+                    )}
 
                     <div className="mt-4">
                       <textarea
