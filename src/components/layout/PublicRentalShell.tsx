@@ -39,7 +39,7 @@ export function PublicRentalShell() {
         <div className="mx-auto grid w-full max-w-7xl gap-6 px-4 py-10 text-right text-sm sm:px-6 lg:grid-cols-[1.2fr_1fr_1fr] lg:items-start lg:px-8">
           <div className="space-y-3">
             <p className="text-base font-extrabold text-tertiary">سوق إيجارات السبحي</p>
-            <p className="mt-1 leading-7 text-fixed-dim/90">منصة عرض وحدات الإيجار داخل كمبوند السبحي مع تحقق دفع آمن عبر الخادم.</p>
+            <p className="mt-1 leading-7 text-fixed-dim/90">منصة امنة لعرض وحدات الإيجار داخل كمبوند السبحي .</p>
             <div className="flex items-center gap-2 font-bold text-secondary-container">
               <ShieldCheck className="h-5 w-5 text-tertiary" />
               لا يتم عرض بيانات المالك إلا بعد تحقق الدفع من الخادم
