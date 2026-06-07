@@ -16,12 +16,9 @@ const MAX_OWNER_IMAGE_BYTES = 5 * 1024 * 1024;
 const ALLOWED_OWNER_IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
 
 const unitConditionOptions = [
-  'مفروشة',
-  'غير مفروشة',
-  'نص فرش',
+  'سوبر لوكس',
   'متشطبة',
-  'نص تشطيب',
-  'غير متشطبة',
+  'فاضية',
 ] as const;
 
 const requiredPositiveNumber = (message: string) => z.coerce.number().positive(message);
@@ -62,9 +59,7 @@ function optionalNumber(value: unknown) {
   return value === '' || value === null || value === undefined ? undefined : Number(value);
 }
 
-function furnishingStatusForCondition(condition: OwnerSubmissionFormValues['unitCondition']): RentalFurnishingStatus {
-  if (condition === 'مفروشة') return 'FURNISHED';
-  if (condition === 'نص فرش') return 'SEMI_FURNISHED';
+function furnishingStatusForCondition(_condition: OwnerSubmissionFormValues['unitCondition']): RentalFurnishingStatus {
   return 'UNFURNISHED';
 }
 
@@ -99,7 +94,7 @@ export function OwnerListUnitPage() {
   } = useForm<OwnerSubmissionFormInput, unknown, OwnerSubmissionFormValues>({
     resolver: zodResolver(ownerSubmissionSchema),
     defaultValues: {
-      unitCondition: 'مفروشة',
+      unitCondition: 'سوبر لوكس',
       policyAccepted: false,
     },
   });

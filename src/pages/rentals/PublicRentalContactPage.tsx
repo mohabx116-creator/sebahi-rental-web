@@ -252,7 +252,7 @@ export function PublicRentalContactPage() {
                     </span>
                   )}
                   <span className="rounded-full bg-white/5 border border-white/10 px-3 py-1.5 text-xs font-black text-fixed">{listingTypeLabels[listing.listingType]}</span>
-                  <span className="rounded-full bg-white/5 border border-white/10 px-3 py-1.5 text-xs font-black text-fixed">{furnishingLabels[listing.furnishingStatus]}</span>
+                  <span className="rounded-full bg-white/5 border border-white/10 px-3 py-1.5 text-xs font-black text-fixed">{listing.unitCondition || furnishingLabels[listing.furnishingStatus]}</span>
                 </div>
                 <h1 className="mt-4 text-2xl font-black leading-9 text-fixed">{title}</h1>
                 <p className="mt-2 flex items-start gap-2 text-sm leading-7 text-fixed-dim">

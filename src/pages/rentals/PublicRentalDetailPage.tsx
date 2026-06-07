@@ -243,7 +243,7 @@ export function PublicRentalDetailPage() {
                       </span>
                     )}
                     <span className="rounded-full bg-white/5 border border-white/10 px-3 py-1 text-xs font-bold text-fixed backdrop-blur-md">{listingTypeLabels[listing.listingType]}</span>
-                    <span className="rounded-full bg-white/5 border border-white/10 px-3 py-1 text-xs font-bold text-fixed backdrop-blur-md">{furnishingLabels[listing.furnishingStatus]}</span>
+                    <span className="rounded-full bg-white/5 border border-white/10 px-3 py-1 text-xs font-bold text-fixed backdrop-blur-md">{listing.unitCondition || furnishingLabels[listing.furnishingStatus]}</span>
                   </div>
                   <h1 className="mt-3 max-w-4xl text-2xl font-black leading-[1.35] sm:text-4xl lg:text-5xl text-fixed">{title}</h1>
                   <p className="mt-2 flex max-w-3xl items-center gap-2 text-sm text-fixed-dim sm:text-base">
@@ -338,7 +338,7 @@ export function PublicRentalDetailPage() {
             <h2 className="text-2xl font-black text-fixed">المواصفات</h2>
             <dl className="mt-5 grid gap-3 sm:grid-cols-2">
               <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">نوع الوحدة</dt><dd className="mt-1 font-black text-tertiary">{listingTypeLabels[listing.listingType]}</dd></div>
-              <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">التجهيز</dt><dd className="mt-1 font-black text-tertiary">{furnishingLabels[listing.furnishingStatus]}</dd></div>
+              <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">حالة الوحدة</dt><dd className="mt-1 font-black text-tertiary">{listing.unitCondition || furnishingLabels[listing.furnishingStatus]}</dd></div>
               <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">الدور</dt><dd className="mt-1 font-black text-tertiary">{listing.floor ?? 'غير محدد'}</dd></div>
               <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">تاريخ النشر</dt><dd className="mt-1 font-black text-tertiary">{formatRentalDate(listing.publishedAt)}</dd></div>
             </dl>
