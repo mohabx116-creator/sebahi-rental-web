@@ -275,7 +275,7 @@ export function PublicRentalsPage() {
               مسح
             </Link>
             <button className="rounded-full bg-tertiary hover:bg-tertiary/90 px-6 py-3 text-sm font-black text-primary shadow-lg shadow-tertiary/20 transition" type="submit">
-              تطبيق الفلاتر
+              فلترة
             </button>
           </div>
         </form>
@@ -322,8 +322,8 @@ export function PublicRentalsPage() {
                 visibleListings.length === 1
                   ? 'grid-cols-1 max-w-[430px] mx-auto'
                   : visibleListings.length === 2
-                  ? 'grid-cols-1 md:grid-cols-2 max-w-[900px] mx-auto'
-                  : 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3 max-w-7xl mx-auto',
+                    ? 'grid-cols-1 md:grid-cols-2 max-w-[900px] mx-auto'
+                    : 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3 max-w-7xl mx-auto',
                 listingsQuery.isFetching && 'opacity-80'
               )}
             >
