@@ -92,6 +92,7 @@ export function sanitizeSebahiDisplayText(value: string | null | undefined, fall
     .replace(/black-horse/gi, 'sebahi')
     .replace(/Compound OS Demo/gi, publicRentalBrand.compoundAr)
     .replace(/New Cairo, Egypt/gi, 'القاهرة الجديدة')
+    .replace(/كمباوند/g, 'كمبوند')
     .replace(/بلاك هورس/g, publicRentalBrand.compoundAr);
 }
 
