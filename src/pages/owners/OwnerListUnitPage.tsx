@@ -17,7 +17,7 @@ const ALLOWED_OWNER_IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/web
 
 const unitConditionOptions = [
   'سوبر لوكس',
-  'متشطبة',
+  'مفروشة',
   'فاضية',
 ] as const;
 
@@ -59,7 +59,8 @@ function optionalNumber(value: unknown) {
   return value === '' || value === null || value === undefined ? undefined : Number(value);
 }
 
-function furnishingStatusForCondition(_condition: OwnerSubmissionFormValues['unitCondition']): RentalFurnishingStatus {
+function furnishingStatusForCondition(condition: OwnerSubmissionFormValues['unitCondition']): RentalFurnishingStatus {
+  if (condition === 'مفروشة') return 'FURNISHED';
   return 'UNFURNISHED';
 }
 
