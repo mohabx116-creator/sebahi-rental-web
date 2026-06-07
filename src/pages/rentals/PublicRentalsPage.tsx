@@ -186,7 +186,9 @@ export function PublicRentalsPage() {
 
   const listings = listingsQuery.data?.data ?? [];
   const selectedCondition = searchParams.get('unitCondition') || '';
+  const featuredOnly = searchParams.get('featured') === 'true';
   const filteredListings = listings.filter((listing) => {
+    if (featuredOnly && !listing.isFeatured) return false;
     if (!selectedCondition) return true;
     return listing.unitCondition?.trim() === selectedCondition.trim();
   });
@@ -208,7 +210,7 @@ export function PublicRentalsPage() {
       if (value) next.set(key, value);
     });
 
-
+    if (formData.get('featured') === 'true') next.set('featured', 'true');
 
 
 
@@ -270,6 +272,21 @@ export function PublicRentalsPage() {
             <input className="rounded-2xl border-outline bg-primary/45 py-3 px-4 text-right text-fixed focus:border-tertiary focus:ring-tertiary/20" defaultValue={searchParams.get('minRent') ?? ''} min="0" name="minRent" placeholder="أقل سعر شهري" type="number" />
             <input className="rounded-2xl border-outline bg-primary/45 py-3 px-4 text-right text-fixed focus:border-tertiary focus:ring-tertiary/20" defaultValue={searchParams.get('maxRent') ?? ''} min="0" name="maxRent" placeholder="أعلى سعر شهري" type="number" />
           </div>
+          <label className="mt-4 block cursor-pointer text-right">
+            <input className="peer sr-only" defaultChecked={featuredOnly} name="featured" type="checkbox" value="true" />
+            <span className="flex min-h-24 items-center justify-between gap-4 rounded-[24px] border border-outline bg-primary/35 px-5 py-4 text-fixed transition hover:border-tertiary/60 hover:bg-primary/50 peer-checked:border-tertiary peer-checked:bg-tertiary/15 peer-checked:shadow-lg peer-checked:shadow-tertiary/10">
+              <span className="flex items-center gap-3">
+                <span className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-tertiary peer-checked:border-tertiary/40">
+                  <Sparkles className="h-6 w-6" />
+                </span>
+                <span>
+                  <span className="block text-lg font-black">الوحدات المميزة فقط</span>
+                  <span className="mt-1 block text-sm font-bold text-fixed-dim">اعرض الإعلانات المميزة أولًا</span>
+                </span>
+              </span>
+              <span className="h-7 w-7 rounded-full border-2 border-outline bg-white/5 transition peer-checked:border-tertiary peer-checked:bg-tertiary" />
+            </span>
+          </label>
           <div className="mt-4 flex justify-end gap-2">
             <Link className="rounded-full border border-outline px-5 py-3 text-sm font-bold text-fixed bg-white/5 hover:bg-white/10 transition" to={ROUTES.RENTALS}>
               مسح
