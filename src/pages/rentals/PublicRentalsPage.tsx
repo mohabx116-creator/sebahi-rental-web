@@ -264,7 +264,7 @@ export function PublicRentalsPage() {
             <select className="rounded-2xl border-outline bg-primary/45 py-3 px-4 text-right text-fixed focus:border-tertiary focus:ring-tertiary/20" defaultValue={searchParams.get('unitCondition') ?? ''} name="unitCondition">
               <option value="" className="bg-primary text-fixed">حالة الوحدة</option>
               <option value="سوبر لوكس" className="bg-primary text-fixed">سوبر لوكس</option>
-              <option value="متشطبة" className="bg-primary text-fixed">متشطبة</option>
+              <option value="مفروشة" className="bg-primary text-fixed">مفروشة</option>
               <option value="فاضية" className="bg-primary text-fixed">فاضية</option>
             </select>
             <input className="rounded-2xl border-outline bg-primary/45 py-3 px-4 text-right text-fixed focus:border-tertiary focus:ring-tertiary/20" defaultValue={searchParams.get('minRent') ?? ''} min="0" name="minRent" placeholder="أقل سعر شهري" type="number" />
