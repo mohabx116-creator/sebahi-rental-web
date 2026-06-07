@@ -47,13 +47,13 @@ export function PublicRentalShell() {
           </div>
           <div className="space-y-3">
             <p className="text-base font-extrabold text-tertiary">للتواصل والدعم</p>
-            <a className="flex items-center gap-2 font-semibold hover:text-tertiary transition" href="tel:+201027613133">
+            <a className="flex items-center gap-2 font-semibold hover:text-tertiary transition" href="tel:+201234567890">
               <Phone className="h-4 w-4 text-tertiary" />
-              <span dir="ltr">+201027613133</span>
+              <span dir="ltr">+201234567890</span>
             </a>
-            <a className="flex items-center gap-2 font-semibold hover:text-tertiary transition" href="mailto:mohabx116@gmail.com">
+            <a className="flex items-center gap-2 font-semibold hover:text-tertiary transition" href="mailto:dalilsubhi@gmail.com">
               <Mail className="h-4 w-4 text-tertiary" />
-              <span dir="ltr">mohabx116@gmail.com</span>
+              <span dir="ltr">dalilsubhi@gmail.com</span>
             </a>
           </div>
           <div className="space-y-3">
