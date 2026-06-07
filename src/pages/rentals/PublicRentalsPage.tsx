@@ -14,13 +14,13 @@ import {
   getOptimizedListingImageUrl,
   listingStatusLabels,
   listingTypeLabels,
-  publicCompoundName,
   publicRentalBrand,
   publicRentalText,
   toNumber,
 } from './rental-format';
 
 const heroImage = '/hero-compound.png';
+const publicRentalCardLocation = 'كمبوند السبحي-حدائق العاشر من رمضان';
 
 function buildQuery(searchParams: URLSearchParams): RentalListingQuery {
   const minRent = searchParams.get('minRent');
@@ -62,11 +62,8 @@ function ListingImageFallback({ title }: { title: string }) {
 function RentalListingCard({ listing }: { listing: RentalListing }) {
   const coverImage = getListingCoverImage(listing);
   const title = publicRentalText(listing.title);
-  const location = publicRentalText(
-    listing.locationText ?? listing.addressText ?? listing.compound?.address,
-    publicRentalBrand.compoundAr,
-  );
-  const compoundName = publicCompoundName(listing.compound?.name);
+  const location = publicRentalCardLocation;
+  const compoundName = publicRentalBrand.compoundAr;
   const depositAmount = toNumber(listing.depositAmount);
 
   return (
