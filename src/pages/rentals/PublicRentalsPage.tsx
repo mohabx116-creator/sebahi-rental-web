@@ -182,7 +182,7 @@ export function PublicRentalsPage() {
     queryKey: ['rentals', 'public', 'listings', query],
     queryFn: () => rentalApiService.getPublicRentalListings(query),
     placeholderData: (previousData) => previousData,
-    refetchInterval: 30000,
+    refetchInterval: 15000,
     refetchIntervalInBackground: false,
     refetchOnWindowFocus: true,
     refetchOnReconnect: true,
