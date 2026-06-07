@@ -23,7 +23,6 @@ import {
   furnishingLabels,
   getListingCoverImage,
   getListingImageAlt,
-  getOptimizedListingImageUrl,
   listingStatusLabels,
   listingTypeLabels,
   publicCompoundName,
@@ -93,6 +92,36 @@ export function PublicRentalDetailPage() {
   }, [slug]);
 
   useEffect(() => {
+    if (gallery.length <= 1) return;
+
+    const prevIndex = (selectedImageIndex - 1 + gallery.length) % gallery.length;
+    const nextIndex = (selectedImageIndex + 1) % gallery.length;
+
+    const prevImg = gallery[prevIndex];
+    const nextImg = gallery[nextIndex];
+
+    if (prevImg) {
+      const prevUrl = prevImg.optimizedUrls
+        ? (prevImg.optimizedUrls.card ?? prevImg.optimizedUrls.hero ?? prevImg.url)
+        : prevImg.url;
+      if (prevUrl) {
+        const img = new Image();
+        img.src = prevUrl;
+      }
+    }
+
+    if (nextImg) {
+      const nextUrl = nextImg.optimizedUrls
+        ? (nextImg.optimizedUrls.card ?? nextImg.optimizedUrls.hero ?? nextImg.url)
+        : nextImg.url;
+      if (nextUrl) {
+        const img = new Image();
+        img.src = nextUrl;
+      }
+    }
+  }, [selectedImageIndex, gallery]);
+
+  useEffect(() => {
     if (!isLightboxOpen || gallery.length === 0) return;
 
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -157,6 +186,11 @@ export function PublicRentalDetailPage() {
   ];
 
   const activeImage = gallery[selectedImageIndex] || coverImage;
+  const activeImageUrl = activeImage
+    ? (activeImage.optimizedUrls
+      ? (activeImage.optimizedUrls.card ?? activeImage.optimizedUrls.hero ?? activeImage.url)
+      : activeImage.url)
+    : '';
 
   return (
     <main className="pb-16 text-fixed">
@@ -175,12 +209,14 @@ export function PublicRentalDetailPage() {
                   onClick={() => setIsLightboxOpen(true)}
                 >
                   <DetailImageFallback title={title} />
-                  {activeImage && (
+                  {activeImageUrl && (
                     <img
                       alt={getListingImageAlt(listing, activeImage)}
                       className="relative h-full w-full object-cover transition duration-300 group-hover:opacity-90"
                       decoding="async"
-                      src={getOptimizedListingImageUrl(activeImage, 'hero')}
+                      loading="eager"
+                      src={activeImageUrl}
+                      {...{ fetchPriority: 'high' }}
                       onError={(event) => {
                         event.currentTarget.style.display = 'none';
                       }}
@@ -234,30 +270,35 @@ export function PublicRentalDetailPage() {
 
               {gallery.length > 1 && (
                 <div className="flex gap-2 sm:gap-3 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-white/10 snap-x">
-                  {gallery.map((image, index) => (
-                    <button
-                      key={image.id}
-                      aria-label={`عرض الصورة ${index + 1}`}
-                      className={cn(
-                        "relative shrink-0 aspect-[4/3] w-24 sm:w-28 rounded-2xl overflow-hidden border-2 bg-surface-dim snap-start transition",
-                        selectedImageIndex === index
-                          ? "border-tertiary shadow-lg shadow-tertiary/20 scale-95"
-                          : "border-outline/50 hover:border-white/30"
-                      )}
-                      onClick={() => setSelectedImageIndex(index)}
-                    >
-                      <img
-                        alt={getListingImageAlt(listing, image)}
-                        className="h-full w-full object-cover"
-                        decoding="async"
-                        loading="lazy"
-                        src={getOptimizedListingImageUrl(image, 'thumbnail')}
-                        onError={(event) => {
-                          event.currentTarget.style.display = 'none';
-                        }}
-                      />
-                    </button>
-                  ))}
+                  {gallery.map((image, index) => {
+                    const thumbUrl = image.optimizedUrls
+                      ? (image.optimizedUrls.thumbnail ?? image.url)
+                      : image.url;
+                    return (
+                      <button
+                        key={image.id}
+                        aria-label={`عرض الصورة ${index + 1}`}
+                        className={cn(
+                          "relative shrink-0 aspect-[4/3] w-24 sm:w-28 rounded-2xl overflow-hidden border-2 bg-surface-dim snap-start transition",
+                          selectedImageIndex === index
+                            ? "border-tertiary shadow-lg shadow-tertiary/20 scale-95"
+                            : "border-outline/50 hover:border-white/30"
+                        )}
+                        onClick={() => setSelectedImageIndex(index)}
+                      >
+                        <img
+                          alt={getListingImageAlt(listing, image)}
+                          className="h-full w-full object-cover"
+                          decoding="async"
+                          loading="lazy"
+                          src={thumbUrl}
+                          onError={(event) => {
+                            event.currentTarget.style.display = 'none';
+                          }}
+                        />
+                      </button>
+                    );
+                  })}
                 </div>
               )}
             </div>
@@ -386,7 +427,9 @@ export function PublicRentalDetailPage() {
             <img
               alt={getListingImageAlt(listing, activeImage)}
               className="max-h-[85vh] max-w-[90vw] object-contain rounded-2xl shadow-2xl border border-white/5"
-              src={getOptimizedListingImageUrl(activeImage, 'hero')}
+              decoding="async"
+              loading="eager"
+              src={activeImage.optimizedUrls ? (activeImage.optimizedUrls.hero ?? activeImage.url) : activeImage.url}
             />
             {gallery.length > 1 && (
               <div className="absolute bottom-[-40px] left-1/2 -translate-x-1/2 text-sm font-bold text-white/75 bg-black/40 px-3 py-1 rounded-full backdrop-blur-sm">
