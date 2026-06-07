@@ -103,7 +103,9 @@ function ContactImageFallback({ title }: { title: string }) {
 export function PublicRentalContactPage() {
   const { slug } = useParams();
   const [isSubmitPending, setIsSubmitPending] = useState(false);
+  const [inquiryPrepared, setInquiryPrepared] = useState(false);
   const [inquirySuccess, setInquirySuccess] = useState(false);
+  const [formValues, setFormValues] = useState<ContactFormValues | null>(null);
   const [copied, setCopied] = useState(false);
   const [copiedAgain, setCopiedAgain] = useState(false);
   const [generatedMessage, setGeneratedMessage] = useState('');
@@ -135,9 +137,9 @@ export function PublicRentalContactPage() {
   const coverImage = listing ? getListingCoverImage(listing) : null;
 
   const onSubmit = handleSubmit(async (values) => {
-    if (!listing || isSubmitPending) return;
+    if (!listing) return;
     setSubmitError(null);
-    setIsSubmitPending(true);
+    setFormValues(values);
 
     const messageText = generateMessageContent({
       tenantName: values.tenantName,
@@ -146,41 +148,11 @@ export function PublicRentalContactPage() {
       listing,
     });
 
-    try {
-      await rentalApiService.createRentalInquiry(listing.id, {
-        tenantName: values.tenantName,
-        tenantPhone: values.tenantPhone,
-        tenantNationalId: values.tenantNationalId,
-        message: messageText,
-      });
+    setGeneratedMessage(messageText);
+    setInquiryPrepared(true);
 
-      setGeneratedMessage(messageText);
-      setInquirySuccess(true);
-
-      const copySuccess = await copyToClipboard(messageText);
-      setCopied(copySuccess);
-
-      window.open('https://chat.whatsapp.com/ECEZfbsvjlU43eDvKa9XUu', '_blank');
-    } catch (error) {
-      console.error(error);
-      let errorMessage = 'تعذر إرسال الطلب. حاول مرة أخرى.';
-      if (error instanceof ApiClientError) {
-        if (
-          error.status === 409 ||
-          error.status === 410 ||
-          error.message?.includes('not available') ||
-          error.message?.includes('unavailable') ||
-          error.message?.includes('متاحة')
-        ) {
-          errorMessage = 'هذه الوحدة لم تعد متاحة حاليًا.';
-        } else if (error.message) {
-          errorMessage = error.message;
-        }
-      }
-      setSubmitError(errorMessage);
-    } finally {
-      setIsSubmitPending(false);
-    }
+    const copySuccess = await copyToClipboard(messageText);
+    setCopied(copySuccess);
   });
 
   if (listingQuery.isLoading) {
@@ -286,110 +258,153 @@ export function PublicRentalContactPage() {
                 ))}
               </div>
 
-              {inquirySuccess ? (
+              {inquiryPrepared ? (
                 <div className="mt-7 space-y-6 text-right">
-                  <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-5">
-                    <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500 text-white">
-                      <CheckCircle2 className="h-6 w-6" />
-                    </span>
-                    <h3 className="mt-4 text-xl font-black text-emerald-400">تم إرسال طلبك بنجاح!</h3>
-                    <p className="mt-2 text-sm leading-7 text-fixed-dim">
-                      تم تسجيل طلبك في النظام بنجاح. سيتم التواصل معك عبر الواتساب.
-                    </p>
-                  </div>
-
-                  {copied ? (
-                    <div className="rounded-[24px] border border-emerald-500/30 bg-emerald-500/5 p-5 space-y-4">
-                      <h4 className="text-lg font-black text-emerald-400">تم نسخ رسالة الطلب بنجاح.</h4>
-                      <p className="text-sm leading-6 text-fixed-dim">
-                        تم فتح جروب الواتساب في تبويب جديد. الصق الرسالة داخل الجروب حتى يتمكن فريق الإدارة من متابعة طلبك.
+                  {inquirySuccess ? (
+                    <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-5">
+                      <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500 text-white">
+                        <CheckCircle2 className="h-6 w-6" />
+                      </span>
+                      <h3 className="mt-4 text-xl font-black text-emerald-400">تم تسجيل طلبك وحجز الوحدة مؤقتًا لحين مراجعة الإدارة.</h3>
+                      <p className="mt-2 text-sm leading-7 text-fixed-dim">
+                        سيتم التواصل معك عبر الواتساب.
                       </p>
-
-                      <div className="grid gap-3 sm:grid-cols-3 pt-2">
-                        {[
-                          ['١', 'افتح جروب الواتساب'],
-                          ['٢', 'الصق الرسالة المنسوخة'],
-                          ['٣', 'انتظر رد فريق الإدارة على الخاص'],
-                        ].map(([step, label]) => (
-                          <div className="rounded-2xl bg-emerald-500/10 border border-emerald-500/20 p-3" key={step}>
-                            <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500 text-xs font-black text-white">
-                              {step}
-                            </span>
-                            <p className="mt-2 text-xs font-black leading-5 text-fixed">{label}</p>
-                          </div>
-                        ))}
-                      </div>
-
-                      <div className="flex flex-col gap-3 pt-2">
-                        <a
-                          href="https://chat.whatsapp.com/ECEZfbsvjlU43eDvKa9XUu"
-                          target="_blank"
-                          rel="noreferrer"
-                          className="flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 hover:bg-emerald-600 px-4 py-3 text-sm font-black text-white transition shadow-lg shadow-emerald-500/20"
-                        >
-                          <MessageCircle className="h-5 w-5" />
-                          فتح جروب الواتساب مرة أخرى
-                        </a>
-
-                        <button
-                          type="button"
-                          onClick={async () => {
-                            const ok = await copyToClipboard(generatedMessage);
-                            if (ok) {
-                              setCopiedAgain(true);
-                              setTimeout(() => setCopiedAgain(false), 2000);
-                            }
-                          }}
-                          className="w-full inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 px-4 py-3 text-sm font-bold text-fixed transition cursor-pointer"
-                        >
-                          نسخ الرسالة مرة أخرى
-                        </button>
-                        {copiedAgain && (
-                          <p className="text-center text-xs font-bold text-emerald-400">
-                            تم نسخ الرسالة.
-                          </p>
-                        )}
-                      </div>
                     </div>
                   ) : (
-                    <div className="rounded-[24px] border border-amber-500/30 bg-amber-500/5 p-5 space-y-4">
-                      <h4 className="text-lg font-black text-amber-400">لم يتم النسخ تلقائيًا.</h4>
-                      <p className="text-sm leading-6 text-fixed-dim">
-                        لم يتم النسخ تلقائيًا. انسخ الرسالة يدويًا ثم افتح جروب الواتساب.
+                    <div className="rounded-2xl border border-blue-500/30 bg-blue-500/10 p-5">
+                      <h3 className="text-xl font-black text-blue-400">تم تجهيز طلبك بنجاح.</h3>
+                      {copied ? (
+                        <p className="mt-2 text-sm leading-7 text-emerald-400 font-bold">
+                          تم نسخ رسالة الطلب.
+                        </p>
+                      ) : (
+                        <p className="mt-2 text-sm leading-7 text-amber-400 font-bold">
+                          لم يتم النسخ تلقائيًا.
+                        </p>
+                      )}
+                      <p className="mt-2 text-sm leading-7 text-red-400 font-bold">
+                        تنبيه: لا يتم حجز الوحدة إلا بعد الضغط على زر إرسال الطلب عبر الواتساب.
                       </p>
-
-                      <textarea
-                        readOnly
-                        value={generatedMessage}
-                        className="w-full h-44 rounded-xl border border-outline/20 bg-primary/60 p-3 text-right text-xs font-mono text-fixed focus:ring-0 focus:outline-none"
-                      />
-
-                      <div className="flex flex-col gap-3 pt-2">
-                        <button
-                          type="button"
-                          onClick={async () => {
-                            const ok = await copyToClipboard(generatedMessage);
-                            if (ok) {
-                              setCopied(true);
-                            }
-                          }}
-                          className="w-full inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 px-4 py-3 text-sm font-bold text-fixed transition cursor-pointer"
-                        >
-                          نسخ الرسالة
-                        </button>
-
-                        <a
-                          href="https://chat.whatsapp.com/ECEZfbsvjlU43eDvKa9XUu"
-                          target="_blank"
-                          rel="noreferrer"
-                          className="flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 hover:bg-emerald-600 px-4 py-3 text-sm font-black text-white transition shadow-lg shadow-emerald-500/20"
-                        >
-                          <MessageCircle className="h-5 w-5" />
-                          فتح جروب الواتساب
-                        </a>
-                      </div>
+                      <p className="mt-1 text-sm leading-6 text-fixed-dim">
+                        بعد الضغط على الزر سيتم تسجيل الطلب وفتح جروب الواتساب. الصق الرسالة داخل الجروب حتى يتمكن فريق الإدارة من متابعة طلبك.
+                      </p>
                     </div>
                   )}
+
+                  <div className="rounded-[24px] border border-tertiary/30 bg-tertiary/5 p-5 space-y-4">
+                    <h4 className="text-base font-black text-tertiary">الخطوات التالية الهامة:</h4>
+
+                    <div className="grid gap-3 sm:grid-cols-3 pt-2">
+                      {[
+                        ['١', 'تم تجهيز بيانات الطلب'],
+                        ['٢', 'تم نسخ رسالة الطلب'],
+                        ['٣', 'اضغط إرسال الطلب عبر الواتساب لإكمال الحجز المؤقت'],
+                      ].map(([step, label]) => (
+                        <div className="rounded-2xl bg-tertiary/10 border border-tertiary/20 p-3" key={step}>
+                          <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-tertiary text-xs font-black text-primary">
+                            {step}
+                          </span>
+                          <p className="mt-2 text-xs font-black leading-5 text-fixed">{label}</p>
+                        </div>
+                      ))}
+                    </div>
+
+                    {!copied && (
+                      <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 space-y-2">
+                        <p className="text-xs text-amber-400 font-bold">
+                          لم يتم النسخ تلقائيًا. انسخ الرسالة يدويًا ثم اضغط إرسال الطلب عبر الواتساب.
+                        </p>
+                        <textarea
+                          readOnly
+                          value={generatedMessage}
+                          className="w-full h-32 rounded-xl border border-outline/20 bg-primary/60 p-3 text-right text-xs font-mono text-fixed focus:ring-0 focus:outline-none"
+                        />
+                      </div>
+                    )}
+
+                    {copied && (
+                      <div className="mt-4">
+                        <p className="text-xs text-fixed-dim">الرسالة المنسوخة للمراجعة:</p>
+                        <textarea
+                          readOnly
+                          value={generatedMessage}
+                          className="w-full h-32 rounded-xl border border-outline/20 bg-primary/60 p-3 text-right text-xs font-mono text-fixed focus:ring-0 focus:outline-none mt-1"
+                        />
+                      </div>
+                    )}
+
+                    <div className="flex flex-col gap-3 pt-2">
+                      {submitError && (
+                        <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm font-bold text-error">
+                          {submitError}
+                        </div>
+                      )}
+
+                      <button
+                        type="button"
+                        disabled={isSubmitPending}
+                        onClick={async () => {
+                          if (!listing || isSubmitPending || !formValues) return;
+                          setSubmitError(null);
+                          setIsSubmitPending(true);
+
+                          try {
+                            await rentalApiService.createRentalInquiry(listing.id, {
+                              tenantName: formValues.tenantName,
+                              tenantPhone: formValues.tenantPhone,
+                              tenantNationalId: formValues.tenantNationalId,
+                              message: generatedMessage,
+                            });
+
+                            setInquirySuccess(true);
+                            window.open('https://chat.whatsapp.com/ECEZfbsvjlU43eDvKa9XUu', '_blank');
+                          } catch (error) {
+                            console.error(error);
+                            let errorMessage = 'تعذر إرسال الطلب. حاول مرة أخرى.';
+                            if (error instanceof ApiClientError) {
+                              if (
+                                error.status === 409 ||
+                                error.status === 410 ||
+                                error.message?.includes('not available') ||
+                                error.message?.includes('unavailable') ||
+                                error.message?.includes('متاحة')
+                              ) {
+                                errorMessage = 'هذه الوحدة لم تعد متاحة حاليًا.';
+                              } else if (error.message) {
+                                errorMessage = error.message;
+                              }
+                            }
+                            setSubmitError(errorMessage);
+                          } finally {
+                            setIsSubmitPending(false);
+                          }
+                        }}
+                        className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 hover:bg-emerald-600 px-5 py-4 text-base font-black text-white transition disabled:cursor-not-allowed disabled:opacity-60 shadow-lg shadow-emerald-500/20 cursor-pointer"
+                      >
+                        <MessageCircle className="h-5 w-5" />
+                        {isSubmitPending ? 'جاري إرسال الطلب...' : 'إرسال الطلب عبر الواتساب'}
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          const ok = await copyToClipboard(generatedMessage);
+                          if (ok) {
+                            setCopiedAgain(true);
+                            setTimeout(() => setCopiedAgain(false), 2000);
+                          }
+                        }}
+                        className="w-full inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 px-4 py-3 text-sm font-bold text-fixed transition cursor-pointer"
+                      >
+                        نسخ الرسالة مرة أخرى
+                      </button>
+                      {copiedAgain && (
+                        <p className="text-center text-xs font-bold text-emerald-400 animate-pulse">
+                          تم نسخ الرسالة.
+                        </p>
+                      )}
+                    </div>
+                  </div>
                 </div>
               ) : (
                 <form className="mt-7 space-y-4" onSubmit={onSubmit}>
@@ -438,7 +453,7 @@ export function PublicRentalContactPage() {
                     type="submit"
                   >
                     <MessageCircle className="h-5 w-5 text-primary" />
-                    {isSubmitPending ? 'جاري إرسال الطلب...' : 'تواصل عن طريق الواتساب'}
+                    {isSubmitPending ? 'جاري إرسال الطلب...' : 'إنشاء طلب حجز'}
                   </button>
                 </form>
               )}
