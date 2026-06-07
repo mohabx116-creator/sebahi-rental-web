@@ -42,12 +42,12 @@ export function PublicRentalShell() {
             <p className="mt-1 leading-7 text-fixed-dim/90">منصة امنة لعرض وحدات الإيجار داخل كمبوند السبحي .</p>
             <div className="flex items-center gap-2 font-bold text-secondary-container">
               <ShieldCheck className="h-5 w-5 text-tertiary" />
-              لا يتم عرض بيانات المالك إلا بعد تحقق الدفع من الخادم
+              لا يتم عرض بيانات المالك إلا عن طريق التواصل مع الادارة
             </div>
           </div>
           <div className="space-y-3">
             <p className="text-base font-extrabold text-tertiary">للتواصل والدعم</p>
-            <a className="flex items-center gap-2 font-semibold hover:text-tertiary transition" href="tel:+201234567890">
+            <a className="flex items-center gap-2 font-semibold hover:text-tertiary transition" href="tel:+20123">
               <Phone className="h-4 w-4 text-tertiary" />
               <span dir="ltr">+201234567890</span>
             </a>
@@ -66,7 +66,7 @@ export function PublicRentalShell() {
               <FileText className="h-4 w-4 text-tertiary" />
               سياسة الاسترجاع
             </Link>
-            <span className="block text-xs leading-6 text-fixed-dim/70">سياسة الخصوصية والشروط قيد الإعداد قبل تفعيل المدفوعات.</span>
+            <span className="block text-xs leading-6 text-fixed-dim/70">سياسة الخصوصية والشروط قيد الإعداد .</span>
           </div>
         </div>
       </footer>
