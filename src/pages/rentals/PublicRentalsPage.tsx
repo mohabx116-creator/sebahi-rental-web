@@ -182,6 +182,10 @@ export function PublicRentalsPage() {
     queryKey: ['rentals', 'public', 'listings', query],
     queryFn: () => rentalApiService.getPublicRentalListings(query),
     placeholderData: (previousData) => previousData,
+    refetchInterval: 30000,
+    refetchIntervalInBackground: false,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
   });
 
   const listings = listingsQuery.data?.data ?? [];
@@ -304,7 +308,10 @@ export function PublicRentalsPage() {
         <div className="mb-6 flex items-center justify-between gap-4 border-b border-outline/40 pb-4">
           <h2 className="text-2xl font-black text-fixed">وحدات متاحة للإيجار</h2>
           <p className="text-sm font-bold text-fixed-dim">
-            {listingsQuery.isFetching ? 'جار تحديث النتائج...' : `${new Intl.NumberFormat('ar-EG').format(totalCount)} نتيجة`}
+            <>
+              <span className="ml-2 text-xs text-tertiary/75 font-normal">(يتم تحديث العقارات تلقائيًا)</span>
+              {listingsQuery.isFetching ? 'جار تحديث النتائج...' : `${new Intl.NumberFormat('ar-EG').format(totalCount)} نتيجة`}
+            </>
           </p>
         </div>
 
