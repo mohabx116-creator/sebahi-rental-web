@@ -239,9 +239,9 @@ export function PublicRentalsPage() {
           <div className="rounded-[28px] border border-white/10 bg-white/5 p-6 text-right shadow-2xl backdrop-blur-md">
             <p className="text-sm font-bold text-tertiary">الوحدات المتاحة الآن</p>
             <p className="mt-2 text-5xl font-black text-fixed">{new Intl.NumberFormat('ar-EG').format(totalCount)}</p>
-            <p className="mt-3 text-sm leading-7 text-fixed-dim/80">
-              جميع طلبات فتح التواصل والحجز تمر عبر الخادم. لا نعرض بيانات المالك ولا نؤكد الحجز من الواجهة فقط.
-            </p>
+
+
+
           </div>
         </div>
       </section>
