@@ -105,6 +105,7 @@ export function PublicRentalContactPage() {
   const [isSubmitPending, setIsSubmitPending] = useState(false);
   const [inquirySuccess, setInquirySuccess] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [copiedAgain, setCopiedAgain] = useState(false);
   const [generatedMessage, setGeneratedMessage] = useState('');
   const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -297,48 +298,98 @@ export function PublicRentalContactPage() {
                     </p>
                   </div>
 
-                  <div className="rounded-[24px] border border-tertiary/30 bg-tertiary/5 p-5">
-                    <h4 className="text-base font-black text-tertiary">الخطوة التالية الهامة:</h4>
-                    {copied ? (
-                      <p className="mt-2 text-sm leading-6 text-emerald-400 font-bold">
-                        تم نسخ رسالة الطلب. افتح الواتساب والصق الرسالة داخل الجروب.
+                  {copied ? (
+                    <div className="rounded-[24px] border border-emerald-500/30 bg-emerald-500/5 p-5 space-y-4">
+                      <h4 className="text-lg font-black text-emerald-400">تم نسخ رسالة الطلب بنجاح.</h4>
+                      <p className="text-sm leading-6 text-fixed-dim">
+                        تم فتح جروب الواتساب في تبويب جديد. الصق الرسالة داخل الجروب حتى يتمكن فريق الإدارة من متابعة طلبك.
                       </p>
-                    ) : (
-                      <p className="mt-2 text-sm leading-6 text-amber-400 font-bold">
-                        انسخ الرسالة يدويًا ثم افتح جروب الواتساب.
-                      </p>
-                    )}
 
-                    <div className="mt-4">
+                      <div className="grid gap-3 sm:grid-cols-3 pt-2">
+                        {[
+                          ['١', 'افتح جروب الواتساب'],
+                          ['٢', 'الصق الرسالة المنسوخة'],
+                          ['٣', 'انتظر رد فريق الإدارة على الخاص'],
+                        ].map(([step, label]) => (
+                          <div className="rounded-2xl bg-emerald-500/10 border border-emerald-500/20 p-3" key={step}>
+                            <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500 text-xs font-black text-white">
+                              {step}
+                            </span>
+                            <p className="mt-2 text-xs font-black leading-5 text-fixed">{label}</p>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="flex flex-col gap-3 pt-2">
+                        <a
+                          href="https://chat.whatsapp.com/ECEZfbsvjlU43eDvKa9XUu"
+                          target="_blank"
+                          rel="noreferrer"
+                          className="flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 hover:bg-emerald-600 px-4 py-3 text-sm font-black text-white transition shadow-lg shadow-emerald-500/20"
+                        >
+                          <MessageCircle className="h-5 w-5" />
+                          فتح جروب الواتساب مرة أخرى
+                        </a>
+
+                        <button
+                          type="button"
+                          onClick={async () => {
+                            const ok = await copyToClipboard(generatedMessage);
+                            if (ok) {
+                              setCopiedAgain(true);
+                              setTimeout(() => setCopiedAgain(false), 2000);
+                            }
+                          }}
+                          className="w-full inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 px-4 py-3 text-sm font-bold text-fixed transition cursor-pointer"
+                        >
+                          نسخ الرسالة مرة أخرى
+                        </button>
+                        {copiedAgain && (
+                          <p className="text-center text-xs font-bold text-emerald-400">
+                            تم نسخ الرسالة.
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="rounded-[24px] border border-amber-500/30 bg-amber-500/5 p-5 space-y-4">
+                      <h4 className="text-lg font-black text-amber-400">لم يتم النسخ تلقائيًا.</h4>
+                      <p className="text-sm leading-6 text-fixed-dim">
+                        لم يتم النسخ تلقائيًا. انسخ الرسالة يدويًا ثم افتح جروب الواتساب.
+                      </p>
+
                       <textarea
                         readOnly
                         value={generatedMessage}
                         className="w-full h-44 rounded-xl border border-outline/20 bg-primary/60 p-3 text-right text-xs font-mono text-fixed focus:ring-0 focus:outline-none"
                       />
-                      <button
-                        type="button"
-                        onClick={async () => {
-                          const ok = await copyToClipboard(generatedMessage);
-                          if (ok) {
-                            setCopied(true);
-                          }
-                        }}
-                        className="mt-2 inline-flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 px-4 py-2 text-xs font-bold text-fixed transition cursor-pointer"
-                      >
-                        {copied ? 'تم النسخ بنجاح!' : 'نسخ الرسالة'}
-                      </button>
-                    </div>
 
-                    <a
-                      href="https://chat.whatsapp.com/ECEZfbsvjlU43eDvKa9XUu"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="mt-5 flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 hover:bg-emerald-600 px-5 py-4 text-base font-black text-white transition shadow-lg shadow-emerald-500/20"
-                    >
-                      <MessageCircle className="h-5 w-5" />
-                      فتح جروب الواتساب ولصق الرسالة
-                    </a>
-                  </div>
+                      <div className="flex flex-col gap-3 pt-2">
+                        <button
+                          type="button"
+                          onClick={async () => {
+                            const ok = await copyToClipboard(generatedMessage);
+                            if (ok) {
+                              setCopied(true);
+                            }
+                          }}
+                          className="w-full inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 px-4 py-3 text-sm font-bold text-fixed transition cursor-pointer"
+                        >
+                          نسخ الرسالة
+                        </button>
+
+                        <a
+                          href="https://chat.whatsapp.com/ECEZfbsvjlU43eDvKa9XUu"
+                          target="_blank"
+                          rel="noreferrer"
+                          className="flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 hover:bg-emerald-600 px-4 py-3 text-sm font-black text-white transition shadow-lg shadow-emerald-500/20"
+                        >
+                          <MessageCircle className="h-5 w-5" />
+                          فتح جروب الواتساب
+                        </a>
+                      </div>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <form className="mt-7 space-y-4" onSubmit={onSubmit}>
