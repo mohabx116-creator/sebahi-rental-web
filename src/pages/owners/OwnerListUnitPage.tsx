@@ -60,6 +60,7 @@ function optionalNumber(value: unknown) {
 }
 
 function furnishingStatusForCondition(condition: OwnerSubmissionFormValues['unitCondition']): RentalFurnishingStatus {
+  if (condition === 'سوبر لوكس') return 'FURNISHED';
   if (condition === 'مفروشة') return 'FURNISHED';
   return 'UNFURNISHED';
 }

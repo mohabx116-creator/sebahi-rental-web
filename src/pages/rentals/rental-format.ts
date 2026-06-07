@@ -24,8 +24,8 @@ export const listingTypeLabels: Record<RentalListingType, string> = {
 };
 
 export const furnishingLabels: Record<RentalFurnishingStatus, string> = {
-  UNFURNISHED: 'غير مفروشة',
-  SEMI_FURNISHED: 'نصف مفروشة',
+  UNFURNISHED: 'فاضية',
+  SEMI_FURNISHED: 'فاضية',
   FURNISHED: 'مفروشة',
 };
 
