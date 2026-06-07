@@ -31,6 +31,7 @@ import {
   furnishingLabels,
   getListingCoverImage,
   getListingImageAlt,
+  getOptimizedListingImageUrl,
   listingStatusLabels,
   listingTypeLabels,
   publicCompoundName,
@@ -229,7 +230,9 @@ export function PublicRentalContactPage() {
                   <img
                     alt={getListingImageAlt(listing, coverImage)}
                     className="relative h-full w-full object-cover"
-                    src={coverImage.url}
+                    decoding="async"
+                    loading="lazy"
+                    src={getOptimizedListingImageUrl(coverImage, 'card')}
                     onError={(event) => {
                       event.currentTarget.style.display = 'none';
                     }}

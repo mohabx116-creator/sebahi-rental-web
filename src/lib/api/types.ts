@@ -60,6 +60,11 @@ export interface RentalUnitPublicSummary {
 export interface RentalListingImage {
   id: string;
   url: string;
+  optimizedUrls?: {
+    card: string;
+    hero: string;
+    thumbnail: string;
+  };
   altText?: string | null;
   sortOrder: number;
   isCover: boolean;

@@ -30,6 +30,7 @@ import {
   furnishingLabels,
   getListingCoverImage,
   getListingImageAlt,
+  getOptimizedListingImageUrl,
   listingStatusLabels,
   listingTypeLabels,
   publicCompoundName,
@@ -224,7 +225,8 @@ export function PublicRentalDetailPage() {
                     <img
                       alt={getListingImageAlt(listing, coverImage)}
                       className="relative h-full w-full object-cover"
-                      src={coverImage.url}
+                      decoding="async"
+                      src={getOptimizedListingImageUrl(coverImage, 'hero')}
                       onError={(event) => {
                         event.currentTarget.style.display = 'none';
                       }}
@@ -258,7 +260,9 @@ export function PublicRentalDetailPage() {
                       key={image.id}
                       alt={getListingImageAlt(listing, image)}
                       className="aspect-[4/3] rounded-2xl border border-outline/50 object-cover shadow-md"
-                      src={image.url}
+                      decoding="async"
+                      loading="lazy"
+                      src={getOptimizedListingImageUrl(image, 'thumbnail')}
                       onError={(event) => {
                         event.currentTarget.style.display = 'none';
                       }}

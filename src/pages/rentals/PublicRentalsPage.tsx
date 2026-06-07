@@ -11,6 +11,7 @@ import {
   furnishingLabels,
   getListingCoverImage,
   getListingImageAlt,
+  getOptimizedListingImageUrl,
   listingStatusLabels,
   listingTypeLabels,
   publicCompoundName,
@@ -82,7 +83,9 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
             <img
               alt={getListingImageAlt(listing, coverImage)}
               className="relative h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-              src={coverImage.url}
+              decoding="async"
+              loading="lazy"
+              src={getOptimizedListingImageUrl(coverImage, 'card')}
               onError={(event) => {
                 event.currentTarget.style.display = 'none';
               }}
@@ -186,6 +189,7 @@ export function PublicRentalsPage() {
 
   const listings = listingsQuery.data?.data ?? [];
   const visibleListings = [...listings].sort((a, b) => Number(b.isFeatured) - Number(a.isFeatured));
+  const paginationMeta = listingsQuery.data?.meta;
   const totalCount = listingsQuery.data?.meta?.totalCount ?? listings.length;
   let activeFilters = 0;
   searchParams.forEach((value) => {
@@ -334,21 +338,40 @@ export function PublicRentalsPage() {
         )}
 
         {visibleListings.length > 0 && (
-          <div
-            className={cn(
-              'grid gap-6 w-full',
-              visibleListings.length === 1
-                ? 'grid-cols-1 max-w-[430px] mx-auto'
-                : visibleListings.length === 2
-                ? 'grid-cols-1 md:grid-cols-2 max-w-[900px] mx-auto'
-                : 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3 max-w-7xl mx-auto',
-              listingsQuery.isFetching && 'opacity-80'
+          <>
+            <div
+              className={cn(
+                'grid gap-6 w-full',
+                visibleListings.length === 1
+                  ? 'grid-cols-1 max-w-[430px] mx-auto'
+                  : visibleListings.length === 2
+                  ? 'grid-cols-1 md:grid-cols-2 max-w-[900px] mx-auto'
+                  : 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3 max-w-7xl mx-auto',
+                listingsQuery.isFetching && 'opacity-80'
+              )}
+            >
+              {visibleListings.map((listing) => (
+                <RentalListingCard key={listing.id} listing={listing} />
+              ))}
+            </div>
+            {paginationMeta?.hasNextPage && (
+              <div className="mt-8 flex justify-center">
+                <Link
+                  className="inline-flex min-h-12 items-center justify-center rounded-full border border-outline bg-white/5 px-7 py-3 text-sm font-black text-fixed shadow-lg transition hover:bg-white/10"
+                  to={{
+                    pathname: ROUTES.RENTALS,
+                    search: (() => {
+                      const next = new URLSearchParams(searchParams);
+                      next.set('page', String((paginationMeta.page ?? query.page ?? 1) + 1));
+                      return next.toString();
+                    })(),
+                  }}
+                >
+                  تحميل المزيد
+                </Link>
+              </div>
             )}
-          >
-            {visibleListings.map((listing) => (
-              <RentalListingCard key={listing.id} listing={listing} />
-            ))}
-          </div>
+          </>
         )}
       </section>
     </main>

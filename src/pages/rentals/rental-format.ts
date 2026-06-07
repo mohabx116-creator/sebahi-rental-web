@@ -108,7 +108,7 @@ export function sortListingImages(listingOrImages: RentalListing | RentalListing
 
   return [...(images ?? [])]
     .filter((image) => image.url.trim().length > 0)
-    .sort((a, b) => a.sortOrder - b.sortOrder);
+    .sort((a, b) => Number(b.isCover) - Number(a.isCover) || a.sortOrder - b.sortOrder);
 }
 
 export function getListingCoverImage(listing: RentalListing | null | undefined) {
@@ -118,4 +118,28 @@ export function getListingCoverImage(listing: RentalListing | null | undefined) 
 
 export function getListingImageAlt(listing: RentalListing, image: RentalListingImage | null | undefined) {
   return publicRentalText(image?.altText, `صورة ${publicRentalText(listing.title, 'وحدة للإيجار في كمباوند السبحي')}`);
+}
+
+type RentalImageVariant = 'card' | 'hero' | 'thumbnail';
+
+const cloudinaryTransforms: Record<RentalImageVariant, string> = {
+  card: 'f_auto,q_auto,w_600,c_limit',
+  hero: 'f_auto,q_auto,w_1200,c_limit',
+  thumbnail: 'f_auto,q_auto,w_300,c_limit',
+};
+
+function transformCloudinaryImageUrl(url: string, variant: RentalImageVariant) {
+  if (!url.includes('res.cloudinary.com') || !url.includes('/upload/')) {
+    return url;
+  }
+
+  return url.replace('/upload/', `/upload/${cloudinaryTransforms[variant]}/`);
+}
+
+export function getOptimizedListingImageUrl(
+  image: RentalListingImage | null | undefined,
+  variant: RentalImageVariant,
+) {
+  if (!image?.url) return '';
+  return image.optimizedUrls?.[variant] ?? transformCloudinaryImageUrl(image.url, variant);
 }

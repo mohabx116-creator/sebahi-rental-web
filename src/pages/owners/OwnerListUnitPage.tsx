@@ -13,6 +13,10 @@ import { furnishingLabels, listingTypeLabels, publicRentalBrand } from '../renta
 
 const optionalEmail = z.string().trim().email('اكتب بريد إلكتروني صحيح').optional().or(z.literal(''));
 
+const MAX_OWNER_IMAGES = 8;
+const MAX_OWNER_IMAGE_BYTES = 5 * 1024 * 1024;
+const ALLOWED_OWNER_IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
+
 const ownerSubmissionSchema = z.object({
   ownerName: z.string().trim().min(2, 'اكتب اسم المالك'),
   ownerPhone: z.string().trim().min(5, 'اكتب رقم موبايل صحيح'),
@@ -48,6 +52,16 @@ function getUploadErrorMessage(error: unknown) {
   return 'تعذر رفع الصورة. حاول مرة أخرى أو تواصل مع الدعم.';
 }
 
+function validateOwnerImageFile(file: File) {
+  if (!ALLOWED_OWNER_IMAGE_TYPES.has(file.type)) {
+    throw new Error('نوع الصورة غير مدعوم. استخدم JPG أو PNG أو WebP فقط.');
+  }
+
+  if (file.size > MAX_OWNER_IMAGE_BYTES) {
+    throw new Error('حجم الصورة يجب ألا يتجاوز 5 ميجابايت.');
+  }
+}
+
 export function OwnerListUnitPage() {
   const [images, setImages] = useState<OwnerSubmissionImageInput[]>([]);
   const [uploadError, setUploadError] = useState('');
@@ -77,7 +91,12 @@ export function OwnerListUnitPage() {
   });
 
   async function uploadImage(file: File, sortOrder: number) {
+    validateOwnerImageFile(file);
     const signature = await createCloudinaryUploadSignature();
+    if (!signature.uploadUrl || !signature.fields) {
+      throw new Error('إعدادات رفع الصور غير مكتملة في الخادم.');
+    }
+
     const formData = new FormData();
     formData.append('file', file);
     Object.entries(signature.fields).forEach(([key, value]) => {
@@ -93,9 +112,15 @@ export function OwnerListUnitPage() {
       throw new Error('تعذر رفع الصورة إلى خدمة التخزين.');
     }
 
-    const result = await response.json() as { secure_url?: string; public_id?: string };
+    const result = await response.json() as { secure_url?: string; public_id?: string; bytes?: number; resource_type?: string };
     if (!result.secure_url) {
       throw new Error('خدمة التخزين لم ترجع رابط صورة صالحا.');
+    }
+    if (result.resource_type && result.resource_type !== 'image') {
+      throw new Error('خدمة التخزين لم ترجع ملف صورة صالحا.');
+    }
+    if (result.bytes && result.bytes > MAX_OWNER_IMAGE_BYTES) {
+      throw new Error('حجم الصورة المرفوعة تجاوز الحد المسموح.');
     }
 
     return {
@@ -110,14 +135,31 @@ export function OwnerListUnitPage() {
   async function handleImageFiles(files: FileList | null) {
     if (!files?.length) return;
     setUploadError('');
+    const selectedFiles = Array.from(files);
+    const remainingSlots = MAX_OWNER_IMAGES - images.length;
+    if (remainingSlots <= 0) {
+      setUploadError('لا يمكن رفع أكثر من 8 صور للوحدة.');
+      return;
+    }
+    if (selectedFiles.length > remainingSlots) {
+      setUploadError(`يمكنك إضافة ${remainingSlots} صورة فقط لإكمال حد 8 صور.`);
+      return;
+    }
+    try {
+      selectedFiles.forEach(validateOwnerImageFile);
+    } catch (error) {
+      setUploadError(getUploadErrorMessage(error));
+      return;
+    }
+
     setIsUploading(true);
     try {
       const nextImages: OwnerSubmissionImageInput[] = [];
-      for (const file of Array.from(files)) {
+      for (const file of selectedFiles) {
         nextImages.push(await uploadImage(file, images.length + nextImages.length));
       }
       setImages((current) => {
-        const merged = [...current, ...nextImages].slice(0, 20);
+        const merged = [...current, ...nextImages].slice(0, MAX_OWNER_IMAGES);
         if (!merged.some((image) => image.isCover) && merged[0]) {
           merged[0] = { ...merged[0], isCover: true };
         }
@@ -316,7 +358,7 @@ export function OwnerListUnitPage() {
                 <input
                   className="sr-only"
                   type="file"
-                  accept="image/*"
+                  accept="image/jpeg,image/png,image/webp"
                   multiple
                   disabled={isPending}
                   onChange={(event) => void handleImageFiles(event.target.files)}
@@ -333,7 +375,7 @@ export function OwnerListUnitPage() {
                 <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                   {images.map((image, index) => (
                     <div key={image.url} className="overflow-hidden rounded-2xl border border-outline bg-primary/45">
-                      <img alt={image.altText ?? 'صورة الوحدة'} src={image.url} className="aspect-[4/3] w-full object-cover" />
+                      <img alt={image.altText ?? 'صورة الوحدة'} src={image.url} className="aspect-[4/3] w-full object-cover" decoding="async" loading="lazy" />
                       <div className="flex items-center justify-between gap-2 p-3">
                         <button type="button" onClick={() => markCover(index)} className={image.isCover ? "rounded-full bg-secondary/35 border border-secondary/20 px-3 py-1 text-xs font-black text-white" : "rounded-full bg-white/5 border border-white/10 px-3 py-1 text-xs font-black text-fixed hover:bg-white/10"}>
                           {image.isCover ? 'صورة الغلاف' : 'اختيار كغلاف'}
