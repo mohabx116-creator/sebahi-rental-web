@@ -1,4 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { ScrollToTop } from '../components/layout/ScrollToTop';
 import { PublicRentalShell } from '../components/layout/PublicRentalShell';
 import { ROUTES } from '../lib/constants/routes';
 import { NotFoundPage } from '../pages/NotFoundPage';
@@ -12,6 +13,7 @@ import { PublicRentalsPage } from '../pages/rentals/PublicRentalsPage';
 export function AppRouter() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route element={<PublicRentalShell />}>
           <Route index element={<Navigate to={ROUTES.RENTALS} replace />} />
