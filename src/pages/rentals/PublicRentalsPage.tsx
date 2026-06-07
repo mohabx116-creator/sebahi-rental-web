@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft, Bath, BedDouble, Building2, Filter, Home, MapPin, ShieldCheck, Sparkles } from 'lucide-react';
+import { ArrowLeft, Bath, BedDouble, Building2, Check, Filter, Home, MapPin, ShieldCheck, Sparkles } from 'lucide-react';
 import type { FormEvent } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { rentalApiService } from '../../lib/api/rental-service';
@@ -284,7 +284,9 @@ export function PublicRentalsPage() {
                   <span className="mt-1 block text-sm font-bold text-fixed-dim">اعرض الإعلانات المميزة أولًا</span>
                 </span>
               </span>
-              <span className="h-7 w-7 rounded-full border-2 border-outline bg-white/5 transition peer-checked:border-tertiary peer-checked:bg-tertiary" />
+              <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-outline bg-white/5 text-primary transition peer-checked:border-tertiary peer-checked:bg-tertiary peer-checked:[&>svg]:opacity-100">
+                <Check className="h-5 w-5 opacity-0 transition" />
+              </span>
             </span>
           </label>
           <div className="mt-4 flex justify-end gap-2">
