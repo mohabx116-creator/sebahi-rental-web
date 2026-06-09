@@ -237,6 +237,8 @@ export interface OwnerSubmissionPublicStatus {
   createdListingId?: string | null;
   createdAt: string;
   updatedAt: string;
+  duplicateReviewFlag?: boolean;
+  reviewReason?: string | null;
   createdListing?: Pick<RentalListing, 'id' | 'title' | 'slug' | 'status'> & { isPublished: boolean } | null;
 }
 

@@ -91,10 +91,34 @@ function validateOwnerImageFile(file: File) {
   }
 }
 
+function buildWhatsAppMessage(values: OwnerSubmissionFormValues, submissionId: string) {
+  const lines = [
+    'طلب إضافة وحدة / شقة للطلاب',
+    '',
+    `رقم الطلب: ${submissionId}`,
+    `الاسم: ${values.ownerName}`,
+    `الهاتف: ${values.ownerPhone}`,
+    `الواتساب: ${values.ownerWhatsapp}`,
+    `المنطقة/الكمبوند: ${publicRentalBrand.compoundAr}`,
+    `نوع الوحدة: شقة`,
+    `حالة الوحدة: ${values.unitCondition}`,
+    `المساحة: ${values.areaSqm} م²`,
+    values.floor !== undefined ? `الدور: ${values.floor}` : null,
+    `عدد الغرف: ${values.bedrooms}`,
+    `إيجار الشقة الشهري: ${values.monthlyRent} ج.م`,
+    values.depositAmount !== undefined ? `التأمين: ${values.depositAmount} ج.م` : null,
+    values.totalBeds !== undefined ? `عدد السراير: ${values.totalBeds}` : null,
+    values.description ? `الوصف: ${values.description}` : null,
+  ].filter((line) => line !== null && line !== undefined);
+
+  return lines.join('\n');
+}
+
 export function OwnerListUnitPage() {
   const [images, setImages] = useState<OwnerSubmissionImageInput[]>([]);
   const [uploadError, setUploadError] = useState('');
   const [isUploading, setIsUploading] = useState(false);
+  const [submittedData, setSubmittedData] = useState<OwnerSubmissionFormValues | null>(null);
 
   const {
     formState: { errors, isSubmitting },
@@ -219,6 +243,8 @@ export function OwnerListUnitPage() {
       return;
     }
 
+    setSubmittedData(values);
+
     await submissionMutation.mutateAsync({
       ownerName: values.ownerName,
       ownerPhone: values.ownerPhone,
@@ -302,15 +328,36 @@ export function OwnerListUnitPage() {
 
         <div className="space-y-6">
           {success && (
-            <section className="rounded-[28px] border border-secondary/35 bg-secondary/20 p-6 text-right">
-              <CheckCircle2 className="h-10 w-10 text-tertiary" />
-              <h2 className="mt-4 text-2xl font-black text-fixed">تم إرسال طلب إعلان وحدتك بنجاح.</h2>
-              <p className="mt-2 text-sm leading-7 text-fixed-dim">
-                رقم الطلب: <span className="font-mono font-black text-tertiary" dir="ltr">{success.id}</span>
-              </p>
-              <p className="mt-2 text-sm leading-7 text-fixed-dim">
-                ستتواصل الإدارة معك لمراجعة البيانات واستكمال خطوات النشر.
-              </p>
+            <section className="rounded-[28px] border border-secondary/35 bg-secondary/20 p-6 text-right space-y-4">
+              <div className="flex items-center gap-3">
+                <CheckCircle2 className="h-10 w-10 text-tertiary shrink-0" />
+                <h2 className="text-2xl font-black text-fixed">تم إرسال طلبك بنجاح</h2>
+              </div>
+              <div className="text-sm leading-7 text-fixed-dim space-y-1">
+                <p>
+                  رقم الطلب: <span className="font-mono font-black text-tertiary" dir="ltr">{success.id}</span>
+                </p>
+                <p>سيتم مراجعته من الإدارة</p>
+                {success.duplicateReviewFlag && (
+                  <p className="font-bold text-error mt-2">
+                    قد يحتاج الطلب إلى مراجعة إضافية بسبب تكرار الرقم القومي.
+                  </p>
+                )}
+              </div>
+              {submittedData && (
+                <div className="pt-2">
+                  <a
+                    href={`https://wa.me/201224591618?text=${encodeURIComponent(
+                      buildWhatsAppMessage(submittedData, success.id)
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-xl bg-tertiary px-5 py-3 text-sm font-black text-primary hover:bg-tertiary/90 transition shadow-md"
+                  >
+                    <span>تواصل عبر الواتساب لتأكيد الطلب (01224591618)</span>
+                  </a>
+                </div>
+              )}
             </section>
           )}
 
