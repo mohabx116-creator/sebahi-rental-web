@@ -212,6 +212,7 @@ export interface CreateOwnerSubmissionInput {
   ownerPhone: string;
   ownerWhatsapp: string;
   ownerNationalId?: string;
+  totalBeds?: number;
   listingType: RentalListingType;
   title?: string;
   description?: string;

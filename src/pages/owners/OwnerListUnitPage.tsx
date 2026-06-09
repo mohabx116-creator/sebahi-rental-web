@@ -35,7 +35,15 @@ const ownerSubmissionSchema = z.object({
   ),
   ownerPhone: z.string().trim().min(5, 'اكتب رقم موبايل صحيح'),
   ownerWhatsapp: z.string().trim().min(5, 'اكتب رقم موبايل صحيح'),
-  ownerNationalId: z.string().trim().optional(),
+  ownerNationalId: z
+    .string()
+    .trim()
+    .min(1, 'الرقم القومي للمالك مطلوب')
+    .regex(/^[0-9]{14}$/, 'الرقم القومي يجب أن يكون 14 رقمًا باللغة الإنجليزية.'),
+  totalBeds: z.preprocess(
+    (value) => (value === '' || value === null || value === undefined ? 4 : Number(value)),
+    z.number().int().min(1, 'عدد السراير يجب أن يكون 1 على الأقل').max(20, 'عدد السراير لا يمكن أن يتجاوز 20'),
+  ),
   unitCondition: z.enum(unitConditionOptions),
   floor: z.preprocess(optionalNumber, z.number().int().optional()),
   areaSqm: requiredPositiveNumber('اكتب مساحة صحيحة'),
@@ -98,6 +106,7 @@ export function OwnerListUnitPage() {
     defaultValues: {
       unitCondition: 'سوبر لوكس',
       policyAccepted: false,
+      totalBeds: 4,
     },
   });
 
@@ -214,7 +223,8 @@ export function OwnerListUnitPage() {
       ownerName: values.ownerName,
       ownerPhone: values.ownerPhone,
       ownerWhatsapp: values.ownerWhatsapp,
-      ownerNationalId: values.ownerNationalId || undefined,
+      ownerNationalId: values.ownerNationalId,
+      totalBeds: values.totalBeds,
       listingType: 'APARTMENT',
       furnishingStatus: furnishingStatusForCondition(values.unitCondition),
       unitCondition: values.unitCondition,
@@ -316,8 +326,14 @@ export function OwnerListUnitPage() {
                 <Field label="رقم الواتساب" error={errors.ownerWhatsapp?.message}>
                   <input {...register('ownerWhatsapp')} dir="ltr" disabled={isPending} className="form-input" />
                 </Field>
-                <Field label="الرقم القومي اختياري">
-                  <input {...register('ownerNationalId')} dir="ltr" disabled={isPending} className="form-input" />
+                <Field label="الرقم القومي للمالك" error={errors.ownerNationalId?.message}>
+                  <input
+                    {...register('ownerNationalId')}
+                    placeholder="14 رقم باللغة الإنجليزية"
+                    dir="ltr"
+                    disabled={isPending}
+                    className="form-input"
+                  />
                 </Field>
               </div>
             </FormSection>
@@ -345,6 +361,10 @@ export function OwnerListUnitPage() {
                 </Field>
                 <Field label="التأمين" error={errors.depositAmount?.message}>
                   <input type="number" {...register('depositAmount')} disabled={isPending} className="form-input" />
+                </Field>
+                <Field label="عدد السراير" error={errors.totalBeds?.message}>
+                  <input type="number" {...register('totalBeds')} disabled={isPending} className="form-input" />
+                  <span className="mt-1 block text-xs text-fixed-dim">عدد السراير المتاحة داخل الشقة للطلاب.</span>
                 </Field>
               </div>
               <Field label="الأساسيات">
