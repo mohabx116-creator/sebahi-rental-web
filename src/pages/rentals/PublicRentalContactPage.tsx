@@ -67,7 +67,9 @@ function generateMessageContent({
 }) {
   const listingUrl = `${window.location.origin}/rentals/${listing.slug}`;
   const adminUrl = `https://compound-os-admin.vercel.app/rentals/${listing.id}`;
-  return `طلب تواصل لوحدة سكنية:
+  const availableBeds = listing.availableBeds ?? Math.max((listing.totalBeds ?? 4) - 0 - 0, 0);
+  const totalBeds = listing.totalBeds ?? 4;
+  return `طلب حجز سرير:
 - الاسم بالكامل: ${tenantName}
 - رقم الموبايل: ${tenantPhone}
 - الرقم القومي: ${tenantNationalId}
@@ -77,9 +79,11 @@ function generateMessageContent({
 - رابط الإعلان العام: ${listingUrl}
 - رابط الإعلان في لوحة التحكم:
 ${adminUrl}
-- الإيجار الشهري: ${listing.monthlyRent}
+- إيجار الشقة الشهري: ${listing.monthlyRent}
 - مبلغ التأمين: ${listing.depositAmount}
-- حالة الوحدة: ${listing.unitCondition || 'غير متوفر'}`;
+- حالة الوحدة: ${listing.unitCondition || 'غير متوفر'}
+- السراير المتاحة: ${availableBeds}
+- إجمالي السراير: ${totalBeds}`;
 }
 
 function ContactImageFallback({ title }: { title: string }) {
@@ -225,7 +229,7 @@ export function PublicRentalContactPage() {
                 <h1 className="mt-4 text-2xl font-black leading-9 text-fixed">{title}</h1>
                 <div className="mt-5">
                   <div className="rounded-3xl bg-primary/45 border border-outline/25 p-4">
-                    <p className="text-xs font-bold text-fixed-dim">الايجار الشهري</p>
+                    <p className="text-xs font-bold text-fixed-dim">إيجار الشقة الشهري</p>
                     <p className="mt-1 text-xl font-black text-tertiary">{formatRentalMoney(listing.monthlyRent)}</p>
                   </div>
                 </div>
@@ -265,7 +269,7 @@ export function PublicRentalContactPage() {
                       <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500 text-white">
                         <CheckCircle2 className="h-6 w-6" />
                       </span>
-                      <h3 className="mt-4 text-xl font-black text-emerald-400">تم تسجيل طلبك وحجز الوحدة مؤقتًا لحين مراجعة الإدارة.</h3>
+                      <h3 className="mt-4 text-xl font-black text-emerald-400">تم تسجيل طلبك وحجز سرير مؤقتًا لحين مراجعة الإدارة.</h3>
                       <p className="mt-2 text-sm leading-7 text-fixed-dim">
                         سيتم التواصل معك عبر الواتساب.
                       </p>
@@ -283,7 +287,7 @@ export function PublicRentalContactPage() {
                         </p>
                       )}
                       <p className="mt-2 text-sm leading-7 text-red-400 font-bold">
-                        تنبيه: لا يتم حجز الوحدة إلا بعد الضغط على زر إرسال الطلب عبر الواتساب.
+                        تنبيه: لا يتم حجز السرير إلا بعد الضغط على زر إرسال الطلب عبر الواتساب.
                       </p>
                       <p className="mt-1 text-sm leading-6 text-fixed-dim">
                         بعد الضغط على الزر سيتم تسجيل الطلب وفتح جروب الواتساب. الصق الرسالة داخل الجروب حتى يتمكن فريق الإدارة من متابعة طلبك.
@@ -369,7 +373,7 @@ export function PublicRentalContactPage() {
                                 error.message?.includes('unavailable') ||
                                 error.message?.includes('متاحة')
                               ) {
-                                errorMessage = 'هذه الوحدة لم تعد متاحة حاليًا.';
+                                errorMessage = 'لا توجد سراير متاحة حاليًا لهذا الإعلان.';
                               } else if (error.message) {
                                 errorMessage = error.message;
                               }
@@ -382,7 +386,7 @@ export function PublicRentalContactPage() {
                         className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 hover:bg-emerald-600 px-5 py-4 text-base font-black text-white transition disabled:cursor-not-allowed disabled:opacity-60 shadow-lg shadow-emerald-500/20 cursor-pointer"
                       >
                         <MessageCircle className="h-5 w-5" />
-                        {isSubmitPending ? 'جاري إرسال الطلب...' : 'إرسال الطلب عبر الواتساب'}
+                        {isSubmitPending ? 'جاري إرسال الطلب...' : 'إرسال طلب حجز السرير عبر الواتساب'}
                       </button>
 
                       <button
@@ -453,7 +457,7 @@ export function PublicRentalContactPage() {
                     type="submit"
                   >
                     <MessageCircle className="h-5 w-5 text-primary" />
-                    {isSubmitPending ? 'جاري إرسال الطلب...' : 'إنشاء طلب حجز'}
+                    {isSubmitPending ? 'جاري إرسال الطلب...' : 'إنشاء طلب حجز سرير'}
                   </button>
                 </form>
               )}

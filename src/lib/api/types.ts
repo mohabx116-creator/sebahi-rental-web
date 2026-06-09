@@ -98,6 +98,8 @@ export interface RentalListing {
   expiresAt?: string | null;
   reservedUntil?: string | null;
   createdAt: string;
+  totalBeds?: number;
+  availableBeds?: number;
   images: RentalListingImage[];
   compound?: RentalCompoundPublicSummary | null;
   unit?: RentalUnitPublicSummary | null;

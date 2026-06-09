@@ -305,7 +305,7 @@ export function PublicRentalDetailPage() {
 
             <aside className="self-start rounded-[32px] glass-panel p-5 text-right xl:sticky xl:top-24 xl:p-6">
               <div className="rounded-[26px] bg-secondary p-5 text-white border border-secondary/35 shadow-inner">
-                <p className="text-sm font-bold text-tertiary">الإيجار الشهري</p>
+                <p className="text-sm font-bold text-tertiary">إيجار الشقة الشهري</p>
                 <p className="mt-1 text-4xl font-black leading-tight text-white">{formatRentalMoney(listing.monthlyRent)}</p>
               </div>
 
@@ -331,10 +331,21 @@ export function PublicRentalDetailPage() {
                 ))}
               </div>
 
+              <div className="mt-4 space-y-2 rounded-[24px] border border-outline/40 p-4 bg-white/5 text-sm">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-fixed-dim">السراير المتاحة</span>
+                  <span className="font-black text-emerald-400">{listing.availableBeds ?? Math.max((listing.totalBeds ?? 4) - 0 - 0, 0)}</span>
+                </div>
+                <div className="flex items-center justify-between border-t border-outline/25 pt-2">
+                  <span className="font-bold text-fixed-dim">إجمالي السراير</span>
+                  <span className="font-black text-tertiary">{listing.totalBeds ?? 4}</span>
+                </div>
+              </div>
+
               <div className="mt-5 space-y-3">
                 <Link className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-tertiary hover:bg-tertiary/90 px-5 py-4 text-base font-black text-primary shadow-xl shadow-tertiary/15 transition" to={`/rentals/${listing.slug}/contact`}>
                   <LockKeyhole className="h-5 w-5" />
-                  طلب تواصل وحجز الوحدة
+                  طلب تواصل وحجز سرير
                 </Link>
               </div>
             </aside>
@@ -356,6 +367,8 @@ export function PublicRentalDetailPage() {
               <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">حالة الوحدة</dt><dd className="mt-1 font-black text-tertiary">{listing.unitCondition || furnishingLabels[listing.furnishingStatus]}</dd></div>
               <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">الدور</dt><dd className="mt-1 font-black text-tertiary">{listing.floor ?? 'غير محدد'}</dd></div>
               <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">تاريخ النشر</dt><dd className="mt-1 font-black text-tertiary">{formatRentalDate(listing.publishedAt)}</dd></div>
+              <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">السراير المتاحة</dt><dd className="mt-1 font-black text-emerald-400">{listing.availableBeds ?? Math.max((listing.totalBeds ?? 4) - 0 - 0, 0)}</dd></div>
+              <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">إجمالي السراير</dt><dd className="mt-1 font-black text-tertiary">{listing.totalBeds ?? 4}</dd></div>
             </dl>
           </section>
 

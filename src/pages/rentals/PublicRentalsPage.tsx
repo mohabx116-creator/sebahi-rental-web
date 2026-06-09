@@ -65,6 +65,8 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
   const location = publicRentalCardLocation;
   const compoundName = publicRentalBrand.compoundAr;
   const depositAmount = toNumber(listing.depositAmount);
+  const availableBeds = listing.availableBeds ?? Math.max((listing.totalBeds ?? 4) - 0 - 0, 0);
+  const bedsStatusText = availableBeds > 0 ? `${availableBeds} سرير متاح` : 'غير متاح حاليًا';
 
   return (
     <article
@@ -101,7 +103,7 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
             )}
           </div>
           <div className="absolute inset-x-0 bottom-0 p-4 text-white">
-            <p className="text-xs font-bold text-fixed-dim">الإيجار الشهري</p>
+            <p className="text-xs font-bold text-fixed-dim">إيجار الشقة الشهري</p>
             <p className="text-2xl font-black text-tertiary">{formatRentalMoney(listing.monthlyRent)}</p>
           </div>
         </div>
@@ -122,6 +124,14 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
         <div className="flex flex-wrap items-center gap-2">
           <span className="rounded-full bg-secondary/25 border border-secondary/10 px-3 py-1 text-sm font-bold text-white">{listingTypeLabels[listing.listingType]}</span>
           <span className="rounded-full bg-tertiary/20 border border-tertiary/10 px-3 py-1 text-sm font-bold text-tertiary">{listing.unitCondition || furnishingLabels[listing.furnishingStatus]}</span>
+          <span className={cn(
+            "rounded-full border px-3 py-1 text-sm font-bold",
+            availableBeds > 0 
+              ? "bg-emerald-500/20 border-emerald-500/30 text-emerald-400"
+              : "bg-rose-500/20 border-rose-500/30 text-rose-400"
+          )}>
+            {bedsStatusText}
+          </span>
         </div>
 
         <div className="grid grid-cols-3 gap-2 text-center text-sm text-fixed-dim">
