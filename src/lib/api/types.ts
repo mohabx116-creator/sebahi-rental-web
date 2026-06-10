@@ -80,6 +80,9 @@ export interface RentalListing {
   listingType: RentalListingType;
   furnishingStatus: RentalFurnishingStatus;
   unitCondition?: string | null;
+  isAirConditioned?: boolean;
+  basicFeatures?: string[] | null;
+  extraAmenitiesText?: string | null;
   basics?: string | null;
   amenities?: string | null;
   bedrooms: number;

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft, Bath, BedDouble, Building2, Filter, Home, MapPin, ShieldCheck, Sparkles } from 'lucide-react';
+import { ArrowLeft, BedDouble, Building2, Filter, Home, MapPin, ShieldCheck, Sparkles } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import type { FormEvent } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -138,16 +138,25 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
 
         <div className="grid grid-cols-3 gap-2 text-center text-sm text-fixed-dim">
           <span className="rounded-2xl bg-primary/40 border border-outline-variant/30 px-2 py-3">
-            <BedDouble className="mx-auto mb-1 h-5 w-5 text-tertiary" />
-            {listing.bedrooms} غرف
-          </span>
-          <span className="rounded-2xl bg-primary/40 border border-outline-variant/30 px-2 py-3">
-            <Bath className="mx-auto mb-1 h-5 w-5 text-tertiary" />
-            {listing.bathrooms} حمام
-          </span>
-          <span className="rounded-2xl bg-primary/40 border border-outline-variant/30 px-2 py-3">
             <Building2 className="mx-auto mb-1 h-5 w-5 text-tertiary" />
-            {new Intl.NumberFormat('ar-EG').format(toNumber(listing.areaSqm))} م²
+            {listing.floor != null ? `الدور ${listing.floor}` : `${listing.totalBeds || 4} سراير`}
+          </span>
+          <span className="rounded-2xl bg-primary/40 border border-outline-variant/30 px-2 py-3">
+            <ShieldCheck className="mx-auto mb-1 h-5 w-5 text-tertiary" />
+            {(listing.basicFeatures || []).length >= 7 ? 'الأساسيات مكتملة' : 'أساسيات غير مكتملة'}
+          </span>
+          <span className="rounded-2xl bg-primary/40 border border-outline-variant/30 px-2 py-3">
+            {listing.isAirConditioned ? (
+              <>
+                <Sparkles className="mx-auto mb-1 h-5 w-5 text-tertiary" />
+                مكيفة
+              </>
+            ) : (
+              <>
+                <BedDouble className="mx-auto mb-1 h-5 w-5 text-tertiary" />
+                المتاح {availableBeds} سرير
+              </>
+            )}
           </span>
         </div>
 

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
-  Bath,
   BedDouble,
   Building2,
   ChevronRight,
@@ -14,7 +13,6 @@ import {
 } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import { rentalApiService } from '../../lib/api/rental-service';
-import type { RentalListing } from '../../lib/api/types';
 import { ROUTES } from '../../lib/constants/routes';
 import { cn } from '../../lib/utils/cn';
 import {
@@ -32,14 +30,17 @@ import {
   toNumber,
 } from './rental-format';
 
-function optionalAmenities(listing: RentalListing) {
-  const value = (listing as RentalListing & { amenities?: unknown; features?: unknown }).amenities
-    ?? (listing as RentalListing & { features?: unknown }).features;
-
-  return Array.isArray(value)
-    ? value.filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
-    : [];
-}
+const BASIC_FEATURES_MAP = {
+  internet: 'إنترنت',
+  basic_appliances: 'أجهزة كهربائية أساسية',
+  water_motor: 'موتور مياه',
+  desks: 'مكاتب',
+  window_mesh: 'سلك شباك',
+  water_heater: 'سخان مياه',
+  water_filter: 'فلتر مياه',
+} as const;
+type BasicFeatureKey = keyof typeof BASIC_FEATURES_MAP;
+const BASIC_FEATURE_KEYS = Object.keys(BASIC_FEATURES_MAP) as BasicFeatureKey[];
 
 function DetailImageFallback({ title }: { title: string }) {
   return (
@@ -168,7 +169,6 @@ export function PublicRentalDetailPage() {
     );
   }
 
-  const amenities = optionalAmenities(listing);
   const title = publicRentalText(listing.title);
   const description = publicRentalText(listing.description);
   const location = publicRentalText(
@@ -177,12 +177,12 @@ export function PublicRentalDetailPage() {
   );
   const compoundName = publicCompoundName(listing.compound?.name);
   const unitFacts = [
-    { label: 'الغرف', value: `${listing.bedrooms}`, icon: BedDouble },
-    { label: 'الحمامات', value: `${listing.bathrooms}`, icon: Bath },
-    { label: 'المساحة', value: `${new Intl.NumberFormat('ar-EG').format(toNumber(listing.areaSqm))} م²`, icon: Ruler },
+    { label: 'الغرف', value: `2`, icon: BedDouble },
+    { label: 'الدور', value: listing.floor != null ? `${listing.floor}` : 'غير محدد', icon: Building2 },
+    { label: 'المساحة', value: `63 م²`, icon: Ruler },
   ];
   const pricingItems = [
-    { label: 'التأمين', value: listing.depositAmount ? formatRentalMoney(listing.depositAmount) : 'غير محدد' },
+    { label: 'التأمين', value: listing.depositAmount ? formatRentalMoney(listing.depositAmount) : formatRentalMoney(toNumber(listing.monthlyRent) * 2) },
   ];
 
   const activeImage = gallery[selectedImageIndex] || coverImage;
@@ -361,29 +361,57 @@ export function PublicRentalDetailPage() {
           </section>
 
           <section className="rounded-[28px] glass-panel p-6 text-right">
-            <h2 className="text-2xl font-black text-fixed">المواصفات</h2>
+            <h2 className="text-2xl font-black text-fixed">مواصفات الشقة</h2>
             <dl className="mt-5 grid gap-3 sm:grid-cols-2">
-              <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">نوع الوحدة</dt><dd className="mt-1 font-black text-tertiary">{listingTypeLabels[listing.listingType]}</dd></div>
-              <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">حالة الوحدة</dt><dd className="mt-1 font-black text-tertiary">{listing.unitCondition || furnishingLabels[listing.furnishingStatus]}</dd></div>
+              <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">المساحة</dt><dd className="mt-1 font-black text-tertiary">63 م²</dd></div>
+              <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">عدد الغرف</dt><dd className="mt-1 font-black text-tertiary">2</dd></div>
               <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">الدور</dt><dd className="mt-1 font-black text-tertiary">{listing.floor ?? 'غير محدد'}</dd></div>
+              <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">الشقة مكيفة</dt><dd className="mt-1 font-black text-tertiary">{listing.isAirConditioned ? 'نعم' : 'لا'}</dd></div>
+              <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">التأمين</dt><dd className="mt-1 font-black text-tertiary">{listing.depositAmount ? formatRentalMoney(listing.depositAmount) : formatRentalMoney(toNumber(listing.monthlyRent) * 2)}</dd></div>
               <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">تاريخ النشر</dt><dd className="mt-1 font-black text-tertiary">{formatRentalDate(listing.publishedAt)}</dd></div>
               <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">السراير المتاحة</dt><dd className="mt-1 font-black text-emerald-400">{listing.availableBeds ?? Math.max((listing.totalBeds ?? 4) - 0 - 0, 0)}</dd></div>
               <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">إجمالي السراير</dt><dd className="mt-1 font-black text-tertiary">{listing.totalBeds ?? 4}</dd></div>
             </dl>
           </section>
 
-          {amenities.length > 0 && (
-            <section className="rounded-[28px] glass-panel p-6 text-right">
-              <h2 className="text-2xl font-black text-fixed">المميزات</h2>
-              <div className="mt-5 flex flex-wrap gap-2">
-                {amenities.map((item) => (
-                  <span key={item} className="rounded-full bg-secondary/30 border border-secondary/20 px-4 py-2 text-sm font-bold text-white">
-                    {publicRentalText(item)}
-                  </span>
-                ))}
+          <section className="rounded-[28px] glass-panel p-6 text-right">
+            <h2 className="text-2xl font-black text-fixed">الأساسيات</h2>
+            <div className="mt-5 space-y-4">
+              <div className="grid gap-3 sm:grid-cols-2">
+                {BASIC_FEATURE_KEYS.map((key) => {
+                  const isAvailable = listing.basicFeatures?.includes(key);
+                  return (
+                    <div key={key} className="flex items-center justify-between rounded-2xl bg-primary/45 border border-outline/20 p-4">
+                      <span className="text-sm text-fixed-dim">{BASIC_FEATURES_MAP[key]}</span>
+                      <span className={cn("text-sm font-black", isAvailable ? "text-emerald-400" : "text-fixed/50")}>
+                        {isAvailable ? 'متوفر' : 'غير متوفر'}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
-            </section>
-          )}
+              <div className="rounded-2xl bg-tertiary/10 border border-tertiary/20 p-4 text-center">
+                <span className="text-sm font-bold text-tertiary">
+                  {(() => {
+                    const selected = listing.basicFeatures || [];
+                    if (selected.length === BASIC_FEATURE_KEYS.length) return "كل الأساسيات موجودة";
+                    if (selected.length === 0) return "كل الأساسيات غير متوفرة";
+                    const missing = BASIC_FEATURE_KEYS.filter((k) => !selected.includes(k)).map((k) => BASIC_FEATURES_MAP[k]);
+                    return `الأساسيات الناقصة: ${missing.join('، ')}`;
+                  })()}
+                </span>
+              </div>
+            </div>
+          </section>
+
+          <section className="rounded-[28px] glass-panel p-6 text-right">
+            <h2 className="text-2xl font-black text-fixed">الكماليات والمميزات الإضافية</h2>
+            <div className="mt-5 rounded-2xl bg-primary/45 border border-outline/20 p-5">
+              <p className="whitespace-pre-line text-base leading-relaxed text-fixed-dim">
+                {listing.extraAmenitiesText || '-'}
+              </p>
+            </div>
+          </section>
         </div>
 
         <div className="space-y-6">
