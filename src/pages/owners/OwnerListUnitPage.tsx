@@ -99,6 +99,7 @@ function buildWhatsAppMessage(values: OwnerSubmissionFormValues, submissionId: s
     `الاسم: ${values.ownerName}`,
     `الهاتف: ${values.ownerPhone}`,
     `الواتساب: ${values.ownerWhatsapp}`,
+    `الرقم القومي للمالك: ${values.ownerNationalId}`,
     `المنطقة/الكمبوند: ${publicRentalBrand.compoundAr}`,
     `نوع الوحدة: شقة`,
     `حالة الوحدة: ${values.unitCondition}`,
@@ -108,6 +109,8 @@ function buildWhatsAppMessage(values: OwnerSubmissionFormValues, submissionId: s
     `إيجار الشقة الشهري: ${values.monthlyRent} ج.م`,
     values.depositAmount !== undefined ? `التأمين: ${values.depositAmount} ج.م` : null,
     values.totalBeds !== undefined ? `عدد السراير: ${values.totalBeds}` : null,
+    values.basics ? `الأساسيات: ${values.basics}` : null,
+    values.amenities ? `الكماليات: ${values.amenities}` : null,
     values.description ? `الوصف: ${values.description}` : null,
   ].filter((line) => line !== null && line !== undefined);
 
@@ -119,6 +122,7 @@ export function OwnerListUnitPage() {
   const [uploadError, setUploadError] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const [submittedData, setSubmittedData] = useState<OwnerSubmissionFormValues | null>(null);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
   const {
     formState: { errors, isSubmitting },
@@ -139,6 +143,7 @@ export function OwnerListUnitPage() {
     onSuccess: () => {
       reset();
       setImages([]);
+      setIsSuccessModalOpen(true);
     },
   });
 
@@ -495,6 +500,47 @@ export function OwnerListUnitPage() {
           </form>
         </div>
       </section>
+
+      {isSuccessModalOpen && success && submittedData && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 text-right" dir="rtl">
+          <div className="w-full max-w-lg rounded-[32px] bg-[#1a1d21] border border-white/10 p-6 sm:p-8 shadow-2xl animate-in fade-in zoom-in-95 relative">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/20 mb-6">
+              <CheckCircle2 className="h-8 w-8 text-emerald-500" />
+            </div>
+            <h3 className="text-2xl font-black text-white text-center mb-2">تم تسجيل طلبك بنجاح</h3>
+            <p className="text-base leading-7 text-white/70 text-center mb-6">
+              تم حفظ بيانات الشقة مبدئيًا. لإكمال إرسال الطلب ومراجعته من الإدارة، اضغط على زر واتساب وأرسل الرسالة الجاهزة.
+            </p>
+            
+            <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 mb-6">
+              <p className="text-sm font-bold leading-6 text-amber-500 text-center">
+                مهم: لن يتم اعتبار الطلب مكتملًا للمراجعة إلا بعد إرسال رسالة الواتساب.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-3">
+              <a
+                href={`https://wa.me/201224591618?text=${encodeURIComponent(
+                  buildWhatsAppMessage(submittedData, success.id)
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setIsSuccessModalOpen(false)}
+                className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-[#25D366] hover:bg-[#20bd5a] px-5 py-4 text-base font-black text-white transition shadow-lg shadow-[#25D366]/20"
+              >
+                إرسال رسالة الواتساب الآن
+              </a>
+              <button
+                type="button"
+                onClick={() => setIsSuccessModalOpen(false)}
+                className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 px-4 py-3 text-sm font-bold text-white transition"
+              >
+                سأرسلها لاحقًا
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
