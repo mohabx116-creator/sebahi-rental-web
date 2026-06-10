@@ -66,7 +66,6 @@ function generateMessageContent({
   listing: any;
 }) {
   const listingUrl = `${window.location.origin}/rentals/${listing.slug}`;
-  const adminUrl = `https://compound-os-admin.vercel.app/rentals/${listing.id}`;
   const availableBeds = listing.availableBeds ?? Math.max((listing.totalBeds ?? 4) - 0 - 0, 0);
   const totalBeds = listing.totalBeds ?? 4;
   return `طلب حجز سرير:
@@ -77,8 +76,6 @@ function generateMessageContent({
 - معرف الإعلان (ID): ${listing.id}
 - معرف الوحدة (Unit ID): ${listing.unitId || 'غير متوفر'}
 - رابط الإعلان العام: ${listingUrl}
-- رابط الإعلان في لوحة التحكم:
-${adminUrl}
 - إيجار الشقة الشهري: ${listing.monthlyRent}
 - مبلغ التأمين: ${listing.depositAmount}
 - حالة الوحدة: ${listing.unitCondition || 'غير متوفر'}
