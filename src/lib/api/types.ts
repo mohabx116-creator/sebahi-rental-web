@@ -222,10 +222,11 @@ export interface CreateOwnerSubmissionInput {
   bathrooms: number;
   furnishingStatus?: RentalFurnishingStatus;
   unitCondition?: string;
-  basics?: string;
-  amenities?: string;
+  isAirConditioned?: boolean;
+  basicFeatures?: string[];
+  extraAmenitiesText?: string;
   monthlyRent: number;
-  depositAmount: number;
+  depositAmount?: number;
   images: OwnerSubmissionImageInput[];
   policyAccepted: true;
 }

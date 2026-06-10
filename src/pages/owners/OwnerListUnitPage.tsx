@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { CheckCircle2, FileImage, Home, Loader2, ShieldCheck, Trash2, UploadCloud } from 'lucide-react';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { z } from 'zod';
 import { ApiClientError } from '../../lib/api/api-client';
@@ -10,6 +10,19 @@ import { createCloudinaryUploadSignature, createOwnerSubmission } from '../../li
 import type { OwnerSubmissionImageInput, RentalFurnishingStatus } from '../../lib/api/types';
 import { ROUTES } from '../../lib/constants/routes';
 import { publicRentalBrand } from '../rentals/rental-format';
+
+const BASIC_FEATURES_MAP = {
+  internet: 'إنترنت',
+  basic_appliances: 'أجهزة كهربائية أساسية',
+  water_motor: 'موتور مياه',
+  desks: 'مكاتب',
+  window_mesh: 'سلك شباك',
+  water_heater: 'سخان مياه',
+  water_filter: 'فلتر مياه',
+} as const;
+
+type BasicFeatureKey = keyof typeof BASIC_FEATURES_MAP;
+const BASIC_FEATURE_KEYS = Object.keys(BASIC_FEATURES_MAP) as BasicFeatureKey[];
 
 const MAX_OWNER_IMAGES = 12;
 const MAX_OWNER_IMAGE_BYTES = 5 * 1024 * 1024;
@@ -21,7 +34,6 @@ const unitConditionOptions = [
   'فاضية',
 ] as const;
 
-const requiredPositiveNumber = (message: string) => z.coerce.number().positive(message);
 const requiredNumber = (schema: z.ZodNumber) =>
   z.preprocess(
     (value) => (value === '' || value === null || value === undefined ? undefined : Number(value)),
@@ -45,17 +57,21 @@ const ownerSubmissionSchema = z.object({
     z.number().int().min(1, 'عدد السراير يجب أن يكون 1 على الأقل').max(20, 'عدد السراير لا يمكن أن يتجاوز 20'),
   ),
   unitCondition: z.enum(unitConditionOptions),
-  floor: z.preprocess(optionalNumber, z.number().int().optional()),
-  areaSqm: requiredPositiveNumber('اكتب مساحة صحيحة'),
-  bedrooms: z.coerce.number().int().min(0),
+  floor: requiredNumber(z.number({ error: 'الدور مطلوب.' }).int().min(0).max(50)),
   monthlyRent: requiredNumber(
     z.number({ error: 'الإيجار الشهري مطلوب.' }).positive('اكتب إيجارًا شهريًا صحيحًا'),
   ),
-  depositAmount: requiredNumber(
-    z.number({ error: 'مبلغ التأمين مطلوب.' }).nonnegative('اكتب مبلغ تأمين صحيحًا'),
-  ),
-  basics: z.string().trim().optional(),
-  amenities: z.string().trim().optional(),
+  isAirConditioned: z.boolean().default(false),
+  basicFeatures: z.record(z.string(), z.boolean()).default({
+    internet: true,
+    basic_appliances: true,
+    water_motor: true,
+    desks: true,
+    window_mesh: true,
+    water_heater: true,
+    water_filter: true,
+  }),
+  extraAmenitiesText: z.string().trim().optional(),
   description: z.string().trim().optional(),
   policyAccepted: z.boolean().refine((value) => value === true, 'يجب الموافقة على سياسة الاسترجاع وشروط النشر'),
 });
@@ -63,9 +79,7 @@ const ownerSubmissionSchema = z.object({
 type OwnerSubmissionFormInput = z.input<typeof ownerSubmissionSchema>;
 type OwnerSubmissionFormValues = z.output<typeof ownerSubmissionSchema>;
 
-function optionalNumber(value: unknown) {
-  return value === '' || value === null || value === undefined ? undefined : Number(value);
-}
+
 
 function furnishingStatusForCondition(condition: OwnerSubmissionFormValues['unitCondition']): RentalFurnishingStatus {
   if (condition === 'سوبر لوكس') return 'FURNISHED';
@@ -103,14 +117,21 @@ function buildWhatsAppMessage(values: OwnerSubmissionFormValues, submissionId: s
     `المنطقة/الكمبوند: ${publicRentalBrand.compoundAr}`,
     `نوع الوحدة: شقة`,
     `حالة الوحدة: ${values.unitCondition}`,
-    `المساحة: ${values.areaSqm} م²`,
+    `المساحة: 63 م²`,
     values.floor !== undefined ? `الدور: ${values.floor}` : null,
-    `عدد الغرف: ${values.bedrooms}`,
+    `عدد الغرف: 2`,
     `إيجار الشقة الشهري: ${values.monthlyRent} ج.م`,
-    values.depositAmount !== undefined ? `التأمين: ${values.depositAmount} ج.م` : null,
+    `التأمين: ${values.monthlyRent * 2} ج.م`,
     values.totalBeds !== undefined ? `عدد السراير: ${values.totalBeds}` : null,
-    values.basics ? `الأساسيات: ${values.basics}` : null,
-    values.amenities ? `الكماليات: ${values.amenities}` : null,
+    `الشقة مكيفة: ${values.isAirConditioned ? 'نعم' : 'لا'}`,
+    (() => {
+      const selected = Object.keys(values.basicFeatures || {}).filter(k => values.basicFeatures[k as BasicFeatureKey]) as BasicFeatureKey[];
+      if (selected.length === BASIC_FEATURE_KEYS.length) return "الأساسيات: كلها موجودة";
+      if (selected.length === 0) return "الأساسيات: غير متوفرة";
+      const missing = BASIC_FEATURE_KEYS.filter(k => !selected.includes(k)).map(k => BASIC_FEATURES_MAP[k]);
+      return `الأساسيات: كلها موجودة عدا: ${missing.join('، ')}`;
+    })(),
+    values.extraAmenitiesText ? `الكماليات: ${values.extraAmenitiesText}` : null,
     values.description ? `الوصف: ${values.description}` : null,
   ].filter((line) => line !== null && line !== undefined);
 
@@ -129,14 +150,28 @@ export function OwnerListUnitPage() {
     handleSubmit,
     register,
     reset,
+    control,
   } = useForm<OwnerSubmissionFormInput, unknown, OwnerSubmissionFormValues>({
     resolver: zodResolver(ownerSubmissionSchema),
     defaultValues: {
       unitCondition: 'سوبر لوكس',
       policyAccepted: false,
       totalBeds: 4,
+      isAirConditioned: false,
+      basicFeatures: {
+        internet: true,
+        basic_appliances: true,
+        water_motor: true,
+        desks: true,
+        window_mesh: true,
+        water_heater: true,
+        water_filter: true,
+      },
     },
   });
+
+  const monthlyRentValue = useWatch({ control, name: 'monthlyRent' });
+  const depositAmount = (Number(monthlyRentValue) || 0) * 2;
 
   const submissionMutation = useMutation({
     mutationFn: createOwnerSubmission,
@@ -260,13 +295,11 @@ export function OwnerListUnitPage() {
       furnishingStatus: furnishingStatusForCondition(values.unitCondition),
       unitCondition: values.unitCondition,
       floor: values.floor,
-      areaSqm: values.areaSqm,
-      bedrooms: values.bedrooms,
       bathrooms: 1,
       monthlyRent: values.monthlyRent,
-      depositAmount: values.depositAmount,
-      basics: values.basics || undefined,
-      amenities: values.amenities || undefined,
+      isAirConditioned: values.isAirConditioned,
+      basicFeatures: Object.keys(values.basicFeatures).filter(k => values.basicFeatures[k as BasicFeatureKey]),
+      extraAmenitiesText: values.extraAmenitiesText || undefined,
       description: values.description || undefined,
       images,
       policyAccepted: true,
@@ -399,32 +432,56 @@ export function OwnerListUnitPage() {
                     ))}
                   </select>
                 </Field>
-                <Field label="المساحة بالمتر" error={errors.areaSqm?.message}>
-                  <input type="number" {...register('areaSqm')} disabled={isPending} className="form-input" />
-                </Field>
-                <Field label="الدور" error={errors.floor?.message}>
-                  <input type="number" {...register('floor')} disabled={isPending} className="form-input" />
-                </Field>
-                <Field label="عدد الغرف" error={errors.bedrooms?.message}>
-                  <input type="number" {...register('bedrooms')} disabled={isPending} className="form-input" />
-                </Field>
                 <Field label="الإيجار الشهري" error={errors.monthlyRent?.message}>
                   <input type="number" {...register('monthlyRent')} disabled={isPending} className="form-input" />
                 </Field>
-                <Field label="التأمين" error={errors.depositAmount?.message}>
-                  <input type="number" {...register('depositAmount')} disabled={isPending} className="form-input" />
+                <Field label="التأمين = شهرين من الإيجار">
+                  <input type="number" value={depositAmount} disabled className="form-input opacity-60 cursor-not-allowed bg-primary/20 text-tertiary font-bold" />
                 </Field>
                 <Field label="عدد السراير" error={errors.totalBeds?.message}>
                   <input type="number" {...register('totalBeds')} disabled={isPending} className="form-input" />
                   <span className="mt-1 block text-xs text-fixed-dim">عدد السراير المتاحة داخل الشقة للطلاب.</span>
                 </Field>
+                <Field label="الدور" error={errors.floor?.message}>
+                  <input type="number" {...register('floor')} disabled={isPending} className="form-input" />
+                  <span className="mt-1 block text-xs text-fixed-dim">اكتب رقم الدور فقط، مثال: 3</span>
+                </Field>
               </div>
-              <Field label="الأساسيات">
-                <textarea {...register('basics')} disabled={isPending} className="form-input min-h-24 resize-y" />
-              </Field>
-              <Field label="المميزات والخدمات">
-                <textarea {...register('amenities')} disabled={isPending} className="form-input min-h-24 resize-y" />
-              </Field>
+
+              <div className="rounded-[28px] border border-outline/30 bg-primary/30 p-5 mt-4">
+                <h3 className="text-lg font-black text-fixed mb-4">بيانات ثابتة للوحدة</h3>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <Field label="المساحة بالمتر">
+                    <input value="63" disabled className="form-input opacity-60 cursor-not-allowed" />
+                  </Field>
+                  <Field label="عدد الغرف">
+                    <input value="2" disabled className="form-input opacity-60 cursor-not-allowed" />
+                  </Field>
+                </div>
+              </div>
+
+              <div className="rounded-[28px] border border-outline/30 bg-primary/30 p-5 mt-4 space-y-4">
+                <h3 className="text-lg font-black text-fixed">الأساسيات المتوفرة</h3>
+                <p className="text-xs text-fixed-dim">كل الأساسيات محددة افتراضيًا، لو في حاجة غير متوفرة في الشقة شيل العلامة من أمامها.</p>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {BASIC_FEATURE_KEYS.map((key) => (
+                    <label key={key} className="flex items-center gap-3 text-sm font-bold text-fixed cursor-pointer">
+                      <input type="checkbox" {...register(`basicFeatures.${key}`)} disabled={isPending} className="rounded border-outline bg-primary/45 text-secondary focus:ring-secondary/20 h-5 w-5" />
+                      <span>{BASIC_FEATURES_MAP[key]}</span>
+                    </label>
+                  ))}
+                  <label className="flex items-center gap-3 text-sm font-bold text-fixed cursor-pointer sm:col-span-2 pt-2 border-t border-outline/30 mt-2">
+                    <input type="checkbox" {...register('isAirConditioned')} disabled={isPending} className="rounded border-outline bg-primary/45 text-secondary focus:ring-secondary/20 h-5 w-5" />
+                    <span>الشقة مكيفة</span>
+                  </label>
+                </div>
+              </div>
+
+              <div className="mt-4">
+                <Field label="الكماليات والمميزات الإضافية" error={errors.extraAmenitiesText?.message}>
+                  <textarea {...register('extraAmenitiesText')} disabled={isPending} placeholder="مثال: بلكونة، قريبة من البوابة، فرش جديد، إطلالة مفتوحة..." className="form-input min-h-24 resize-y" />
+                </Field>
+              </div>
               <Field label="وصف إضافي اختياري" error={errors.description?.message}>
                 <textarea {...register('description')} disabled={isPending} className="form-input min-h-32 resize-y" />
               </Field>
