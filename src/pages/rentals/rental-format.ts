@@ -31,10 +31,10 @@ export const furnishingLabels: Record<RentalFurnishingStatus, string> = {
 
 export const listingStatusLabels: Record<RentalListingStatus, string> = {
   DRAFT: 'مسودة',
-  PENDING_PAYMENT: 'بانتظار الدفع',
+  PENDING_PAYMENT: 'طلب قديم قيد المراجعة',
   PENDING_REVIEW: 'بانتظار المراجعة',
   ACTIVE: 'متاحة',
-  PAYMENT_LOCKED: 'دفع قيد المعالجة',
+  PAYMENT_LOCKED: 'طلب قديم قيد المراجعة',
   RESERVED: 'محجوزة',
   RENTED: 'تم التأجير',
   EXPIRED: 'منتهية',
@@ -44,14 +44,14 @@ export const listingStatusLabels: Record<RentalListingStatus, string> = {
 };
 
 export const reservationStatusLabels: Record<RentalReservationStatus, string> = {
-  PENDING_PAYMENT: 'بانتظار الدفع',
-  PAYMENT_LOCKED: 'الدفع قيد التجهيز',
-  PAID_PENDING_CONFIRMATION: 'مدفوعة وتنتظر التأكيد',
+  PENDING_PAYMENT: 'طلب قديم قيد المراجعة',
+  PAYMENT_LOCKED: 'طلب قديم قيد المراجعة',
+  PAID_PENDING_CONFIRMATION: 'طلب قديم ينتظر التأكيد',
   RESERVED: 'محجوزة مؤقتا',
   CONFIRMED: 'مؤكدة',
   CANCELLED: 'ملغاة',
   EXPIRED: 'منتهية',
-  REFUNDED: 'تم رد المبلغ',
+  REFUNDED: 'طلب قديم تم رده',
   REJECTED: 'مرفوضة',
 };
 

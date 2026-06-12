@@ -4,9 +4,7 @@ import {
   CalendarClock,
   CheckCircle2,
   Clock,
-  CreditCard,
   Home,
-  Hourglass,
   ShieldCheck,
   XCircle,
 } from 'lucide-react';
@@ -26,7 +24,7 @@ import {
 
 type ReservationStatus = RentalReservation['status'];
 
-const paymentPendingStatuses: ReservationStatus[] = ['PENDING_PAYMENT', 'PAYMENT_LOCKED'];
+const legacyPaymentStatuses: ReservationStatus[] = ['PENDING_PAYMENT', 'PAYMENT_LOCKED'];
 const positiveStatuses: ReservationStatus[] = ['RESERVED', 'PAID_PENDING_CONFIRMATION', 'CONFIRMED'];
 const negativeStatuses: ReservationStatus[] = ['CANCELLED', 'EXPIRED', 'REJECTED', 'REFUNDED'];
 
@@ -74,15 +72,6 @@ function statusDescription(status: ReservationStatus) {
   return 'تابع حالة الطلب من هذه الصفحة، ولا تعتمد على أي تأكيد خارج الخادم.';
 }
 
-function getPotentialPaymentUrl(reservation: RentalReservation) {
-  const extendedReservation = reservation as RentalReservation & {
-    paymentUrl?: string | null;
-    payment?: { paymentUrl?: string | null } | null;
-  };
-
-  return extendedReservation.paymentUrl ?? extendedReservation.payment?.paymentUrl ?? null;
-}
-
 export function PublicRentalReservationPage() {
   const { id } = useParams();
   const reservationQuery = useQuery({
@@ -120,8 +109,7 @@ export function PublicRentalReservationPage() {
   const reservation = reservationQuery.data;
   const listingTitle = reservation.listing ? publicRentalText(reservation.listing.title) : null;
   const listingHref = reservation.listing ? `/rentals/${reservation.listing.slug}` : null;
-  const paymentUrl = getPotentialPaymentUrl(reservation);
-  const isPaymentPending = paymentPendingStatuses.includes(reservation.status);
+  const isLegacyPaymentRecord = legacyPaymentStatuses.includes(reservation.status);
 
   return (
     <main className="pb-16 text-fixed">
@@ -161,34 +149,19 @@ export function PublicRentalReservationPage() {
                 <p className="mt-3 text-sm leading-7 text-fixed-dim">{statusDescription(reservation.status)}</p>
               </section>
 
-              {isPaymentPending && (
+              {isLegacyPaymentRecord && (
                 <section className="rounded-[28px] border border-tertiary/30 bg-tertiary/20 p-5">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div>
-                      <p className="flex items-center gap-2 text-sm font-black text-tertiary">
-                        <CreditCard className="h-4 w-4 text-tertiary" />
-                        طلب دفع قديم قيد المراجعة
-                      </p>
+                      <p className="text-sm font-black text-tertiary">طلب قديم قيد المراجعة</p>
                       <h3 className="mt-3 text-2xl font-black text-fixed">
-                        {paymentUrl ? 'رابط الدفع القديم متاح لهذا الطلب' : 'لا يوجد رابط دفع لهذا الطلب حاليا'}
+                        لا يوجد دفع إلكتروني جديد لحجوزات السراير
                       </h3>
                       <p className="mt-2 text-sm leading-7 text-fixed-dim">
                         يتم عرض هذه الحالة للطلبات القديمة فقط. المسار الحالي لحجز السرير لا ينشئ دفعا إلكترونيا جديدا.
                       </p>
                     </div>
-                    <Hourglass className="h-10 w-10 text-tertiary" />
                   </div>
-                  {paymentUrl && (
-                    <a
-                      className="mt-5 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-secondary hover:bg-secondary/90 px-5 py-3 text-sm font-black text-white shadow-lg shadow-secondary/20"
-                      href={paymentUrl}
-                      rel="noreferrer"
-                      target="_blank"
-                    >
-                      إتمام الدفع
-                      <ArrowLeft className="h-4 w-4" />
-                    </a>
-                  )}
                 </section>
               )}
 
