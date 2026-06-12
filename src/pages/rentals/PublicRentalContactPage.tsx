@@ -59,15 +59,21 @@ function generateMessageContent({
   tenantPhone,
   tenantNationalId,
   listing,
+  reservedBedNumber,
+  remainingAvailableBeds,
 }: {
   tenantName: string;
   tenantPhone: string;
   tenantNationalId: string;
   listing: any;
+  reservedBedNumber?: number | null;
+  remainingAvailableBeds?: number | null;
 }) {
   const listingUrl = `${window.location.origin}/rentals/${listing.slug}`;
   const availableBeds = listing.availableBeds ?? Math.max((listing.totalBeds ?? 4) - 0 - 0, 0);
   const totalBeds = listing.totalBeds ?? 4;
+  const remainingBeds =
+    remainingAvailableBeds ?? (reservedBedNumber ? Math.max(availableBeds - 1, 0) : availableBeds);
   return `طلب حجز سرير:
 - الاسم بالكامل: ${tenantName}
 - رقم الموبايل: ${tenantPhone}
@@ -80,7 +86,9 @@ function generateMessageContent({
 - مبلغ التأمين: ${listing.depositAmount}
 - حالة الشقة: ${listing.unitCondition || 'غير متوفر'}
 - السراير المتاحة: ${availableBeds}
-- إجمالي السراير: ${totalBeds}`;
+- إجمالي السراير: ${totalBeds}${reservedBedNumber ? `
+- رقم السرير المحجوز: سرير ${reservedBedNumber}
+- عدد السراير المتاحة بعد الطلب: ${remainingBeds}` : ''}`;
 }
 
 function ContactImageFallback({ title }: { title: string }) {
@@ -350,12 +358,22 @@ export function PublicRentalContactPage() {
                           setIsSubmitPending(true);
 
                           try {
-                            await rentalApiService.createRentalInquiry(listing.id, {
+                            const result = await rentalApiService.createRentalInquiry(listing.id, {
                               tenantName: formValues.tenantName,
                               tenantPhone: formValues.tenantPhone,
                               tenantNationalId: formValues.tenantNationalId,
                               message: generatedMessage,
                             });
+                            const finalMessage = generateMessageContent({
+                              tenantName: formValues.tenantName,
+                              tenantPhone: formValues.tenantPhone,
+                              tenantNationalId: formValues.tenantNationalId,
+                              listing,
+                              reservedBedNumber: result.bedNumber,
+                              remainingAvailableBeds: result.remainingAvailableBeds,
+                            });
+                            setGeneratedMessage(finalMessage);
+                            setCopied(await copyToClipboard(finalMessage));
 
                             setInquirySuccess(true);
                             window.open('https://chat.whatsapp.com/ECEZfbsvjlU43eDvKa9XUu', '_blank');
@@ -370,7 +388,7 @@ export function PublicRentalContactPage() {
                                 error.message?.includes('unavailable') ||
                                 error.message?.includes('متاحة')
                               ) {
-                                errorMessage = 'لا توجد سراير متاحة حاليًا لهذا الإعلان.';
+                                errorMessage = 'لا توجد سراير متاحة لهذا الإعلان';
                               } else if (error.message) {
                                 errorMessage = error.message;
                               }

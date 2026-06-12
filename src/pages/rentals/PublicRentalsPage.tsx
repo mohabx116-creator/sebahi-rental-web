@@ -291,12 +291,12 @@ export function PublicRentalsPage() {
               سراير مختارة للإيجار داخل كمبوند السبحي
             </h1>
             <p className="mt-5 max-w-2xl text-lg leading-9 text-fixed-dim">
-              تصفح إعلانات السراير المنشورة، قارن السعر والمساحة وحالة الشقة، وابدأ طلب التواصل أو الحجز من خلال تدفقات دفع آمنة لا تعتمد على حالة المتصفح.
+              تصفح إعلانات السراير المنشورة، قارن السعر والمساحة وحالة الشقة، وابدأ طلب التواصل أو الحجز من خلال مراجعة الإدارة.
             </p>
             <div className="mt-6 flex flex-wrap gap-3 text-sm font-bold text-fixed-dim">
               <span className="inline-flex items-center gap-2 rounded-full bg-white/5 border border-white/10 px-4 py-2 backdrop-blur-md">
                 <ShieldCheck className="h-4 w-4 text-tertiary" />
-                بيانات المالك محمية حتى تأكيد الدفع
+                بيانات المالك محمية حتى مراجعة الإدارة
               </span>
               <span className="rounded-full bg-white/5 border border-white/10 px-4 py-2 backdrop-blur-md">بحث سريع حسب السعر والمواصفات</span>
             </div>

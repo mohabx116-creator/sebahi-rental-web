@@ -129,6 +129,8 @@ export interface CreateRentalInquiryInput {
 export interface RentalInquiryPublicResponse {
   id: string;
   status: RentalInquiryStatus;
+  bedNumber?: number | null;
+  remainingAvailableBeds?: number | null;
 }
 
 export interface StartContactUnlockInput {
@@ -199,6 +201,8 @@ export interface StartReservationResponse {
   reservation: RentalReservation;
   payment?: RentalPaymentSummary | null;
   paymentUrl?: string | null;
+  bedNumber?: number | null;
+  remainingAvailableBeds?: number | null;
 }
 
 export interface OwnerSubmissionImageInput {

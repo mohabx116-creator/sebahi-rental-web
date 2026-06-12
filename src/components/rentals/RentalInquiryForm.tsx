@@ -38,7 +38,7 @@ type InquiryFormValues = z.infer<typeof inquirySchema>;
 
 function readableInquiryError(error: unknown) {
   if (error instanceof ApiClientError) {
-    if (error.status === 409) return 'لا توجد سراير متاحة لاستقبال الطلبات حاليًا.';
+    if (error.status === 409) return 'لا توجد سراير متاحة لهذا الإعلان';
     if (error.status === 400) return 'راجع البيانات المكتوبة وحاول مرة أخرى.';
     return error.message || 'حاول مرة أخرى بعد قليل.';
   }

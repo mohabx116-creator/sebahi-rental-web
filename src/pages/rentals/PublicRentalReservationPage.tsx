@@ -51,13 +51,13 @@ function statusDescription(status: ReservationStatus) {
     return 'تم تأكيد الحجز من خلال الخادم. يمكن متابعة الخطوات الرسمية التالية مع إدارة المنصة.';
   }
   if (status === 'RESERVED') {
-    return 'تم تثبيت الحجز المؤقت بعد تأكيد الدفع من الخادم، وسيتم التعامل معه كحجز سرير خلال مدة الحجز.';
+    return 'تم تسجيل الحجز المؤقت من الخادم، وسيتم التعامل معه كحجز سرير خلال مدة المراجعة.';
   }
   if (status === 'PAID_PENDING_CONFIRMATION') {
-    return 'تم تسجيل الدفع وينتظر الحجز التأكيد النهائي من الخادم أو الإدارة.';
+    return 'هذا طلب قديم مرتبط بدفع إلكتروني وينتظر التأكيد النهائي من الخادم أو الإدارة.';
   }
   if (status === 'PAYMENT_LOCKED' || status === 'PENDING_PAYMENT') {
-    return 'بدأ طلب الحجز، لكن الدفع لم يكتمل أو لم يؤكد من الخادم بعد.';
+    return 'هذا طلب قديم مرتبط بمسار دفع إلكتروني ولم يكتمل تأكيده من الخادم بعد.';
   }
   if (status === 'CANCELLED') {
     return 'تم إلغاء هذا الطلب، ولا يوجد سرير محجوز بناء عليه.';
@@ -138,7 +138,7 @@ export function PublicRentalReservationPage() {
                 <p className="text-sm font-bold text-tertiary">{publicRentalBrand.rentalsTitle}</p>
                 <h1 className="mt-2 text-3xl font-black leading-[1.35] sm:text-4xl text-fixed">حالة الحجز المؤقت</h1>
                 <p className="mt-3 max-w-2xl text-sm leading-7 text-fixed-dim/95">
-                  هذه الصفحة تعرض الحالة القادمة من الخادم فقط. لا توجد حالة نجاح محلية أو تأكيد خارج مسار الدفع الرسمي.
+                  هذه الصفحة تعرض الحالة القادمة من الخادم فقط. لا توجد حالة نجاح محلية أو تأكيد خارج مراجعة الإدارة.
                 </p>
               </div>
               <div className="inline-flex w-fit items-center gap-3 rounded-3xl bg-white/5 border border-white/10 p-4">
@@ -167,13 +167,13 @@ export function PublicRentalReservationPage() {
                     <div>
                       <p className="flex items-center gap-2 text-sm font-black text-tertiary">
                         <CreditCard className="h-4 w-4 text-tertiary" />
-                        الدفع الإلكتروني قيد التجهيز
+                        طلب دفع قديم قيد المراجعة
                       </p>
                       <h3 className="mt-3 text-2xl font-black text-fixed">
-                        {paymentUrl ? 'رابط الدفع متاح لهذا الطلب' : 'لا يوجد رابط دفع متاح حاليا'}
+                        {paymentUrl ? 'رابط الدفع القديم متاح لهذا الطلب' : 'لا يوجد رابط دفع لهذا الطلب حاليا'}
                       </h3>
                       <p className="mt-2 text-sm leading-7 text-fixed-dim">
-                        لن يتم اعتبار الحجز ناجحا إلا بعد تأكيد الدفع من الخادم. إذا لم يظهر رابط دفع، فهذا يعني أن مزود الدفع لم يجهز بعد.
+                        يتم عرض هذه الحالة للطلبات القديمة فقط. المسار الحالي لحجز السرير لا ينشئ دفعا إلكترونيا جديدا.
                       </p>
                     </div>
                     <Hourglass className="h-10 w-10 text-tertiary" />
@@ -211,7 +211,7 @@ export function PublicRentalReservationPage() {
 
             <aside className="space-y-4 rounded-[28px] bg-primary/40 border border-outline/20 p-5 lg:sticky lg:top-24">
               <div>
-                <p className="text-sm font-bold text-fixed-dim">قيمة رسوم الحجز</p>
+                <p className="text-sm font-bold text-fixed-dim">القيمة المسجلة للطلب</p>
                 <p className="mt-1 text-3xl font-black text-tertiary">{formatRentalMoney(reservation.amount)}</p>
               </div>
               <div className="h-px bg-outline/20" />
@@ -231,7 +231,7 @@ export function PublicRentalReservationPage() {
               </div>
               <div className="rounded-2xl bg-secondary/20 border border-secondary/30 p-4 text-sm leading-7 text-fixed-dim">
                 <ShieldCheck className="mb-2 h-5 w-5 text-tertiary" />
-                الحجز والدفع يعالجان من خلال الخادم فقط. الواجهة لا تصنع تأكيدا وهميا ولا تغير حالة الطلب محليا.
+                حجز السرير يعالج من خلال الخادم فقط. الواجهة لا تصنع تأكيدا وهميا ولا تغير حالة الطلب محليا.
               </div>
             </aside>
           </div>
