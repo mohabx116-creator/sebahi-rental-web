@@ -51,7 +51,7 @@ function statusDescription(status: ReservationStatus) {
     return 'تم تأكيد الحجز من خلال الخادم. يمكن متابعة الخطوات الرسمية التالية مع إدارة المنصة.';
   }
   if (status === 'RESERVED') {
-    return 'تم تثبيت الحجز المؤقت بعد تأكيد الدفع من الخادم، والوحدة غير متاحة لحجز آخر خلال مدة الحجز.';
+    return 'تم تثبيت الحجز المؤقت بعد تأكيد الدفع من الخادم، وسيتم التعامل معه كحجز سرير خلال مدة الحجز.';
   }
   if (status === 'PAID_PENDING_CONFIRMATION') {
     return 'تم تسجيل الدفع وينتظر الحجز التأكيد النهائي من الخادم أو الإدارة.';
@@ -60,7 +60,7 @@ function statusDescription(status: ReservationStatus) {
     return 'بدأ طلب الحجز، لكن الدفع لم يكتمل أو لم يؤكد من الخادم بعد.';
   }
   if (status === 'CANCELLED') {
-    return 'تم إلغاء هذا الطلب، ولا توجد وحدة محجوزة بناء عليه.';
+    return 'تم إلغاء هذا الطلب، ولا يوجد سرير محجوز بناء عليه.';
   }
   if (status === 'EXPIRED') {
     return 'انتهت مهلة الطلب ولم يعد الحجز فعالا.';
@@ -69,7 +69,7 @@ function statusDescription(status: ReservationStatus) {
     return 'تم تسجيل حالة رد المبلغ لهذا الطلب داخل النظام.';
   }
   if (status === 'REJECTED') {
-    return 'تم رفض هذا الطلب، ويمكن اختيار وحدة أخرى من سوق الإيجارات.';
+    return 'تم رفض هذا الطلب، ويمكن اختيار سرير آخر من سوق الإيجارات.';
   }
   return 'تابع حالة الطلب من هذه الصفحة، ولا تعتمد على أي تأكيد خارج الخادم.';
 }
@@ -108,7 +108,7 @@ export function PublicRentalReservationPage() {
         <CalendarClock className="h-14 w-14 text-tertiary" />
         <h1 className="mt-5 text-3xl font-black text-fixed">طلب الحجز غير موجود</h1>
         <p className="mt-3 leading-8 text-fixed-dim">
-          قد يكون رقم الطلب غير صحيح أو لم يعد متاحا للعرض. ارجع إلى سوق إيجارات السبحي لاختيار وحدة مناسبة.
+          قد يكون رقم الطلب غير صحيح أو لم يعد متاحا للعرض. ارجع إلى سوق إيجارات السبحي لاختيار سرير مناسب.
         </p>
         <Link className="mt-6 rounded-full bg-tertiary px-6 py-3 font-bold text-primary hover:bg-tertiary/90 transition shadow-lg shadow-tertiary/20" to={ROUTES.RENTALS}>
           العودة إلى الإيجارات
@@ -194,14 +194,14 @@ export function PublicRentalReservationPage() {
 
               {reservation.listing && (
                 <section className="rounded-[28px] bg-primary/45 border border-outline/25 p-5 shadow-md">
-                  <p className="text-sm font-bold text-tertiary">الوحدة المرتبطة</p>
+                  <p className="text-sm font-bold text-tertiary">الإعلان المرتبط</p>
                   <h2 className="mt-2 text-2xl font-black leading-9 text-fixed">{listingTitle}</h2>
                   <p className="mt-2 text-sm text-fixed-dim">
-                    حالة الوحدة: {listingStatusLabels[reservation.listing.status] ?? reservation.listing.status}
+                    حالة الإعلان: {listingStatusLabels[reservation.listing.status] ?? reservation.listing.status}
                   </p>
                   {listingHref && (
                     <Link className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-full bg-tertiary hover:bg-tertiary/90 px-5 py-2.5 text-sm font-bold text-primary transition shadow-lg shadow-tertiary/20" to={listingHref}>
-                      عرض الوحدة
+                      عرض الإعلان
                       <ArrowLeft className="h-4 w-4 text-primary" />
                     </Link>
                   )}
@@ -243,7 +243,7 @@ export function PublicRentalReservationPage() {
             </Link>
             {listingHref && (
               <Link className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-tertiary hover:bg-tertiary/90 px-5 py-3 text-sm font-bold text-primary transition shadow-lg shadow-tertiary/20" to={listingHref}>
-                عرض تفاصيل الوحدة
+                عرض تفاصيل الإعلان
                 <ArrowLeft className="h-4 w-4 text-primary" />
               </Link>
             )}

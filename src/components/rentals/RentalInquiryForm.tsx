@@ -38,7 +38,7 @@ type InquiryFormValues = z.infer<typeof inquirySchema>;
 
 function readableInquiryError(error: unknown) {
   if (error instanceof ApiClientError) {
-    if (error.status === 409) return 'الوحدة غير متاحة لاستقبال الطلبات حاليًا.';
+    if (error.status === 409) return 'لا توجد سراير متاحة لاستقبال الطلبات حاليًا.';
     if (error.status === 400) return 'راجع البيانات المكتوبة وحاول مرة أخرى.';
     return error.message || 'حاول مرة أخرى بعد قليل.';
   }
@@ -122,7 +122,7 @@ export function RentalInquiryForm({
             <CalendarCheck className="h-4 w-4" />
             طلب معاينة أو استفسار
           </span>
-          <h2 className="mt-4 text-2xl font-black leading-9 text-primary">احجز اهتمامك بالوحدة بدون دفع</h2>
+          <h2 className="mt-4 text-2xl font-black leading-9 text-primary">سجل اهتمامك بسرير بدون دفع</h2>
           <p className="mt-2 text-sm leading-7 text-on-surface-variant">
             {intro ?? 'اترك بياناتك وسيقوم فريق كمبوند السبحي بمتابعة طلبك من خلال الإدارة، بدون إظهار بيانات المالك أو تأكيد أي دفع.'}
           </p>
@@ -219,7 +219,7 @@ export function RentalInquiryForm({
             className="min-h-28 w-full resize-none rounded-2xl border-outline-variant bg-surface-container-low py-3 text-right focus:border-secondary focus:ring-secondary/20"
             disabled={isPending}
             maxLength={500}
-            placeholder={selectedInquiryType === 'GENERAL' ? 'اكتب استفسارك عن الوحدة...' : 'اكتب الوقت المناسب للمعاينة أو أي ملاحظات مهمة...'}
+            placeholder={selectedInquiryType === 'GENERAL' ? 'اكتب استفسارك عن السرير أو الشقة...' : 'اكتب الوقت المناسب للمعاينة أو أي ملاحظات مهمة...'}
             {...register('message')}
           />
           {errors.message && <span className="mt-1 block text-sm font-bold text-error">{errors.message.message}</span>}

@@ -288,10 +288,10 @@ export function PublicRentalsPage() {
               {publicRentalBrand.marketplaceLabel}
             </span>
             <h1 className="mt-5 text-4xl font-black leading-[1.25] sm:text-5xl lg:text-6xl text-fixed">
-              وحدات مختارة للإيجار داخل كمبوند السبحي
+              سراير مختارة للإيجار داخل كمبوند السبحي
             </h1>
             <p className="mt-5 max-w-2xl text-lg leading-9 text-fixed-dim">
-              تصفح الوحدات المنشورة، قارن السعر والمساحة وحالة الوحدة، وابدأ طلب التواصل أو الحجز من خلال تدفقات دفع آمنة لا تعتمد على حالة المتصفح.
+              تصفح إعلانات السراير المنشورة، قارن السعر والمساحة وحالة الشقة، وابدأ طلب التواصل أو الحجز من خلال تدفقات دفع آمنة لا تعتمد على حالة المتصفح.
             </p>
             <div className="mt-6 flex flex-wrap gap-3 text-sm font-bold text-fixed-dim">
               <span className="inline-flex items-center gap-2 rounded-full bg-white/5 border border-white/10 px-4 py-2 backdrop-blur-md">
@@ -303,7 +303,7 @@ export function PublicRentalsPage() {
           </div>
 
           <div className="rounded-[28px] border border-white/10 bg-white/5 p-6 text-right shadow-2xl backdrop-blur-md">
-            <p className="text-sm font-bold text-tertiary">الوحدات المتاحة الآن</p>
+            <p className="text-sm font-bold text-tertiary">السراير المتاحة الآن</p>
             <p className="mt-2 text-5xl font-black text-fixed">{new Intl.NumberFormat('ar-EG').format(totalCount)}</p>
 
 
@@ -317,7 +317,7 @@ export function PublicRentalsPage() {
           <div className="mb-4 flex flex-col gap-2 text-right text-fixed sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-2">
               <Filter className="h-5 w-5 text-tertiary" />
-              <h2 className="text-lg font-extrabold">تصفية الوحدات</h2>
+              <h2 className="text-lg font-extrabold">تصفية الإعلانات</h2>
             </div>
             {activeFilters > 0 && <span className="text-xs font-bold text-tertiary">{activeFilters} فلتر نشط</span>}
           </div>
@@ -339,7 +339,7 @@ export function PublicRentalsPage() {
                   <Sparkles className="h-6 w-6" />
                 </span>
                 <span>
-                  <span className="block text-lg font-black">الوحدات المميزة فقط</span>
+                  <span className="block text-lg font-black">الإعلانات المميزة فقط</span>
                   <span className="mt-1 block text-sm font-bold text-fixed-dim">اعرض الإعلانات المميزة أولًا</span>
                 </span>
               </span>
@@ -361,7 +361,7 @@ export function PublicRentalsPage() {
 
       <section className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-6 flex items-center justify-between gap-4 border-b border-outline/40 pb-4">
-          <h2 className="text-2xl font-black text-fixed">وحدات متاحة للإيجار</h2>
+          <h2 className="text-2xl font-black text-fixed">سراير متاحة للإيجار</h2>
           <p className="text-sm font-bold text-fixed-dim">
             <>
               <span className="ml-2 text-xs text-tertiary/75 font-normal">(يتم تحديث العقارات تلقائيًا)</span>
@@ -394,7 +394,7 @@ export function PublicRentalsPage() {
         {listingsQuery.isError && !cachedData && (
           <div className="rounded-[28px] border border-error/25 bg-error-container/10 p-6 text-right shadow-lg">
             <h3 className="text-xl font-black text-error">تعذر تحميل سوق الإيجارات</h3>
-            <p className="mt-2 text-sm leading-7 text-fixed-dim">الخدمة لم ترجع بيانات الوحدات حاليا. راجع اتصال الإنترنت أو حاول مرة أخرى بعد لحظات.</p>
+            <p className="mt-2 text-sm leading-7 text-fixed-dim">الخدمة لم ترجع بيانات الإعلانات حاليا. راجع اتصال الإنترنت أو حاول مرة أخرى بعد لحظات.</p>
             <button className="mt-4 rounded-full bg-error px-5 py-3 text-sm font-bold text-white" type="button" onClick={() => listingsQuery.refetch()}>
               إعادة المحاولة
             </button>
@@ -404,12 +404,12 @@ export function PublicRentalsPage() {
         {!listingsQuery.isLoading && !listingsQuery.isError && listings.length === 0 && (
           <div className="rounded-[28px] glass-panel p-8 text-center">
             <Building2 className="mx-auto h-12 w-12 text-tertiary" />
-            <h3 className="mt-4 text-2xl font-black text-fixed">لا توجد وحدات منشورة حاليا</h3>
+            <h3 className="mt-4 text-2xl font-black text-fixed">لا توجد إعلانات سراير منشورة حاليا</h3>
             <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-fixed-dim">
-              لم نجد وحدات تطابق الفلاتر الحالية داخل كمبوند السبحي. جرب إزالة بعض الفلاتر أو العودة لاحقا بعد نشر وحدات جديدة.
+              لم نجد إعلانات تطابق الفلاتر الحالية داخل كمبوند السبحي. جرب إزالة بعض الفلاتر أو العودة لاحقا بعد نشر إعلانات جديدة.
             </p>
             <Link className="mt-5 inline-flex min-h-11 items-center justify-center rounded-full bg-tertiary px-5 py-3 text-sm font-black text-primary shadow-lg shadow-tertiary/10" to={ROUTES.RENTALS}>
-              عرض كل الوحدات
+              عرض كل الإعلانات
             </Link>
           </div>
         )}

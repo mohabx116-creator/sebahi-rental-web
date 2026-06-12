@@ -74,11 +74,11 @@ function generateMessageContent({
 - الرقم القومي: ${tenantNationalId}
 - عنوان الإعلان: ${listing.title}
 - معرف الإعلان (ID): ${listing.id}
-- معرف الوحدة (Unit ID): ${listing.unitId || 'غير متوفر'}
+- معرف الشقة (Unit ID): ${listing.unitId || 'غير متوفر'}
 - رابط الإعلان العام: ${listingUrl}
 - إيجار الشقة الشهري: ${listing.monthlyRent}
 - مبلغ التأمين: ${listing.depositAmount}
-- حالة الوحدة: ${listing.unitCondition || 'غير متوفر'}
+- حالة الشقة: ${listing.unitCondition || 'غير متوفر'}
 - السراير المتاحة: ${availableBeds}
 - إجمالي السراير: ${totalBeds}`;
 }
@@ -171,9 +171,9 @@ export function PublicRentalContactPage() {
     return (
       <main className="mx-auto flex min-h-[70dvh] w-full max-w-3xl flex-col items-center justify-center px-4 py-12 text-center text-fixed">
         <Home className="h-14 w-14 text-tertiary" />
-        <h1 className="mt-5 text-3xl font-black text-fixed">الوحدة غير موجودة أو تم تحديث رابطها</h1>
+        <h1 className="mt-5 text-3xl font-black text-fixed">الإعلان غير موجود أو تم تحديث رابطه</h1>
         <p className="mt-3 leading-8 text-fixed-dim">
-          الوحدة غير موجودة أو تم تحديث رابطها. يمكنك الرجوع إلى سوق إيجارات السبحي واختيار الرابط الحالي من قائمة الوحدات.
+          الإعلان غير موجود أو تم تحديث رابطه. يمكنك الرجوع إلى سوق إيجارات السبحي واختيار الرابط الحالي من قائمة الإعلانات.
         </p>
         <Link className="mt-6 rounded-full bg-tertiary px-6 py-3 font-bold text-primary hover:bg-tertiary/90 transition shadow-lg shadow-tertiary/20" to={ROUTES.RENTALS}>
           العودة إلى الإيجارات
@@ -187,7 +187,7 @@ export function PublicRentalContactPage() {
       <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
         <Link className="inline-flex min-h-11 items-center gap-2 rounded-full border border-outline bg-white/5 hover:bg-white/10 px-4 py-2 text-sm font-bold text-fixed transition shadow-md" to={listingDetailHref}>
           <ChevronRight className="h-5 w-5 text-tertiary" />
-          العودة إلى تفاصيل الوحدة
+          العودة إلى تفاصيل الإعلان
         </Link>
 
         <div className="mt-5 grid gap-5 lg:grid-cols-[minmax(0,0.85fr)_minmax(420px,1.15fr)] lg:items-start">
@@ -464,7 +464,7 @@ export function PublicRentalContactPage() {
               className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border border-outline bg-white/5 hover:bg-white/10 px-5 py-3 text-sm font-black text-fixed sm:w-auto transition"
               to={listingDetailHref}
             >
-              العودة للوحدة
+              العودة للإعلان
               <ArrowLeft className="h-4 w-4" />
             </Link>
           </section>

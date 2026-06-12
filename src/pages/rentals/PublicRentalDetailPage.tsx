@@ -163,8 +163,8 @@ export function PublicRentalDetailPage() {
   if (listingQuery.isError || !listing) {
     return (
       <DetailError
-        title="الوحدة غير موجودة أو تم تحديث رابطها"
-        message="الوحدة غير موجودة أو تم تحديث رابطها. يمكنك الرجوع إلى قائمة الوحدات المتاحة واختيار الرابط الحالي من السوق."
+        title="الإعلان غير موجود أو تم تحديث رابطه"
+        message="الإعلان غير موجود أو تم تحديث رابطه. يمكنك الرجوع إلى قائمة الإعلانات المتاحة واختيار الرابط الحالي من السوق."
       />
     );
   }
@@ -356,7 +356,7 @@ export function PublicRentalDetailPage() {
       <section className="mx-auto grid w-full max-w-7xl gap-6 px-4 py-8 sm:px-6 lg:px-8 xl:grid-cols-[minmax(0,1fr)_420px]">
         <div className="space-y-6">
           <section className="rounded-[28px] glass-panel p-6 text-right">
-            <h2 className="text-2xl font-black text-fixed">وصف الوحدة</h2>
+            <h2 className="text-2xl font-black text-fixed">وصف الإعلان</h2>
             <p className="mt-4 whitespace-pre-line text-base leading-9 text-fixed-dim">{description}</p>
           </section>
 
