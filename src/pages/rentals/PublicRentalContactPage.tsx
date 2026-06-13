@@ -97,6 +97,17 @@ function getAvailableBeds(listing: { availableBeds?: number; totalBeds?: number 
 
 const whatsappGroupUrl = 'https://chat.whatsapp.com/ECEZfbsvjlU43eDvKa9XUu';
 
+function createClientRequestId() {
+  if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
+    return crypto.randomUUID();
+  }
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (char) => {
+    const random = Math.floor(Math.random() * 16);
+    const value = char === 'x' ? random : (random & 0x3) | 0x8;
+    return value.toString(16);
+  });
+}
+
 function ContactImageFallback({ title }: { title: string }) {
   return (
     <div className="absolute inset-0 flex flex-col justify-between overflow-hidden bg-primary p-5 text-white">
@@ -128,6 +139,7 @@ export function PublicRentalContactPage() {
   const [reservedBedNumber, setReservedBedNumber] = useState<number | null>(null);
   const [remainingAvailableBeds, setRemainingAvailableBeds] = useState<number | null>(null);
   const [reservedInquiryId, setReservedInquiryId] = useState<string | null>(null);
+  const clientRequestIdRef = useRef(createClientRequestId());
   const inFlightReservationRef = useRef(false);
 
   const listingQuery = useQuery({
@@ -394,6 +406,7 @@ export function PublicRentalContactPage() {
 
                           try {
                             const result = await rentalApiService.createRentalInquiry(listing.id, {
+                              clientRequestId: clientRequestIdRef.current,
                               tenantName: formValues.tenantName,
                               tenantPhone: formValues.tenantPhone,
                               tenantNationalId: formValues.tenantNationalId,

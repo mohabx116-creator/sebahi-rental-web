@@ -118,6 +118,7 @@ export interface RentalListingQuery extends ListQuery {
 }
 
 export interface CreateRentalInquiryInput {
+  clientRequestId?: string;
   tenantName: string;
   tenantPhone: string;
   tenantEmail?: string;
@@ -134,6 +135,7 @@ export interface RentalInquiryPublicResponse {
 }
 
 export interface StartContactUnlockInput {
+  clientRequestId?: string;
   tenantName: string;
   tenantPhone: string;
   tenantEmail?: string;
