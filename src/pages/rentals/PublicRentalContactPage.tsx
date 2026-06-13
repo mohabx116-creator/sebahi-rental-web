@@ -500,12 +500,12 @@ export function PublicRentalContactPage() {
                   )}
 
                   <button
-                    className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-tertiary hover:bg-tertiary/90 px-5 py-4 text-base font-black text-primary transition disabled:cursor-not-allowed disabled:opacity-60 shadow-xl shadow-tertiary/20"
+                    className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 hover:bg-emerald-600 px-5 py-4 text-base font-black text-white transition disabled:cursor-not-allowed disabled:opacity-60 shadow-xl shadow-emerald-500/25 cursor-pointer"
                     disabled={isSubmitPending || availableBeds <= 0}
                     type="submit"
                   >
-                    <MessageCircle className="h-5 w-5 text-primary" />
-                    {isSubmitPending ? 'جاري إرسال الطلب...' : 'إرسال طلب حجز السرير عبر الواتساب'}
+                    <CheckCircle2 className="h-5 w-5 text-white" />
+                    {isSubmitPending ? 'جاري الحجز...' : 'حجز'}
                   </button>
                 </form>
               )}
