@@ -9,7 +9,7 @@ import {
   MessageCircle,
   Sparkles,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useParams } from 'react-router-dom';
 import { z } from 'zod';
@@ -95,6 +95,8 @@ function getAvailableBeds(listing: { availableBeds?: number; totalBeds?: number 
   return listing.availableBeds ?? Math.max((listing.totalBeds ?? 4) - 0 - 0, 0);
 }
 
+const whatsappGroupUrl = 'https://chat.whatsapp.com/ECEZfbsvjlU43eDvKa9XUu';
+
 function ContactImageFallback({ title }: { title: string }) {
   return (
     <div className="absolute inset-0 flex flex-col justify-between overflow-hidden bg-primary p-5 text-white">
@@ -125,6 +127,8 @@ export function PublicRentalContactPage() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [reservedBedNumber, setReservedBedNumber] = useState<number | null>(null);
   const [remainingAvailableBeds, setRemainingAvailableBeds] = useState<number | null>(null);
+  const [reservedInquiryId, setReservedInquiryId] = useState<string | null>(null);
+  const inFlightReservationRef = useRef(false);
 
   const listingQuery = useQuery({
     queryKey: ['rentals', 'public', 'listing', slug],
@@ -290,6 +294,14 @@ export function PublicRentalContactPage() {
                       <p className="mt-2 text-sm leading-7 text-fixed-dim">
                         يرجى إرسال الرسالة عبر واتساب لتأكيد المراجعة.
                       </p>
+                      <p className="mt-2 text-sm leading-7 text-fixed-dim">
+                        هذا الطلب مرتبط بسرير واحد فقط. لطلب حجز جديد، ابدأ من صفحة الإعلان مرة أخرى.
+                      </p>
+                      {reservedInquiryId && (
+                        <p className="mt-2 text-xs font-bold leading-6 text-fixed-dim">
+                          رقم الطلب: {reservedInquiryId.slice(0, 8)}
+                        </p>
+                      )}
                       {remainingAvailableBeds !== null && (
                         <p className="mt-2 text-sm font-black leading-7 text-emerald-400">
                           عدد السراير المتاحة بعد الطلب: {remainingAvailableBeds}
@@ -370,7 +382,13 @@ export function PublicRentalContactPage() {
                         type="button"
                         disabled={isSubmitPending}
                         onClick={async () => {
-                          if (!listing || isSubmitPending || !formValues) return;
+                          if (inquirySuccess) {
+                            setCopied(await copyToClipboard(generatedMessage));
+                            window.open(whatsappGroupUrl, '_blank');
+                            return;
+                          }
+                          if (!listing || isSubmitPending || !formValues || inFlightReservationRef.current) return;
+                          inFlightReservationRef.current = true;
                           setSubmitError(null);
                           setIsSubmitPending(true);
 
@@ -381,6 +399,7 @@ export function PublicRentalContactPage() {
                               tenantNationalId: formValues.tenantNationalId,
                               message: generatedMessage,
                             });
+                            setReservedInquiryId(result.id);
                             setReservedBedNumber(result.bedNumber ?? null);
                             setRemainingAvailableBeds(result.remainingAvailableBeds ?? null);
                             const finalMessage = generateMessageContent({
@@ -395,7 +414,7 @@ export function PublicRentalContactPage() {
                             setCopied(await copyToClipboard(finalMessage));
 
                             setInquirySuccess(true);
-                            window.open('https://chat.whatsapp.com/ECEZfbsvjlU43eDvKa9XUu', '_blank');
+                            window.open(whatsappGroupUrl, '_blank');
                           } catch (error) {
                             console.error(error);
                             let errorMessage = 'تعذر إتمام طلب الحجز، حاول مرة أخرى أو تواصل عبر واتساب';
@@ -414,13 +433,14 @@ export function PublicRentalContactPage() {
                             }
                             setSubmitError(errorMessage);
                           } finally {
+                            inFlightReservationRef.current = false;
                             setIsSubmitPending(false);
                           }
                         }}
                         className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 hover:bg-emerald-600 px-5 py-4 text-base font-black text-white transition disabled:cursor-not-allowed disabled:opacity-60 shadow-lg shadow-emerald-500/20 cursor-pointer"
                       >
                         <MessageCircle className="h-5 w-5" />
-                        {isSubmitPending ? 'جاري إرسال الطلب...' : 'إرسال طلب حجز السرير عبر الواتساب'}
+                        {inquirySuccess ? 'فتح واتساب مرة أخرى' : isSubmitPending ? 'جاري إرسال الطلب...' : 'إرسال طلب حجز السرير عبر الواتساب'}
                       </button>
 
                       <button
