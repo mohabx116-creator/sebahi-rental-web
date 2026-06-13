@@ -118,7 +118,7 @@ export function getListingCoverImage(listing: RentalListing | null | undefined) 
 }
 
 export function getListingImageAlt(listing: RentalListing, image: RentalListingImage | null | undefined) {
-  return publicRentalText(image?.altText, `صورة ${publicRentalText(listing.title, 'إعلان سرير للإيجار في كمبوند السبحي')}`);
+  return publicRentalText(image?.altText, `صورة ${publicRentalText(listing.title, 'إعلان إيجار في كمبوند السبحي')}`);
 }
 
 type RentalImageVariant = 'card' | 'hero' | 'thumbnail';

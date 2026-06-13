@@ -66,7 +66,7 @@ function statusDescription(status: ReservationStatus) {
     return 'تم تسجيل هذا الطلب كسجل قديم مغلق داخل النظام.';
   }
   if (status === 'REJECTED') {
-    return 'تم رفض هذا الطلب، ويمكن اختيار سرير آخر من سوق الإيجارات.';
+    return 'تم رفض هذا الطلب، ويمكن اختيار إعلان آخر من سوق الإيجارات.';
   }
   return 'تابع حالة الطلب من هذه الصفحة، ولا تعتمد على أي تأكيد خارج الخادم.';
 }
@@ -97,7 +97,7 @@ export function PublicRentalReservationPage() {
         <CalendarClock className="h-14 w-14 text-tertiary" />
         <h1 className="mt-5 text-3xl font-black text-fixed">طلب الحجز غير موجود</h1>
         <p className="mt-3 leading-8 text-fixed-dim">
-          قد يكون رقم الطلب غير صحيح أو لم يعد متاحا للعرض. ارجع إلى سوق إيجارات السبحي لاختيار سرير مناسب.
+          قد يكون رقم الطلب غير صحيح أو لم يعد متاحا للعرض. ارجع إلى سوق إيجارات السبحي لاختيار إعلان مناسب.
         </p>
         <Link className="mt-6 rounded-full bg-tertiary px-6 py-3 font-bold text-primary hover:bg-tertiary/90 transition shadow-lg shadow-tertiary/20" to={ROUTES.RENTALS}>
           العودة إلى الإيجارات

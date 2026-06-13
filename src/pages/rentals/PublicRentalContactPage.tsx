@@ -259,7 +259,7 @@ export function PublicRentalContactPage() {
                 احجز سرير داخل الشقة عبر واتساب في {compoundName}
               </h2>
               <p className="mt-3 text-sm leading-7 text-fixed-dim">
-                الحجز يتم على سرير داخل الشقة وليس الشقة بالكامل. سيتم تحديد رقم السرير تلقائيًا حسب أولوية الإتاحة.
+                الحجز يتم على سرير داخل الشقة، وليس على الشقة بالكامل. سيتم تحديد رقم السرير تلقائيًا حسب أولوية الإتاحة.
               </p>
 
               <div className="mt-6 grid gap-3 sm:grid-cols-3">

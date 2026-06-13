@@ -304,10 +304,10 @@ export function PublicRentalsPage() {
               {publicRentalBrand.marketplaceLabel}
             </span>
             <h1 className="mt-5 text-4xl font-black leading-[1.25] sm:text-5xl lg:text-6xl text-fixed">
-              سراير مختارة للإيجار داخل كمبوند السبحي
+              إيجارات مختارة داخل كمبوند السبحي
             </h1>
             <p className="mt-5 max-w-2xl text-lg leading-9 text-fixed-dim">
-              تصفح إعلانات السراير المنشورة، قارن السعر والمساحة وحالة الشقة، وابدأ طلب التواصل أو الحجز من خلال مراجعة الإدارة.
+              تصفح إعلانات الإيجار المنشورة داخل كمبوند السبحي، قارن السعر والمساحة وحالة الشقة، وابدأ طلب التواصل أو الحجز من خلال واتساب.
             </p>
             <div className="mt-6 flex flex-wrap gap-3 text-sm font-bold text-fixed-dim">
               <span className="inline-flex items-center gap-2 rounded-full bg-white/5 border border-white/10 px-4 py-2 backdrop-blur-md">
@@ -319,7 +319,7 @@ export function PublicRentalsPage() {
           </div>
 
           <div className="rounded-[28px] border border-white/10 bg-white/5 p-6 text-right shadow-2xl backdrop-blur-md">
-            <p className="text-sm font-bold text-tertiary">السراير المتاحة الآن</p>
+            <p className="text-sm font-bold text-tertiary">الإعلانات المتاحة</p>
             <p className="mt-2 text-5xl font-black text-fixed">{new Intl.NumberFormat('ar-EG').format(totalCount)}</p>
 
 
@@ -377,7 +377,7 @@ export function PublicRentalsPage() {
 
       <section className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-6 flex items-center justify-between gap-4 border-b border-outline/40 pb-4">
-          <h2 className="text-2xl font-black text-fixed">سراير متاحة للإيجار</h2>
+          <h2 className="text-2xl font-black text-fixed">إعلانات إيجار متاحة</h2>
           <p className="text-sm font-bold text-fixed-dim">
             <>
               <span className="ml-2 text-xs text-tertiary/75 font-normal">(يتم تحديث العقارات تلقائيًا)</span>
@@ -420,7 +420,7 @@ export function PublicRentalsPage() {
         {!listingsQuery.isLoading && !listingsQuery.isError && listings.length === 0 && (
           <div className="rounded-[28px] glass-panel p-8 text-center">
             <Building2 className="mx-auto h-12 w-12 text-tertiary" />
-            <h3 className="mt-4 text-2xl font-black text-fixed">لا توجد سراير متاحة حاليًا</h3>
+            <h3 className="mt-4 text-2xl font-black text-fixed">لا توجد إعلانات إيجار متاحة حاليًا</h3>
             <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-fixed-dim">
               لم نجد إعلانات تطابق الفلاتر الحالية داخل كمبوند السبحي. جرب إزالة بعض الفلاتر أو العودة لاحقا بعد نشر إعلانات جديدة.
             </p>

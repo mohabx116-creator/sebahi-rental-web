@@ -122,7 +122,7 @@ export function RentalInquiryForm({
             <CalendarCheck className="h-4 w-4" />
             طلب معاينة أو استفسار
           </span>
-          <h2 className="mt-4 text-2xl font-black leading-9 text-primary">سجل اهتمامك بسرير عبر مراجعة الإدارة</h2>
+          <h2 className="mt-4 text-2xl font-black leading-9 text-primary">سجل اهتمامك بالإعلان عبر مراجعة الإدارة</h2>
           <p className="mt-2 text-sm leading-7 text-on-surface-variant">
             {intro ?? 'اترك بياناتك وسيقوم فريق كمبوند السبحي بمتابعة طلبك من خلال الإدارة، بدون إظهار بيانات المالك أو تأكيد خارجي.'}
           </p>
@@ -219,7 +219,7 @@ export function RentalInquiryForm({
             className="min-h-28 w-full resize-none rounded-2xl border-outline-variant bg-surface-container-low py-3 text-right focus:border-secondary focus:ring-secondary/20"
             disabled={isPending}
             maxLength={500}
-            placeholder={selectedInquiryType === 'GENERAL' ? 'اكتب استفسارك عن السرير أو الشقة...' : 'اكتب الوقت المناسب للمعاينة أو أي ملاحظات مهمة...'}
+            placeholder={selectedInquiryType === 'GENERAL' ? 'اكتب استفسارك عن الشقة أو الإعلان...' : 'اكتب الوقت المناسب للمعاينة أو أي ملاحظات مهمة...'}
             {...register('message')}
           />
           {errors.message && <span className="mt-1 block text-sm font-bold text-error">{errors.message.message}</span>}

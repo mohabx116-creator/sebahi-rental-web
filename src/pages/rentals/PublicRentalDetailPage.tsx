@@ -338,7 +338,7 @@ export function PublicRentalDetailPage() {
 
               <div className="mt-4 space-y-2 rounded-[24px] border border-outline/40 p-4 bg-white/5 text-sm">
                 <p className="pb-2 text-sm font-bold leading-7 text-fixed-dim">
-                  الحجز يتم على سرير داخل الشقة وليس الشقة بالكامل.
+                  الحجز يتم على سرير داخل الشقة، وليس على الشقة بالكامل.
                 </p>
                 <p className="border-b border-outline/25 pb-3 text-xs font-bold leading-6 text-fixed-dim">
                   سيتم تحديد رقم السرير تلقائيًا حسب أولوية الإتاحة: سرير 1 ثم سرير 2 ثم سرير 3 ثم سرير 4.
