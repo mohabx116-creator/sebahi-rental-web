@@ -1,73 +1,57 @@
-# React + TypeScript + Vite
+# سوق إيجارات السبحي — الواجهة العامة
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+الواجهة العامة لبحث وحجز السراير في كمبوند السبحي.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React + TypeScript + Vite
+- React Router
+- TanStack Query
+- Axios
+- Zod
+- lucide-react
 
-## React Compiler
+## Environment
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```env
+VITE_API_BASE_URL="https://compound-os-api.onrender.com/api/v1"
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Scripts
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev
+npm run type-check
+npm run build
 ```
+
+---
+
+## فلو الطالب العام — دليل سريع
+
+> 📄 الدليل الكامل: [`compound-os-api/docs/RENTAL_BED_FLOW_RELEASE_NOTES.md`](../compound-os-api/docs/RENTAL_BED_FLOW_RELEASE_NOTES.md)
+
+### مسارات الصفحات
+
+| المسار | الوصف |
+|---|---|
+| `/rentals` | قائمة الإعلانات المتاحة |
+| `/rentals/:slug` | تفاصيل الإعلان وعدد السراير المتاحة |
+| `/rentals/:slug/contact` | نموذج طلب الحجز + إرسال عبر الواتساب |
+| `/rentals/reservations/:id` | حالة طلب الحجز |
+
+### خطوات الحجز
+
+1. الطالب يفتح صفحة إعلان ويرى **عدد السراير المتاحة**.
+2. يضغط **"طلب تواصل وحجز سرير"**.
+3. يملأ: الاسم الكامل (عربي) + رقم الموبايل + الرقم القومي.
+4. يضغط **"إنشاء طلب حجز سرير"** → يُولَّد نص الرسالة.
+5. يضغط **"إرسال طلب حجز السرير عبر الواتساب"** → يُسجَّل الطلب في النظام ويُفتح جروب الواتساب.
+6. يلصق الرسالة في الجروب.
+
+### قواعد العرض
+
+- الإعلان يظهر فقط إذا كان فيه **سرير واحد على الأقل متاح**.
+- لا يوجد دفع إلكتروني في أي خطوة.
+- رسالة الواتساب تتضمن **رقم السرير المحجوز** وعدد السراير المتاحة بعد الطلب.
+- خطأ "لا توجد سراير متاحة لهذا الإعلان" يظهر إذا امتلأت الشقة قبل إرسال الطلب.
