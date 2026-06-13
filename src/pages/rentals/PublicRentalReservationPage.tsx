@@ -14,7 +14,6 @@ import type { RentalReservation } from '../../lib/api/types';
 import { ROUTES } from '../../lib/constants/routes';
 import {
   formatRentalDate,
-  formatRentalMoney,
   listingStatusLabels,
   publicRentalBrand,
   publicRentalText,
@@ -52,10 +51,10 @@ function statusDescription(status: ReservationStatus) {
     return 'تم تسجيل الحجز المؤقت من الخادم، وسيتم التعامل معه كحجز سرير خلال مدة المراجعة.';
   }
   if (status === 'PAID_PENDING_CONFIRMATION') {
-    return 'هذا طلب قديم مرتبط بدفع إلكتروني وينتظر التأكيد النهائي من الخادم أو الإدارة.';
+    return 'سجل مراجعة قديم ينتظر التأكيد النهائي من الخادم أو الإدارة.';
   }
   if (status === 'PAYMENT_LOCKED' || status === 'PENDING_PAYMENT') {
-    return 'هذا طلب قديم مرتبط بمسار دفع إلكتروني ولم يكتمل تأكيده من الخادم بعد.';
+    return 'سجل مراجعة قديم لم يكتمل تأكيده من الخادم بعد.';
   }
   if (status === 'CANCELLED') {
     return 'تم إلغاء هذا الطلب، ولا يوجد سرير محجوز بناء عليه.';
@@ -64,7 +63,7 @@ function statusDescription(status: ReservationStatus) {
     return 'انتهت مهلة الطلب ولم يعد الحجز فعالا.';
   }
   if (status === 'REFUNDED') {
-    return 'تم تسجيل حالة رد المبلغ لهذا الطلب داخل النظام.';
+    return 'تم تسجيل هذا الطلب كسجل قديم مغلق داخل النظام.';
   }
   if (status === 'REJECTED') {
     return 'تم رفض هذا الطلب، ويمكن اختيار سرير آخر من سوق الإيجارات.';
@@ -83,6 +82,7 @@ export function PublicRentalReservationPage() {
   if (reservationQuery.isLoading) {
     return (
       <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+        <p className="mb-4 text-right text-sm font-bold text-fixed-dim">جاري تحميل الإعلانات</p>
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_360px]">
           <div className="h-[420px] animate-pulse rounded-[32px] bg-primary/30 border border-outline/25 shadow-xl" />
           <div className="h-[320px] animate-pulse rounded-[32px] bg-primary/30 border border-outline/25 shadow-xl" />
@@ -124,7 +124,7 @@ export function PublicRentalReservationPage() {
             <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <p className="text-sm font-bold text-tertiary">{publicRentalBrand.rentalsTitle}</p>
-                <h1 className="mt-2 text-3xl font-black leading-[1.35] sm:text-4xl text-fixed">حالة الحجز المؤقت</h1>
+                <h1 className="mt-2 text-3xl font-black leading-[1.35] sm:text-4xl text-fixed">حالة طلب الحجز</h1>
                 <p className="mt-3 max-w-2xl text-sm leading-7 text-fixed-dim/95">
                   هذه الصفحة تعرض الحالة القادمة من الخادم فقط. لا توجد حالة نجاح محلية أو تأكيد خارج مراجعة الإدارة.
                 </p>
@@ -155,10 +155,10 @@ export function PublicRentalReservationPage() {
                     <div>
                       <p className="text-sm font-black text-tertiary">طلب قديم قيد المراجعة</p>
                       <h3 className="mt-3 text-2xl font-black text-fixed">
-                        لا يوجد دفع إلكتروني جديد لحجوزات السراير
+                        سجل مراجعة قديم
                       </h3>
                       <p className="mt-2 text-sm leading-7 text-fixed-dim">
-                        يتم عرض هذه الحالة للطلبات القديمة فقط. المسار الحالي لحجز السرير لا ينشئ دفعا إلكترونيا جديدا.
+                        يتم عرض هذه الحالة للطلبات القديمة فقط. المسار الحالي لحجز السرير يتم عبر واتساب ومراجعة الإدارة.
                       </p>
                     </div>
                   </div>
@@ -184,8 +184,10 @@ export function PublicRentalReservationPage() {
 
             <aside className="space-y-4 rounded-[28px] bg-primary/40 border border-outline/20 p-5 lg:sticky lg:top-24">
               <div>
-                <p className="text-sm font-bold text-fixed-dim">القيمة المسجلة للطلب</p>
-                <p className="mt-1 text-3xl font-black text-tertiary">{formatRentalMoney(reservation.amount)}</p>
+                <p className="text-sm font-bold text-fixed-dim">نوع الطلب</p>
+                <p className="mt-1 text-2xl font-black text-tertiary">
+                  {reservation.bedNumber ? `سرير ${reservation.bedNumber}` : 'طلب حجز سرير'}
+                </p>
               </div>
               <div className="h-px bg-outline/20" />
               <div className="grid gap-3">

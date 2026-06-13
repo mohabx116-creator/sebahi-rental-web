@@ -42,6 +42,10 @@ const BASIC_FEATURES_MAP = {
 type BasicFeatureKey = keyof typeof BASIC_FEATURES_MAP;
 const BASIC_FEATURE_KEYS = Object.keys(BASIC_FEATURES_MAP) as BasicFeatureKey[];
 
+function getAvailableBeds(listing: { availableBeds?: number; totalBeds?: number }) {
+  return listing.availableBeds ?? Math.max((listing.totalBeds ?? 4) - 0 - 0, 0);
+}
+
 function DetailImageFallback({ title }: { title: string }) {
   return (
     <div className="absolute inset-0 flex flex-col justify-between overflow-hidden bg-primary p-6 text-white sm:p-8">
@@ -176,6 +180,7 @@ export function PublicRentalDetailPage() {
     publicRentalBrand.compoundAr,
   );
   const compoundName = publicCompoundName(listing.compound?.name);
+  const availableBeds = getAvailableBeds(listing);
   const unitFacts = [
     { label: 'الغرف', value: `2`, icon: BedDouble },
     { label: 'الدور', value: listing.floor != null ? `${listing.floor}` : 'غير محدد', icon: Building2 },
@@ -332,9 +337,15 @@ export function PublicRentalDetailPage() {
               </div>
 
               <div className="mt-4 space-y-2 rounded-[24px] border border-outline/40 p-4 bg-white/5 text-sm">
+                <p className="pb-2 text-sm font-bold leading-7 text-fixed-dim">
+                  الحجز يتم على سرير داخل الشقة وليس الشقة بالكامل.
+                </p>
+                <p className="border-b border-outline/25 pb-3 text-xs font-bold leading-6 text-fixed-dim">
+                  سيتم تحديد رقم السرير تلقائيًا حسب أولوية الإتاحة: سرير 1 ثم سرير 2 ثم سرير 3 ثم سرير 4.
+                </p>
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-fixed-dim">السراير المتاحة</span>
-                  <span className="font-black text-emerald-400">{listing.availableBeds ?? Math.max((listing.totalBeds ?? 4) - 0 - 0, 0)}</span>
+                  <span className="font-bold text-fixed-dim">عدد السراير المتاحة</span>
+                  <span className="font-black text-emerald-400">{availableBeds}</span>
                 </div>
                 <div className="flex items-center justify-between border-t border-outline/25 pt-2">
                   <span className="font-bold text-fixed-dim">إجمالي السراير</span>
@@ -343,10 +354,16 @@ export function PublicRentalDetailPage() {
               </div>
 
               <div className="mt-5 space-y-3">
-                <Link className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-tertiary hover:bg-tertiary/90 px-5 py-4 text-base font-black text-primary shadow-xl shadow-tertiary/15 transition" to={`/rentals/${listing.slug}/contact`}>
-                  <LockKeyhole className="h-5 w-5" />
-                  طلب تواصل وحجز سرير
-                </Link>
+                {availableBeds > 0 ? (
+                  <Link className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-tertiary hover:bg-tertiary/90 px-5 py-4 text-base font-black text-primary shadow-xl shadow-tertiary/15 transition" to={`/rentals/${listing.slug}/contact`}>
+                    <LockKeyhole className="h-5 w-5" />
+                    الحجز عبر واتساب
+                  </Link>
+                ) : (
+                  <div className="rounded-2xl border border-error/25 bg-error-container/20 px-4 py-3 text-center text-sm font-black text-error">
+                    لا توجد سراير متاحة لهذا الإعلان
+                  </div>
+                )}
               </div>
             </aside>
           </div>
@@ -369,7 +386,7 @@ export function PublicRentalDetailPage() {
               <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">الشقة مكيفة</dt><dd className="mt-1 font-black text-tertiary">{listing.isAirConditioned ? 'نعم' : 'لا'}</dd></div>
               <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">التأمين</dt><dd className="mt-1 font-black text-tertiary">{listing.depositAmount ? formatRentalMoney(listing.depositAmount) : formatRentalMoney(toNumber(listing.monthlyRent) * 2)}</dd></div>
               <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">تاريخ النشر</dt><dd className="mt-1 font-black text-tertiary">{formatRentalDate(listing.publishedAt)}</dd></div>
-              <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">السراير المتاحة</dt><dd className="mt-1 font-black text-emerald-400">{listing.availableBeds ?? Math.max((listing.totalBeds ?? 4) - 0 - 0, 0)}</dd></div>
+              <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">عدد السراير المتاحة</dt><dd className="mt-1 font-black text-emerald-400">{availableBeds}</dd></div>
               <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">إجمالي السراير</dt><dd className="mt-1 font-black text-tertiary">{listing.totalBeds ?? 4}</dd></div>
             </dl>
           </section>

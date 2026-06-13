@@ -85,10 +85,14 @@ function generateMessageContent({
 - إيجار الشقة الشهري: ${listing.monthlyRent}
 - مبلغ التأمين: ${listing.depositAmount}
 - حالة الشقة: ${listing.unitCondition || 'غير متوفر'}
-- السراير المتاحة: ${availableBeds}
+- عدد السراير المتاحة: ${availableBeds}
 - إجمالي السراير: ${totalBeds}${reservedBedNumber ? `
 - رقم السرير المحجوز: سرير ${reservedBedNumber}
 - عدد السراير المتاحة بعد الطلب: ${remainingBeds}` : ''}`;
+}
+
+function getAvailableBeds(listing: { availableBeds?: number; totalBeds?: number }) {
+  return listing.availableBeds ?? Math.max((listing.totalBeds ?? 4) - 0 - 0, 0);
 }
 
 function ContactImageFallback({ title }: { title: string }) {
@@ -119,6 +123,8 @@ export function PublicRentalContactPage() {
   const [copiedAgain, setCopiedAgain] = useState(false);
   const [generatedMessage, setGeneratedMessage] = useState('');
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [reservedBedNumber, setReservedBedNumber] = useState<number | null>(null);
+  const [remainingAvailableBeds, setRemainingAvailableBeds] = useState<number | null>(null);
 
   const listingQuery = useQuery({
     queryKey: ['rentals', 'public', 'listing', slug],
@@ -144,6 +150,7 @@ export function PublicRentalContactPage() {
   const title = listing ? publicRentalText(listing.title) : '';
   const compoundName = publicCompoundName(listing?.compound?.name);
   const coverImage = listing ? getListingCoverImage(listing) : null;
+  const availableBeds = listing ? getAvailableBeds(listing) : 0;
 
   const onSubmit = handleSubmit(async (values) => {
     if (!listing) return;
@@ -246,17 +253,20 @@ export function PublicRentalContactPage() {
             <div className="rounded-[32px] glass-panel p-5 shadow-xl sm:p-7">
               <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold text-tertiary backdrop-blur-md">
                 <MessageCircle className="h-4 w-4 text-tertiary" />
-                طلب تواصل عبر الواتساب
+                الحجز عبر واتساب
               </span>
               <h2 className="mt-5 text-3xl font-black leading-[1.35] text-fixed">
-                اطلب معاينة أو تواصل داخل {compoundName}
+                احجز سرير داخل الشقة عبر واتساب في {compoundName}
               </h2>
+              <p className="mt-3 text-sm leading-7 text-fixed-dim">
+                الحجز يتم على سرير داخل الشقة وليس الشقة بالكامل. سيتم تحديد رقم السرير تلقائيًا حسب أولوية الإتاحة.
+              </p>
 
               <div className="mt-6 grid gap-3 sm:grid-cols-3">
                 {[
                   ['١', 'املأ البيانات كاملة'],
-                  ['٢', 'تواصل عن طريق الواتساب'],
-                  ['٣', 'سيتم التواصل عن طريق الرد على الخاص'],
+                  ['٢', 'يتم تجهيز رسالة واتساب للحجز'],
+                  ['٣', 'أرسل الرسالة عبر واتساب لتأكيد المراجعة'],
                 ].map(([step, label]) => (
                   <div className="rounded-3xl bg-primary/45 border border-outline/20 p-4" key={step}>
                     <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-secondary text-sm font-black text-white">
@@ -274,10 +284,17 @@ export function PublicRentalContactPage() {
                       <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500 text-white">
                         <CheckCircle2 className="h-6 w-6" />
                       </span>
-                      <h3 className="mt-4 text-xl font-black text-emerald-400">تم تسجيل طلبك وحجز سرير مؤقتًا لحين مراجعة الإدارة.</h3>
+                      <h3 className="mt-4 text-xl font-black text-emerald-400">
+                        تم حجز سريرك مؤقتًا{reservedBedNumber ? `: سرير ${reservedBedNumber}` : ''}
+                      </h3>
                       <p className="mt-2 text-sm leading-7 text-fixed-dim">
-                        سيتم التواصل معك عبر الواتساب.
+                        يرجى إرسال الرسالة عبر واتساب لتأكيد المراجعة.
                       </p>
+                      {remainingAvailableBeds !== null && (
+                        <p className="mt-2 text-sm font-black leading-7 text-emerald-400">
+                          عدد السراير المتاحة بعد الطلب: {remainingAvailableBeds}
+                        </p>
+                      )}
                     </div>
                   ) : (
                     <div className="rounded-2xl border border-blue-500/30 bg-blue-500/10 p-5">
@@ -307,7 +324,7 @@ export function PublicRentalContactPage() {
                       {[
                         ['١', 'تم تجهيز بيانات الطلب'],
                         ['٢', 'تم نسخ رسالة الطلب'],
-                        ['٣', 'اضغط إرسال الطلب عبر الواتساب لإكمال الحجز المؤقت'],
+                        ['٣', 'اضغط إرسال الطلب عبر الواتساب لإكمال حجز السرير المؤقت'],
                       ].map(([step, label]) => (
                         <div className="rounded-2xl bg-tertiary/10 border border-tertiary/20 p-3" key={step}>
                           <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-tertiary text-xs font-black text-primary">
@@ -364,6 +381,8 @@ export function PublicRentalContactPage() {
                               tenantNationalId: formValues.tenantNationalId,
                               message: generatedMessage,
                             });
+                            setReservedBedNumber(result.bedNumber ?? null);
+                            setRemainingAvailableBeds(result.remainingAvailableBeds ?? null);
                             const finalMessage = generateMessageContent({
                               tenantName: formValues.tenantName,
                               tenantPhone: formValues.tenantPhone,
@@ -379,7 +398,7 @@ export function PublicRentalContactPage() {
                             window.open('https://chat.whatsapp.com/ECEZfbsvjlU43eDvKa9XUu', '_blank');
                           } catch (error) {
                             console.error(error);
-                            let errorMessage = 'تعذر إرسال الطلب. حاول مرة أخرى.';
+                            let errorMessage = 'تعذر إتمام طلب الحجز، حاول مرة أخرى أو تواصل عبر واتساب';
                             if (error instanceof ApiClientError) {
                               if (
                                 error.status === 409 ||
@@ -427,6 +446,11 @@ export function PublicRentalContactPage() {
                 </div>
               ) : (
                 <form className="mt-7 space-y-4" onSubmit={onSubmit}>
+                  {availableBeds <= 0 && (
+                    <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm font-bold text-error">
+                      لا توجد سراير متاحة لهذا الإعلان
+                    </div>
+                  )}
                   <label className="block">
                     <span className="mb-2 block text-sm font-bold text-fixed-dim">الاسم بالكامل</span>
                     <input
@@ -468,11 +492,11 @@ export function PublicRentalContactPage() {
 
                   <button
                     className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-tertiary hover:bg-tertiary/90 px-5 py-4 text-base font-black text-primary transition disabled:cursor-not-allowed disabled:opacity-60 shadow-xl shadow-tertiary/20"
-                    disabled={isSubmitPending}
+                    disabled={isSubmitPending || availableBeds <= 0}
                     type="submit"
                   >
                     <MessageCircle className="h-5 w-5 text-primary" />
-                    {isSubmitPending ? 'جاري إرسال الطلب...' : 'إنشاء طلب حجز سرير'}
+                    {isSubmitPending ? 'جاري إرسال الطلب...' : 'إنشاء طلب حجز سرير عبر واتساب'}
                   </button>
                 </form>
               )}

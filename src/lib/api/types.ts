@@ -195,6 +195,7 @@ export interface RentalReservation {
   listing?: Pick<RentalListing, 'id' | 'title' | 'slug' | 'status'> | null;
   paymentUrl?: string | null;
   payment?: { paymentUrl?: string | null } | null;
+  bedNumber?: number | null;
 }
 
 export interface StartReservationResponse {

@@ -24,6 +24,16 @@ import {
 const heroImage = '/hero-compound.png';
 const publicRentalCardLocation = 'كمبوند السبحي-حدائق العاشر من رمضان';
 
+function getAvailableBedsText(availableBeds: number) {
+  if (availableBeds <= 0) return 'لا توجد سراير متاحة';
+  if (availableBeds === 1) return 'آخر سرير متاح';
+  return `عدد السراير المتاحة: ${availableBeds}`;
+}
+
+function getBasicsSummary(listing: RentalListing) {
+  return (listing.basicFeatures || []).length >= 7 ? 'الأساسيات مكتملة' : 'أساسيات غير مكتملة';
+}
+
 function buildQuery(searchParams: URLSearchParams): RentalListingQuery {
   const minRent = searchParams.get('minRent');
   const maxRent = searchParams.get('maxRent');
@@ -68,7 +78,8 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
   const compoundName = publicRentalBrand.compoundAr;
   const depositAmount = toNumber(listing.depositAmount);
   const availableBeds = listing.availableBeds ?? Math.max((listing.totalBeds ?? 4) - 0 - 0, 0);
-  const bedsStatusText = availableBeds > 0 ? `${availableBeds} سرير متاح` : 'غير متاح حاليًا';
+  const bedsStatusText = getAvailableBedsText(availableBeds);
+  const basicsSummary = getBasicsSummary(listing);
 
   return (
     <article
@@ -134,6 +145,11 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
           )}>
             {bedsStatusText}
           </span>
+          {listing.isAirConditioned && (
+            <span className="rounded-full bg-white/5 border border-white/10 px-3 py-1 text-sm font-bold text-fixed">
+              الشقة مكيفة
+            </span>
+          )}
         </div>
 
         <div className="grid grid-cols-3 gap-2 text-center text-sm text-fixed-dim">
@@ -143,7 +159,7 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
           </span>
           <span className="rounded-2xl bg-primary/40 border border-outline-variant/30 px-2 py-3">
             <ShieldCheck className="mx-auto mb-1 h-5 w-5 text-tertiary" />
-            {(listing.basicFeatures || []).length >= 7 ? 'الأساسيات مكتملة' : 'أساسيات غير مكتملة'}
+            {basicsSummary}
           </span>
           <span className="rounded-2xl bg-primary/40 border border-outline-variant/30 px-2 py-3">
             {listing.isAirConditioned ? (
@@ -154,7 +170,7 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
             ) : (
               <>
                 <BedDouble className="mx-auto mb-1 h-5 w-5 text-tertiary" />
-                المتاح {availableBeds} سرير
+                عدد السراير المتاحة: {availableBeds}
               </>
             )}
           </span>
@@ -365,7 +381,7 @@ export function PublicRentalsPage() {
           <p className="text-sm font-bold text-fixed-dim">
             <>
               <span className="ml-2 text-xs text-tertiary/75 font-normal">(يتم تحديث العقارات تلقائيًا)</span>
-              {listingsQuery.isFetching ? 'جار تحديث النتائج...' : `${new Intl.NumberFormat('ar-EG').format(totalCount)} نتيجة`}
+              {listingsQuery.isFetching ? 'جاري تحميل الإعلانات' : `${new Intl.NumberFormat('ar-EG').format(totalCount)} نتيجة`}
             </>
           </p>
         </div>
@@ -404,7 +420,7 @@ export function PublicRentalsPage() {
         {!listingsQuery.isLoading && !listingsQuery.isError && listings.length === 0 && (
           <div className="rounded-[28px] glass-panel p-8 text-center">
             <Building2 className="mx-auto h-12 w-12 text-tertiary" />
-            <h3 className="mt-4 text-2xl font-black text-fixed">لا توجد إعلانات سراير منشورة حاليا</h3>
+            <h3 className="mt-4 text-2xl font-black text-fixed">لا توجد سراير متاحة حاليًا</h3>
             <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-fixed-dim">
               لم نجد إعلانات تطابق الفلاتر الحالية داخل كمبوند السبحي. جرب إزالة بعض الفلاتر أو العودة لاحقا بعد نشر إعلانات جديدة.
             </p>
