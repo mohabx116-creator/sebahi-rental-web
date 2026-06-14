@@ -130,7 +130,6 @@ export function PublicRentalContactPage() {
   const { slug } = useParams();
   const [isSubmitPending, setIsSubmitPending] = useState(false);
   const [inquiryPrepared, setInquiryPrepared] = useState(false);
-  const [copied, setCopied] = useState(false);
   const [copiedAgain, setCopiedAgain] = useState(false);
   const [generatedMessage, setGeneratedMessage] = useState('');
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -168,6 +167,10 @@ export function PublicRentalContactPage() {
 
   const onSubmit = handleSubmit(async (values) => {
     if (!listing || isSubmitPending || inFlightReservationRef.current) return;
+    if (inquiryPrepared && reservedInquiryId) {
+      setSubmitError(null);
+      return;
+    }
     inFlightReservationRef.current = true;
     setSubmitError(null);
     setIsSubmitPending(true);
@@ -178,8 +181,6 @@ export function PublicRentalContactPage() {
       tenantNationalId: values.tenantNationalId,
       listing,
     });
-
-    const whatsappWindow = window.open('', '_blank');
 
     try {
       const result = await rentalApiService.createRentalInquiry(listing.id, {
@@ -203,16 +204,7 @@ export function PublicRentalContactPage() {
       });
       setGeneratedMessage(finalMessage);
       setInquiryPrepared(true);
-      const copyPromise = copyToClipboard(finalMessage);
-
-      if (whatsappWindow) {
-        whatsappWindow.location.href = whatsappGroupUrl;
-      } else {
-        window.open(whatsappGroupUrl, '_blank');
-      }
-      setCopied(await copyPromise);
     } catch (error) {
-      whatsappWindow?.close();
       console.error(error);
       let errorMessage = 'تعذر إتمام طلب الحجز، حاول مرة أخرى أو تواصل عبر واتساب';
       if (error instanceof ApiClientError) {
@@ -348,7 +340,7 @@ export function PublicRentalContactPage() {
                       <CheckCircle2 className="h-6 w-6" />
                     </span>
                     <h3 className="mt-4 text-xl font-black text-emerald-400">
-                      تم حجز سريرك مؤقتًا
+                      تم حجز سريرك مبدئيا
                     </h3>
                     {reservedBedNumber !== null && (
                       <p className="mt-2 text-sm font-black leading-7 text-emerald-400">
@@ -361,7 +353,8 @@ export function PublicRentalContactPage() {
                       </p>
                     )}
                     <p className="mt-2 text-sm leading-7 text-fixed-dim">
-                      يمكنك فتح واتساب مرة أخرى بنفس الرسالة دون إنشاء طلب جديد.
+                      تم تسجيل طلبك بنجاح وحجز سرير واحد داخل الشقة.
+                      لإكمال الطلب، انسخ الرسالة الجاهزة ثم افتح واتساب وأرسلها للإدارة.
                     </p>
                     {reservedInquiryId && (
                       <p className="mt-2 text-xs font-bold leading-6 text-fixed-dim">
@@ -371,13 +364,13 @@ export function PublicRentalContactPage() {
                   </div>
 
                   <div className="rounded-[24px] border border-tertiary/30 bg-tertiary/5 p-5 space-y-4">
-                    <h4 className="text-base font-black text-tertiary">الخطوات التالية الهامة:</h4>
+                    <h4 className="text-base font-black text-tertiary">الخطوات التالية:</h4>
 
                     <div className="grid gap-3 sm:grid-cols-3 pt-2">
                       {[
-                        ['١', 'تم تجهيز بيانات الطلب'],
-                        ['٢', 'تم حجز السرير المؤقت'],
-                        ['٣', 'تم فتح واتساب بنفس رسالة الطلب'],
+                        ['١', 'اضغط "نسخ الرسالة"'],
+                        ['٢', 'اضغط "فتح واتساب"'],
+                        ['٣', 'الصق الرسالة في الشات ثم اضغط إرسال'],
                       ].map(([step, label]) => (
                         <div className="rounded-2xl bg-tertiary/10 border border-tertiary/20 p-3" key={step}>
                           <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-tertiary text-xs font-black text-primary">
@@ -388,29 +381,14 @@ export function PublicRentalContactPage() {
                       ))}
                     </div>
 
-                    {!copied && (
-                      <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 space-y-2">
-                        <p className="text-xs text-amber-400 font-bold">
-                          لم يتم النسخ تلقائيًا. انسخ الرسالة يدويًا ثم الصقها داخل واتساب.
-                        </p>
-                        <textarea
-                          readOnly
-                          value={generatedMessage}
-                          className="w-full h-32 rounded-xl border border-outline/20 bg-primary/60 p-3 text-right text-xs font-mono text-fixed focus:ring-0 focus:outline-none"
-                        />
-                      </div>
-                    )}
-
-                    {copied && (
-                      <div className="mt-4">
-                        <p className="text-xs text-fixed-dim">الرسالة المنسوخة للمراجعة:</p>
-                        <textarea
-                          readOnly
-                          value={generatedMessage}
-                          className="w-full h-32 rounded-xl border border-outline/20 bg-primary/60 p-3 text-right text-xs font-mono text-fixed focus:ring-0 focus:outline-none mt-1"
-                        />
-                      </div>
-                    )}
+                    <div className="mt-4">
+                      <p className="text-xs text-fixed-dim">الرسالة الجاهزة للإرسال:</p>
+                      <textarea
+                        readOnly
+                        value={generatedMessage}
+                        className="w-full h-32 rounded-xl border border-outline/20 bg-primary/60 p-3 text-right text-xs font-mono text-fixed focus:ring-0 focus:outline-none mt-1"
+                      />
+                    </div>
 
                     <div className="flex flex-col gap-3 pt-2">
                       {submitError && (
@@ -418,19 +396,6 @@ export function PublicRentalContactPage() {
                           {submitError}
                         </div>
                       )}
-
-                      <button
-                        type="button"
-                        disabled={isSubmitPending}
-                        onClick={async () => {
-                          window.open(whatsappGroupUrl, '_blank');
-                          setCopied(await copyToClipboard(generatedMessage));
-                        }}
-                        className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 hover:bg-emerald-600 px-5 py-4 text-base font-black text-white transition disabled:cursor-not-allowed disabled:opacity-60 shadow-lg shadow-emerald-500/20 cursor-pointer"
-                      >
-                        <MessageCircle className="h-5 w-5" />
-                        فتح واتساب مرة أخرى
-                      </button>
 
                       <button
                         type="button"
@@ -443,13 +408,33 @@ export function PublicRentalContactPage() {
                         }}
                         className="w-full inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 px-4 py-3 text-sm font-bold text-fixed transition cursor-pointer"
                       >
-                        نسخ الرسالة مرة أخرى
+                        نسخ الرسالة
                       </button>
                       {copiedAgain && (
                         <p className="text-center text-xs font-bold text-emerald-400 animate-pulse">
                           تم نسخ الرسالة.
                         </p>
                       )}
+
+                      <button
+                        type="button"
+                        disabled={isSubmitPending}
+                        onClick={() => {
+                          window.open(whatsappGroupUrl, '_blank');
+                        }}
+                        className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 hover:bg-emerald-600 px-5 py-4 text-base font-black text-white transition disabled:cursor-not-allowed disabled:opacity-60 shadow-lg shadow-emerald-500/20 cursor-pointer"
+                      >
+                        <MessageCircle className="h-5 w-5" />
+                        فتح واتساب
+                      </button>
+
+                      <Link
+                        className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border border-outline bg-white/5 hover:bg-white/10 px-5 py-3 text-sm font-black text-fixed transition"
+                        to={listingDetailHref}
+                      >
+                        العودة لتفاصيل الإعلان
+                        <ArrowLeft className="h-4 w-4" />
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -505,8 +490,11 @@ export function PublicRentalContactPage() {
                     type="submit"
                   >
                     <CheckCircle2 className="h-5 w-5 text-white" />
-                    {isSubmitPending ? 'جاري الحجز...' : 'حجز'}
+                    {isSubmitPending ? 'جاري الحجز...' : 'تأكيد الحجز وتجهيز واتساب'}
                   </button>
+                  <p className="text-center text-xs font-bold leading-6 text-fixed-dim">
+                    بعد تأكيد الحجز هنعرض لك رسالة جاهزة ترسلها للإدارة عبر واتساب.
+                  </p>
                 </form>
               )}
             </div>
