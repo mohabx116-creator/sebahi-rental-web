@@ -46,6 +46,13 @@ function getAvailableBeds(listing: { availableBeds?: number; totalBeds?: number 
   return listing.availableBeds ?? Math.max((listing.totalBeds ?? 4) - 0 - 0, 0);
 }
 
+function getAvailableBedsLabel(count: number) {
+  if (count <= 0) return 'لا توجد سراير متاحة';
+  if (count === 1) return 'سرير واحد متاح فقط';
+  if (count === 2) return 'متبقي سريران فقط';
+  return `متاح الآن: ${count} سراير`;
+}
+
 function DetailImageFallback({ title }: { title: string }) {
   return (
     <div className="absolute inset-0 flex flex-col justify-between overflow-hidden bg-primary p-6 text-white sm:p-8">
@@ -198,7 +205,7 @@ export function PublicRentalDetailPage() {
     : '';
 
   return (
-    <main className="pb-16 text-fixed">
+    <main className="pb-32 text-fixed xl:pb-16">
       <section className="border-b border-outline/30 bg-primary/20">
         <div className="mx-auto w-full max-w-7xl px-4 py-5 sm:px-6 lg:px-8 lg:py-8">
           <Link className="mb-5 inline-flex min-h-10 items-center gap-2 rounded-full px-4 py-1 text-sm font-bold text-fixed-dim hover:text-tertiary hover:bg-white/5 transition" to={ROUTES.RENTALS}>
@@ -264,6 +271,11 @@ export function PublicRentalDetailPage() {
                     )}
                     <span className="rounded-full bg-white/5 border border-white/10 px-3 py-1 text-xs font-bold text-fixed backdrop-blur-md">{listingTypeLabels[listing.listingType]}</span>
                     <span className="rounded-full bg-white/5 border border-white/10 px-3 py-1 text-xs font-bold text-fixed backdrop-blur-md">{listing.unitCondition || furnishingLabels[listing.furnishingStatus]}</span>
+                    {availableBeds > 0 && (
+                      <span className="rounded-full border border-emerald-400/30 bg-emerald-500/15 px-3 py-1 text-xs font-black text-emerald-300 backdrop-blur-md">
+                        {getAvailableBedsLabel(availableBeds)}
+                      </span>
+                    )}
                   </div>
                   <h1 className="mt-3 max-w-4xl text-2xl font-black leading-[1.35] sm:text-4xl lg:text-5xl text-fixed pointer-events-auto">{title}</h1>
                   <p className="mt-2 flex max-w-3xl items-center gap-2 text-sm text-fixed-dim sm:text-base pointer-events-auto">
@@ -345,7 +357,7 @@ export function PublicRentalDetailPage() {
                 </p>
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-fixed-dim">عدد السراير المتاحة</span>
-                  <span className="font-black text-emerald-400">{availableBeds}</span>
+                  <span className="font-black text-emerald-400">{getAvailableBedsLabel(availableBeds)}</span>
                 </div>
                 <div className="flex items-center justify-between border-t border-outline/25 pt-2">
                   <span className="font-bold text-fixed-dim">إجمالي السراير</span>
@@ -357,7 +369,7 @@ export function PublicRentalDetailPage() {
                 {availableBeds > 0 ? (
                   <Link className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-tertiary hover:bg-tertiary/90 px-5 py-4 text-base font-black text-primary shadow-xl shadow-tertiary/15 transition" to={`/rentals/${listing.slug}/contact`}>
                     <LockKeyhole className="h-5 w-5" />
-                    الحجز عبر واتساب
+                    احجز سريرك الآن
                   </Link>
                 ) : (
                   <div className="rounded-2xl border border-error/25 bg-error-container/20 px-4 py-3 text-center text-sm font-black text-error">
@@ -365,6 +377,11 @@ export function PublicRentalDetailPage() {
                   </div>
                 )}
               </div>
+              {availableBeds > 0 && (
+                <p className="mt-3 text-center text-xs font-bold text-fixed-dim">
+                  حجز مبدئي بدون دفع الآن
+                </p>
+              )}
             </aside>
           </div>
         </div>
@@ -494,6 +511,25 @@ export function PublicRentalDetailPage() {
                 {selectedImageIndex + 1} / {gallery.length}
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {availableBeds > 0 && (
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-outline/30 bg-primary/95 px-4 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] pt-3 shadow-2xl backdrop-blur-xl xl:hidden">
+          <div className="mx-auto flex max-w-7xl items-center gap-3">
+            <div className="min-w-0 flex-1 text-right">
+              <p className="truncate text-sm font-black text-tertiary">{formatRentalMoney(listing.monthlyRent)}</p>
+              <p className="mt-1 text-xs font-bold text-fixed-dim">{getAvailableBedsLabel(availableBeds)}</p>
+              <p className="mt-1 text-[11px] font-bold text-fixed-dim">حجز مبدئي بدون دفع الآن</p>
+            </div>
+            <Link
+              className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-2xl bg-tertiary px-4 py-3 text-sm font-black text-primary shadow-lg shadow-tertiary/20"
+              to={`/rentals/${listing.slug}/contact`}
+            >
+              <LockKeyhole className="h-4 w-4" />
+              احجز سريرك الآن
+            </Link>
           </div>
         </div>
       )}
