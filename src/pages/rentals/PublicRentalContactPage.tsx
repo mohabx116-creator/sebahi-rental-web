@@ -130,6 +130,9 @@ export function PublicRentalContactPage() {
   const { slug } = useParams();
   const [isSubmitPending, setIsSubmitPending] = useState(false);
   const [inquiryPrepared, setInquiryPrepared] = useState(false);
+  const [inquirySuccess, setInquirySuccess] = useState(false);
+  const [formValues, setFormValues] = useState<ContactFormValues | null>(null);
+  const [copied, setCopied] = useState(false);
   const [copiedAgain, setCopiedAgain] = useState(false);
   const [generatedMessage, setGeneratedMessage] = useState('');
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -166,14 +169,9 @@ export function PublicRentalContactPage() {
   const availableBeds = listing ? getAvailableBeds(listing) : 0;
 
   const onSubmit = handleSubmit(async (values) => {
-    if (!listing || isSubmitPending || inFlightReservationRef.current) return;
-    if (inquiryPrepared && reservedInquiryId) {
-      setSubmitError(null);
-      return;
-    }
-    inFlightReservationRef.current = true;
+    if (!listing) return;
     setSubmitError(null);
-    setIsSubmitPending(true);
+    setFormValues(values);
 
     const messageText = generateMessageContent({
       tenantName: values.tenantName,
@@ -182,49 +180,11 @@ export function PublicRentalContactPage() {
       listing,
     });
 
-    try {
-      const result = await rentalApiService.createRentalInquiry(listing.id, {
-        clientRequestId: clientRequestIdRef.current,
-        tenantName: values.tenantName,
-        tenantPhone: values.tenantPhone,
-        tenantNationalId: values.tenantNationalId,
-        message: messageText,
-      });
-      setReservedInquiryId(result.id);
-      setReservedBedNumber(result.bedNumber ?? null);
-      setRemainingAvailableBeds(result.remainingAvailableBeds ?? null);
+    setGeneratedMessage(messageText);
+    setInquiryPrepared(true);
 
-      const finalMessage = generateMessageContent({
-        tenantName: values.tenantName,
-        tenantPhone: values.tenantPhone,
-        tenantNationalId: values.tenantNationalId,
-        listing,
-        reservedBedNumber: result.bedNumber,
-        remainingAvailableBeds: result.remainingAvailableBeds,
-      });
-      setGeneratedMessage(finalMessage);
-      setInquiryPrepared(true);
-    } catch (error) {
-      console.error(error);
-      let errorMessage = 'تعذر إتمام طلب الحجز، حاول مرة أخرى أو تواصل عبر واتساب';
-      if (error instanceof ApiClientError) {
-        if (
-          error.status === 409 ||
-          error.status === 410 ||
-          error.message?.includes('not available') ||
-          error.message?.includes('unavailable') ||
-          error.message?.includes('متاحة')
-        ) {
-          errorMessage = 'لا توجد سراير متاحة لهذا الإعلان';
-        } else if (error.message) {
-          errorMessage = error.message;
-        }
-      }
-      setSubmitError(errorMessage);
-    } finally {
-      inFlightReservationRef.current = false;
-      setIsSubmitPending(false);
-    }
+    const copySuccess = await copyToClipboard(messageText);
+    setCopied(copySuccess);
   });
 
   if (listingQuery.isLoading) {
@@ -335,42 +295,63 @@ export function PublicRentalContactPage() {
 
               {inquiryPrepared ? (
                 <div className="mt-7 space-y-6 text-right">
-                  <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-5">
-                    <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500 text-white">
-                      <CheckCircle2 className="h-6 w-6" />
-                    </span>
-                    <h3 className="mt-4 text-xl font-black text-emerald-400">
-                      تم حجز سريرك مبدئيا
-                    </h3>
-                    {reservedBedNumber !== null && (
-                      <p className="mt-2 text-sm font-black leading-7 text-emerald-400">
-                        رقم السرير المحجوز: سرير {reservedBedNumber}
+                  {inquirySuccess ? (
+                    <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-5">
+                      <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500 text-white">
+                        <CheckCircle2 className="h-6 w-6" />
+                      </span>
+                      <h3 className="mt-4 text-xl font-black text-emerald-400">
+                        تم حجز سريرك مبدئيا
+                      </h3>
+                      {reservedBedNumber !== null && (
+                        <p className="mt-2 text-sm font-black leading-7 text-emerald-400">
+                          رقم السرير المحجوز: سرير {reservedBedNumber}
+                        </p>
+                      )}
+                      <p className="mt-2 text-sm leading-7 text-fixed-dim">
+                        تم تسجيل طلبك بنجاح وحجز سرير واحد داخل الشقة.
+                        لإكمال الطلب، انسخ الرسالة الجاهزة ثم افتح واتساب وأرسلها للإدارة.
                       </p>
-                    )}
-                    {remainingAvailableBeds !== null && (
-                      <p className="mt-2 text-sm font-black leading-7 text-emerald-400">
-                        عدد السراير المتاحة بعد الطلب: {remainingAvailableBeds}
+                      {reservedInquiryId && (
+                        <p className="mt-2 text-xs font-bold leading-6 text-fixed-dim">
+                          رقم الطلب: {reservedInquiryId.slice(0, 8)}
+                        </p>
+                      )}
+                      {remainingAvailableBeds !== null && (
+                        <p className="mt-2 text-sm font-black leading-7 text-emerald-400">
+                          عدد السراير المتاحة بعد الطلب: {remainingAvailableBeds}
+                        </p>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="rounded-2xl border border-blue-500/30 bg-blue-500/10 p-5">
+                      <h3 className="text-xl font-black text-blue-400">تم تجهيز طلبك بنجاح.</h3>
+                      {copied ? (
+                        <p className="mt-2 text-sm leading-7 text-emerald-400 font-bold">
+                          تم نسخ رسالة الطلب.
+                        </p>
+                      ) : (
+                        <p className="mt-2 text-sm leading-7 text-amber-400 font-bold">
+                          لم يتم النسخ تلقائيًا.
+                        </p>
+                      )}
+                      <p className="mt-2 text-sm leading-7 text-red-400 font-bold">
+                        تنبيه: لا يتم حجز السرير إلا بعد الضغط على زر تأكيد الحجز وتجهيز واتساب.
                       </p>
-                    )}
-                    <p className="mt-2 text-sm leading-7 text-fixed-dim">
-                      تم تسجيل طلبك بنجاح وحجز سرير واحد داخل الشقة.
-                      لإكمال الطلب، انسخ الرسالة الجاهزة ثم افتح واتساب وأرسلها للإدارة.
-                    </p>
-                    {reservedInquiryId && (
-                      <p className="mt-2 text-xs font-bold leading-6 text-fixed-dim">
-                        رقم الطلب: {reservedInquiryId.slice(0, 8)}
+                      <p className="mt-1 text-sm leading-6 text-fixed-dim">
+                        بعد الضغط على الزر سيتم تسجيل الطلب، وبعد نجاح الحجز سنعرض لك خطوات نسخ الرسالة وفتح واتساب.
                       </p>
-                    )}
-                  </div>
+                    </div>
+                  )}
 
                   <div className="rounded-[24px] border border-tertiary/30 bg-tertiary/5 p-5 space-y-4">
                     <h4 className="text-base font-black text-tertiary">الخطوات التالية:</h4>
 
                     <div className="grid gap-3 sm:grid-cols-3 pt-2">
                       {[
-                        ['١', 'اضغط "نسخ الرسالة"'],
-                        ['٢', 'اضغط "فتح واتساب"'],
-                        ['٣', 'الصق الرسالة في الشات ثم اضغط إرسال'],
+                        ['١', inquirySuccess ? 'اضغط "نسخ الرسالة"' : 'تم تجهيز بيانات الطلب'],
+                        ['٢', inquirySuccess ? 'اضغط "فتح واتساب"' : 'اضغط "تأكيد الحجز وتجهيز واتساب"'],
+                        ['٣', inquirySuccess ? 'الصق الرسالة في الشات ثم اضغط إرسال' : 'بعد نجاح الحجز ستظهر تعليمات واتساب'],
                       ].map(([step, label]) => (
                         <div className="rounded-2xl bg-tertiary/10 border border-tertiary/20 p-3" key={step}>
                           <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-tertiary text-xs font-black text-primary">
@@ -381,20 +362,102 @@ export function PublicRentalContactPage() {
                       ))}
                     </div>
 
-                    <div className="mt-4">
-                      <p className="text-xs text-fixed-dim">الرسالة الجاهزة للإرسال:</p>
-                      <textarea
-                        readOnly
-                        value={generatedMessage}
-                        className="w-full h-32 rounded-xl border border-outline/20 bg-primary/60 p-3 text-right text-xs font-mono text-fixed focus:ring-0 focus:outline-none mt-1"
-                      />
-                    </div>
+                    {!copied && (
+                      <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 space-y-2">
+                        <p className="text-xs text-amber-400 font-bold">
+                          لم يتم النسخ تلقائيًا. انسخ الرسالة يدويًا ثم أكمل خطوة تأكيد الحجز.
+                        </p>
+                        <textarea
+                          readOnly
+                          value={generatedMessage}
+                          className="w-full h-32 rounded-xl border border-outline/20 bg-primary/60 p-3 text-right text-xs font-mono text-fixed focus:ring-0 focus:outline-none"
+                        />
+                      </div>
+                    )}
+
+                    {copied && (
+                      <div className="mt-4">
+                        <p className="text-xs text-fixed-dim">الرسالة الجاهزة للإرسال:</p>
+                        <textarea
+                          readOnly
+                          value={generatedMessage}
+                          className="w-full h-32 rounded-xl border border-outline/20 bg-primary/60 p-3 text-right text-xs font-mono text-fixed focus:ring-0 focus:outline-none mt-1"
+                        />
+                      </div>
+                    )}
 
                     <div className="flex flex-col gap-3 pt-2">
                       {submitError && (
                         <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm font-bold text-error">
                           {submitError}
                         </div>
+                      )}
+
+                      {!inquirySuccess && (
+                        <button
+                          type="button"
+                          disabled={isSubmitPending}
+                          onClick={async () => {
+                            if (!listing || isSubmitPending || !formValues || inFlightReservationRef.current) return;
+                            inFlightReservationRef.current = true;
+                            setSubmitError(null);
+                            setIsSubmitPending(true);
+
+                            try {
+                              const result = await rentalApiService.createRentalInquiry(listing.id, {
+                                clientRequestId: clientRequestIdRef.current,
+                                tenantName: formValues.tenantName,
+                                tenantPhone: formValues.tenantPhone,
+                                tenantNationalId: formValues.tenantNationalId,
+                                message: generatedMessage,
+                              });
+                              setReservedInquiryId(result.id);
+                              setReservedBedNumber(result.bedNumber ?? null);
+                              setRemainingAvailableBeds(result.remainingAvailableBeds ?? null);
+                              const finalMessage = generateMessageContent({
+                                tenantName: formValues.tenantName,
+                                tenantPhone: formValues.tenantPhone,
+                                tenantNationalId: formValues.tenantNationalId,
+                                listing,
+                                reservedBedNumber: result.bedNumber,
+                                remainingAvailableBeds: result.remainingAvailableBeds,
+                              });
+                              setGeneratedMessage(finalMessage);
+                              setCopied(await copyToClipboard(finalMessage));
+
+                              setInquirySuccess(true);
+                            } catch (error) {
+                              console.error(error);
+                              let errorMessage = 'تعذر إتمام طلب الحجز، حاول مرة أخرى أو تواصل عبر واتساب';
+                              if (error instanceof ApiClientError) {
+                                if (
+                                  error.status === 409 ||
+                                  error.status === 410 ||
+                                  error.message?.includes('not available') ||
+                                  error.message?.includes('unavailable') ||
+                                  error.message?.includes('متاحة')
+                                ) {
+                                  errorMessage = 'لا توجد سراير متاحة لهذا الإعلان';
+                                } else if (error.message) {
+                                  errorMessage = error.message;
+                                }
+                              }
+                              setSubmitError(errorMessage);
+                            } finally {
+                              inFlightReservationRef.current = false;
+                              setIsSubmitPending(false);
+                            }
+                          }}
+                          className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 hover:bg-emerald-600 px-5 py-4 text-base font-black text-white transition disabled:cursor-not-allowed disabled:opacity-60 shadow-lg shadow-emerald-500/20 cursor-pointer"
+                        >
+                          <MessageCircle className="h-5 w-5" />
+                          {isSubmitPending ? 'جاري الحجز...' : 'تأكيد الحجز وتجهيز واتساب'}
+                        </button>
+                      )}
+                      {!inquirySuccess && (
+                        <p className="text-center text-xs font-bold leading-6 text-fixed-dim">
+                          بعد تأكيد الحجز هنعرض لك رسالة جاهزة ترسلها للإدارة عبر واتساب.
+                        </p>
                       )}
 
                       <button
@@ -416,25 +479,28 @@ export function PublicRentalContactPage() {
                         </p>
                       )}
 
-                      <button
-                        type="button"
-                        disabled={isSubmitPending}
-                        onClick={() => {
-                          window.open(whatsappGroupUrl, '_blank');
-                        }}
-                        className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 hover:bg-emerald-600 px-5 py-4 text-base font-black text-white transition disabled:cursor-not-allowed disabled:opacity-60 shadow-lg shadow-emerald-500/20 cursor-pointer"
-                      >
-                        <MessageCircle className="h-5 w-5" />
-                        فتح واتساب
-                      </button>
+                      {inquirySuccess && (
+                        <>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              window.open(whatsappGroupUrl, '_blank');
+                            }}
+                            className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 hover:bg-emerald-600 px-5 py-4 text-base font-black text-white transition shadow-lg shadow-emerald-500/20 cursor-pointer"
+                          >
+                            <MessageCircle className="h-5 w-5" />
+                            فتح واتساب
+                          </button>
 
-                      <Link
-                        className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border border-outline bg-white/5 hover:bg-white/10 px-5 py-3 text-sm font-black text-fixed transition"
-                        to={listingDetailHref}
-                      >
-                        العودة لتفاصيل الإعلان
-                        <ArrowLeft className="h-4 w-4" />
-                      </Link>
+                          <Link
+                            className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border border-outline bg-white/5 hover:bg-white/10 px-5 py-3 text-sm font-black text-fixed transition"
+                            to={listingDetailHref}
+                          >
+                            العودة لتفاصيل الإعلان
+                            <ArrowLeft className="h-4 w-4" />
+                          </Link>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -490,11 +556,8 @@ export function PublicRentalContactPage() {
                     type="submit"
                   >
                     <CheckCircle2 className="h-5 w-5 text-white" />
-                    {isSubmitPending ? 'جاري الحجز...' : 'تأكيد الحجز وتجهيز واتساب'}
+                    إنشاء طلب حجز
                   </button>
-                  <p className="text-center text-xs font-bold leading-6 text-fixed-dim">
-                    بعد تأكيد الحجز هنعرض لك رسالة جاهزة ترسلها للإدارة عبر واتساب.
-                  </p>
                 </form>
               )}
             </div>
