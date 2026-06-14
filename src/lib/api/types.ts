@@ -237,6 +237,8 @@ export interface CreateOwnerSubmissionInput {
   extraAmenitiesText?: string;
   monthlyRent: number;
   depositAmount?: number;
+  buildingNumber: string;
+  apartmentNumber: string;
   images: OwnerSubmissionImageInput[];
   policyAccepted: true;
 }

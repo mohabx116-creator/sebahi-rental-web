@@ -24,6 +24,7 @@ export async function createCloudinaryUploadSignature(): Promise<CloudinaryUploa
   return response.data;
 }
 
+// Submits a new owner listing request to the backend with unit details
 export async function createOwnerSubmission(input: CreateOwnerSubmissionInput): Promise<OwnerSubmissionPublicStatus> {
   const response = await postApiData<OwnerSubmissionPublicStatus>('/rentals/owner-submissions', input);
   return response.data;

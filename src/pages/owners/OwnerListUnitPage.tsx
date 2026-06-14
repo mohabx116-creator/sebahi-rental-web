@@ -73,6 +73,8 @@ const ownerSubmissionSchema = z.object({
   }),
   extraAmenitiesText: z.string().trim().optional(),
   description: z.string().trim().optional(),
+  buildingNumber: z.string().trim().min(1, 'اكتب رقم العمارة').max(100),
+  apartmentNumber: z.string().trim().min(1, 'اكتب رقم الشقة').max(100),
   policyAccepted: z.boolean().refine((value) => value === true, 'يجب الموافقة على سياسة الاسترجاع وشروط النشر'),
 });
 
@@ -295,6 +297,8 @@ export function OwnerListUnitPage() {
       furnishingStatus: furnishingStatusForCondition(values.unitCondition),
       unitCondition: values.unitCondition,
       floor: values.floor,
+      buildingNumber: values.buildingNumber,
+      apartmentNumber: values.apartmentNumber,
       bathrooms: 1,
       monthlyRent: values.monthlyRent,
       isAirConditioned: values.isAirConditioned,
@@ -445,6 +449,12 @@ export function OwnerListUnitPage() {
                 <Field label="الدور" error={errors.floor?.message}>
                   <input type="number" {...register('floor')} disabled={isPending} className="form-input" />
                   <span className="mt-1 block text-xs text-fixed-dim">اكتب رقم الدور فقط، مثال: 3</span>
+                </Field>
+                <Field label="رقم العمارة *" error={errors.buildingNumber?.message}>
+                  <input {...register('buildingNumber')} disabled={isPending} className="form-input" />
+                </Field>
+                <Field label="رقم الشقة *" error={errors.apartmentNumber?.message}>
+                  <input {...register('apartmentNumber')} disabled={isPending} className="form-input" />
                 </Field>
               </div>
 
