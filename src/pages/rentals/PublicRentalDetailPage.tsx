@@ -516,12 +516,12 @@ export function PublicRentalDetailPage() {
       )}
 
       {availableBeds > 0 && (
-        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-outline/30 bg-primary/95 px-4 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] pt-3 shadow-2xl backdrop-blur-xl xl:hidden">
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-outline/30 bg-primary/95 px-4 pb-[calc(env(safe-area-inset-bottom)+0.65rem)] pt-2.5 shadow-2xl backdrop-blur-xl xl:hidden">
           <div className="mx-auto flex max-w-7xl items-center gap-3">
             <div className="min-w-0 flex-1 text-right">
               <p className="truncate text-sm font-black text-tertiary">{formatRentalMoney(listing.monthlyRent)}</p>
               <p className="mt-1 text-xs font-bold text-fixed-dim">{getAvailableBedsLabel(availableBeds)}</p>
-              <p className="mt-1 text-[11px] font-bold text-fixed-dim">حجز مبدئي بدون دفع الآن</p>
+              <p className="mt-0.5 text-[11px] font-bold text-fixed-dim">بدون دفع الآن</p>
             </div>
             <Link
               className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-2xl bg-tertiary px-4 py-3 text-sm font-black text-primary shadow-lg shadow-tertiary/20"

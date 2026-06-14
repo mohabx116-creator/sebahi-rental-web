@@ -291,13 +291,13 @@ export function PublicRentalContactPage() {
                 </div>
               )}
 
-              <div className="mt-6 rounded-[24px] border border-tertiary/25 bg-tertiary/5 p-5">
+              <div className="mt-5 rounded-[22px] border border-tertiary/25 bg-tertiary/5 p-4">
                 <h3 className="text-base font-black text-tertiary">حجز مبدئي بدون دفع الآن</h3>
-                <p className="mt-2 text-sm leading-7 text-fixed-dim">
-                  لن يتم طلب أي دفع داخل الموقع. بعد حجز السرير مبدئيا، سيتم تجهيز رسالة واتساب للتواصل مع الإدارة.
+                <p className="mt-2 text-sm leading-6 text-fixed-dim">
+                  لا يوجد دفع داخل الموقع. بعد الحجز ستظهر لك رسالة واتساب جاهزة للإدارة.
                 </p>
-                <div className="mt-4 grid gap-2 sm:grid-cols-3">
-                  {['لا يوجد دفع الآن', 'الإدارة تراجع الطلب عبر واتساب', 'يتم حجز سرير واحد فقط لهذا الطلب'].map((item) => (
+                <div className="mt-3 grid gap-2 sm:grid-cols-3">
+                  {['بدون دفع الآن', 'متابعة عبر واتساب', 'سرير واحد لكل طلب'].map((item) => (
                     <div className="rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-xs font-bold text-fixed" key={item}>
                       {item}
                     </div>
@@ -305,19 +305,19 @@ export function PublicRentalContactPage() {
                 </div>
               </div>
 
-              <div className="mt-5 rounded-[24px] border border-outline/25 bg-primary/35 p-4">
-                <h3 className="text-base font-black text-fixed">خطوات الحجز</h3>
-                <div className="mt-3 grid gap-3 sm:grid-cols-3">
+              <div className="mt-4 rounded-[22px] border border-outline/25 bg-primary/35 p-4">
+                <h3 className="text-base font-black text-fixed">خطوات بسيطة</h3>
+                <div className="mt-3 grid gap-2 sm:grid-cols-3">
                   {[
                     ['١', 'املأ بياناتك'],
-                    ['٢', 'احجز سريرك مبدئيا'],
-                    ['٣', 'افتح واتساب وأرسل الطلب'],
+                    ['٢', 'أكد الحجز'],
+                    ['٣', 'أرسل واتساب'],
                   ].map(([step, label]) => (
-                    <div className="rounded-2xl bg-primary/45 border border-outline/20 p-3" key={step}>
-                      <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-secondary text-xs font-black text-white">
+                    <div className="flex items-center gap-2 rounded-2xl bg-primary/45 border border-outline/20 px-3 py-2" key={step}>
+                      <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-secondary text-xs font-black text-white">
                         {step}
                       </span>
-                      <p className="mt-2 text-xs font-black leading-5 text-fixed">{label}</p>
+                      <p className="text-xs font-black leading-5 text-fixed">{label}</p>
                     </div>
                   ))}
                 </div>
@@ -339,17 +339,17 @@ export function PublicRentalContactPage() {
                         </p>
                       ) : (
                         <p className="mt-3 rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-sm font-bold leading-7 text-amber-400">
-                          لم نتمكن من نسخ الرسالة تلقائيا. اضغط "نسخ الرسالة مرة أخرى" أولا، ثم افتح واتساب.
+                          لم نتمكن من نسخ الرسالة تلقائيا. اضغط "نسخ الرسالة مرة أخرى" أولا.
                         </p>
                       )}
                       <div className="mt-4 rounded-2xl border border-white/10 bg-primary/35 p-4">
-                        <p className="text-sm font-black text-fixed">كل اللي عليك الآن:</p>
-                        <p className="mt-2 text-sm leading-7 text-fixed-dim">
-                          اضغط "فتح واتساب وإرسال الطلب"، وستجد رسالة الطلب جاهزة داخل الشات. راجعها ثم اضغط إرسال.
+                        <p className="text-sm font-black text-fixed">الخطوة الأخيرة:</p>
+                        <p className="mt-2 text-sm leading-6 text-fixed-dim">
+                          افتح واتساب، راجع الرسالة، ثم اضغط إرسال.
                         </p>
                       </div>
                       <p className="mt-3 text-xs font-bold leading-6 text-fixed-dim">
-                        لو لم تظهر الرسالة تلقائيا، اضغط "نسخ الرسالة مرة أخرى" ثم الصقها في واتساب.
+                        لو لم تظهر الرسالة تلقائيا، انسخها من الزر بالأسفل.
                       </p>
                     </div>
                   ) : (
@@ -368,25 +368,25 @@ export function PublicRentalContactPage() {
                         تنبيه: لا يتم حجز السرير إلا بعد الضغط على زر تأكيد الحجز وتجهيز واتساب.
                       </p>
                       <p className="mt-1 text-sm leading-6 text-fixed-dim">
-                        بعد الضغط على الزر سيتم تسجيل الطلب، وبعد نجاح الحجز سنعرض لك خطوات نسخ الرسالة وفتح واتساب.
+                        أكد الحجز، وبعدها افتح واتساب بالرسالة الجاهزة.
                       </p>
                     </div>
                   )}
 
-                  <div className="rounded-[24px] border border-tertiary/30 bg-tertiary/5 p-5 space-y-4">
+                  <div className="rounded-[22px] border border-tertiary/30 bg-tertiary/5 p-4 space-y-3">
                     <h4 className="text-base font-black text-tertiary">الخطوات التالية:</h4>
 
-                    <div className="grid gap-3 sm:grid-cols-3 pt-2">
+                    <div className="grid gap-2 sm:grid-cols-3 pt-1">
                       {[
                         ['١', inquirySuccess ? 'افتح واتساب' : 'تم تجهيز بيانات الطلب'],
                         ['٢', inquirySuccess ? 'راجع الرسالة الجاهزة' : 'اضغط "تأكيد الحجز وتجهيز واتساب"'],
                         ['٣', inquirySuccess ? 'اضغط إرسال' : 'بعد نجاح الحجز ستظهر تعليمات واتساب'],
                       ].map(([step, label]) => (
-                        <div className="rounded-2xl bg-tertiary/10 border border-tertiary/20 p-3" key={step}>
+                        <div className="rounded-2xl bg-tertiary/10 border border-tertiary/20 p-2.5" key={step}>
                           <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-tertiary text-xs font-black text-primary">
                             {step}
                           </span>
-                          <p className="mt-2 text-xs font-black leading-5 text-fixed">{label}</p>
+                          <p className="mt-1.5 text-xs font-black leading-5 text-fixed">{label}</p>
                         </div>
                       ))}
                     </div>
@@ -406,29 +406,29 @@ export function PublicRentalContactPage() {
                     )}
 
                     {!inquirySuccess && (
-                      <div className="rounded-[24px] border border-outline/25 bg-primary/40 p-4">
-                        <h4 className="text-base font-black text-fixed">ملخص طلبك</h4>
-                        <dl className="mt-3 space-y-2 text-sm">
+                      <div className="rounded-[22px] border border-outline/25 bg-primary/40 p-4">
+                        <h4 className="text-base font-black text-fixed">ملخص الطلب</h4>
+                        <dl className="mt-3 space-y-1.5 text-sm">
                           <div className="flex items-center justify-between gap-4">
                             <dt className="font-bold text-fixed-dim">الإعلان</dt>
                             <dd className="max-w-[60%] truncate font-black text-fixed">{title}</dd>
                           </div>
                           <div className="flex items-center justify-between gap-4">
-                            <dt className="font-bold text-fixed-dim">الإيجار الشهري</dt>
+                            <dt className="font-bold text-fixed-dim">الإيجار</dt>
                             <dd className="font-black text-tertiary">{formatRentalMoney(listing.monthlyRent)}</dd>
                           </div>
                           {listing.depositAmount && (
                             <div className="flex items-center justify-between gap-4">
-                              <dt className="font-bold text-fixed-dim">مبلغ التأمين</dt>
+                              <dt className="font-bold text-fixed-dim">التأمين</dt>
                               <dd className="font-black text-tertiary">{formatRentalMoney(listing.depositAmount)}</dd>
                             </div>
                           )}
                           <div className="flex items-center justify-between gap-4">
-                            <dt className="font-bold text-fixed-dim">عدد السراير المطلوبة</dt>
-                            <dd className="font-black text-fixed">1 سرير</dd>
+                            <dt className="font-bold text-fixed-dim">السراير المطلوبة</dt>
+                            <dd className="font-black text-fixed">1</dd>
                           </div>
                           <div className="flex items-center justify-between gap-4">
-                            <dt className="font-bold text-fixed-dim">طريقة المتابعة</dt>
+                            <dt className="font-bold text-fixed-dim">المتابعة</dt>
                             <dd className="font-black text-fixed">واتساب</dd>
                           </div>
                         </dl>
@@ -457,9 +457,9 @@ export function PublicRentalContactPage() {
                     <div className="flex flex-col gap-3 pt-2">
                       {isUnavailableError ? (
                         <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-right">
-                          <h4 className="text-base font-black text-error">عذرا، هذا السرير لم يعد متاحا</h4>
-                          <p className="mt-2 text-sm font-bold leading-7 text-fixed-dim">
-                            يبدو أن شخصا آخر سبق بالحجز. يمكنك الرجوع للإعلانات المتاحة واختيار سرير آخر.
+                          <h4 className="text-base font-black text-error">السرير لم يعد متاحا</h4>
+                          <p className="mt-2 text-sm font-bold leading-6 text-fixed-dim">
+                            تم حجزه من شخص آخر. اختر إعلانا آخر من القائمة.
                           </p>
                           <Link
                             className="mt-4 inline-flex min-h-11 w-full items-center justify-center rounded-2xl bg-white/5 px-4 py-3 text-sm font-black text-fixed transition hover:bg-white/10"
@@ -539,11 +539,10 @@ export function PublicRentalContactPage() {
                       {!inquirySuccess && (
                         <div className="space-y-1 text-center">
                           <p className="text-xs font-bold leading-6 text-fixed-dim">
-                            بعد تأكيد الحجز هتظهر لك رسالة واتساب جاهزة للإرسال للإدارة.
+                            لا يوجد دفع الآن. بعد التأكيد ستظهر رسالة واتساب جاهزة.
                           </p>
-                          <p className="text-xs font-black text-emerald-400">لا يوجد دفع الآن</p>
                           {isSubmitPending && (
-                            <p className="text-xs font-bold text-tertiary">برجاء الانتظار، لا تغلق الصفحة.</p>
+                            <p className="text-xs font-bold text-tertiary">انتظر لحظات...</p>
                           )}
                         </div>
                       )}
@@ -641,7 +640,7 @@ export function PublicRentalContactPage() {
                         {...register('tenantNationalId')}
                       />
                       <span className="mt-2 block text-xs font-bold leading-6 text-fixed-dim">
-                        نستخدمه فقط لتسجيل طلب الحجز مع الإدارة.
+                        نستخدمه لتسجيل طلبك فقط.
                       </span>
                       {errors.tenantNationalId && <span className="mt-1 block text-sm font-bold text-error">{errors.tenantNationalId.message}</span>}
                     </label>
@@ -661,9 +660,7 @@ export function PublicRentalContactPage() {
                     <CheckCircle2 className="h-5 w-5 text-white" />
                     تجهيز رسالة الحجز
                   </button>
-                  <p className="text-center text-xs font-bold leading-6 text-fixed-dim">
-                    هذه الخطوة تجهز الرسالة فقط، والحجز المبدئي يتم في الخطوة التالية.
-                  </p>
+                  <p className="text-center text-xs font-bold leading-6 text-fixed-dim">تجهيز فقط، بدون حجز نهائي.</p>
                 </form>
               )}
             </div>
