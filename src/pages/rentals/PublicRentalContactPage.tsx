@@ -134,11 +134,9 @@ export function PublicRentalContactPage() {
   const [formValues, setFormValues] = useState<ContactFormValues | null>(null);
   const [copied, setCopied] = useState(false);
   const [copiedAgain, setCopiedAgain] = useState(false);
+  const [showPreparedMessage, setShowPreparedMessage] = useState(false);
   const [generatedMessage, setGeneratedMessage] = useState('');
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [reservedBedNumber, setReservedBedNumber] = useState<number | null>(null);
-  const [remainingAvailableBeds, setRemainingAvailableBeds] = useState<number | null>(null);
-  const [reservedInquiryId, setReservedInquiryId] = useState<string | null>(null);
   const clientRequestIdRef = useRef(createClientRequestId());
   const inFlightReservationRef = useRef(false);
 
@@ -182,6 +180,7 @@ export function PublicRentalContactPage() {
 
     setGeneratedMessage(messageText);
     setInquiryPrepared(true);
+    setShowPreparedMessage(false);
 
     const copySuccess = await copyToClipboard(messageText);
     setCopied(copySuccess);
@@ -301,27 +300,26 @@ export function PublicRentalContactPage() {
                         <CheckCircle2 className="h-6 w-6" />
                       </span>
                       <h3 className="mt-4 text-xl font-black text-emerald-400">
-                        تم حجز سريرك مبدئيا
+                        تم حجز سريرك مبدئيا ✅
                       </h3>
-                      {reservedBedNumber !== null && (
-                        <p className="mt-2 text-sm font-black leading-7 text-emerald-400">
-                          رقم السرير المحجوز: سرير {reservedBedNumber}
+                      {copied ? (
+                        <p className="mt-3 text-sm font-black leading-7 text-emerald-400">
+                          تم نسخ رسالة الطلب تلقائيا.
+                        </p>
+                      ) : (
+                        <p className="mt-3 rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-sm font-bold leading-7 text-amber-400">
+                          لم نتمكن من نسخ الرسالة تلقائيا. اضغط "نسخ الرسالة مرة أخرى" أولا، ثم افتح واتساب.
                         </p>
                       )}
-                      <p className="mt-2 text-sm leading-7 text-fixed-dim">
-                        تم تسجيل طلبك بنجاح وحجز سرير واحد داخل الشقة.
-                        لإكمال الطلب، انسخ الرسالة الجاهزة ثم افتح واتساب وأرسلها للإدارة.
+                      <div className="mt-4 rounded-2xl border border-white/10 bg-primary/35 p-4">
+                        <p className="text-sm font-black text-fixed">كل اللي عليك الآن:</p>
+                        <p className="mt-2 text-sm leading-7 text-fixed-dim">
+                          افتح واتساب، الصق الرسالة داخل الشات، ثم اضغط إرسال.
+                        </p>
+                      </div>
+                      <p className="mt-3 text-xs font-bold leading-6 text-fixed-dim">
+                        تنبيه: الحجز تم مبدئيا. لإكمال الطلب، افتح واتساب والصق الرسالة ثم اضغط إرسال.
                       </p>
-                      {reservedInquiryId && (
-                        <p className="mt-2 text-xs font-bold leading-6 text-fixed-dim">
-                          رقم الطلب: {reservedInquiryId.slice(0, 8)}
-                        </p>
-                      )}
-                      {remainingAvailableBeds !== null && (
-                        <p className="mt-2 text-sm font-black leading-7 text-emerald-400">
-                          عدد السراير المتاحة بعد الطلب: {remainingAvailableBeds}
-                        </p>
-                      )}
                     </div>
                   ) : (
                     <div className="rounded-2xl border border-blue-500/30 bg-blue-500/10 p-5">
@@ -349,9 +347,9 @@ export function PublicRentalContactPage() {
 
                     <div className="grid gap-3 sm:grid-cols-3 pt-2">
                       {[
-                        ['١', inquirySuccess ? 'اضغط "نسخ الرسالة"' : 'تم تجهيز بيانات الطلب'],
-                        ['٢', inquirySuccess ? 'اضغط "فتح واتساب"' : 'اضغط "تأكيد الحجز وتجهيز واتساب"'],
-                        ['٣', inquirySuccess ? 'الصق الرسالة في الشات ثم اضغط إرسال' : 'بعد نجاح الحجز ستظهر تعليمات واتساب'],
+                        ['١', inquirySuccess ? 'افتح واتساب' : 'تم تجهيز بيانات الطلب'],
+                        ['٢', inquirySuccess ? 'الصق الرسالة' : 'اضغط "تأكيد الحجز وتجهيز واتساب"'],
+                        ['٣', inquirySuccess ? 'اضغط إرسال' : 'بعد نجاح الحجز ستظهر تعليمات واتساب'],
                       ].map(([step, label]) => (
                         <div className="rounded-2xl bg-tertiary/10 border border-tertiary/20 p-3" key={step}>
                           <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-tertiary text-xs font-black text-primary">
@@ -362,27 +360,36 @@ export function PublicRentalContactPage() {
                       ))}
                     </div>
 
-                    {!copied && (
-                      <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 space-y-2">
+                    {!inquirySuccess && !copied && (
+                      <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4">
                         <p className="text-xs text-amber-400 font-bold">
                           لم يتم النسخ تلقائيًا. انسخ الرسالة يدويًا ثم أكمل خطوة تأكيد الحجز.
                         </p>
-                        <textarea
-                          readOnly
-                          value={generatedMessage}
-                          className="w-full h-32 rounded-xl border border-outline/20 bg-primary/60 p-3 text-right text-xs font-mono text-fixed focus:ring-0 focus:outline-none"
-                        />
                       </div>
                     )}
 
-                    {copied && (
-                      <div className="mt-4">
-                        <p className="text-xs text-fixed-dim">الرسالة الجاهزة للإرسال:</p>
-                        <textarea
-                          readOnly
-                          value={generatedMessage}
-                          className="w-full h-32 rounded-xl border border-outline/20 bg-primary/60 p-3 text-right text-xs font-mono text-fixed focus:ring-0 focus:outline-none mt-1"
-                        />
+                    {!inquirySuccess && copied && (
+                      <p className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3 text-xs font-bold text-emerald-400">
+                        تم نسخ رسالة الطلب.
+                      </p>
+                    )}
+
+                    {inquirySuccess && (
+                      <div className="space-y-3">
+                        <button
+                          type="button"
+                          onClick={() => setShowPreparedMessage((isShown) => !isShown)}
+                          className="inline-flex min-h-11 w-full items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-bold text-fixed transition hover:bg-white/10"
+                        >
+                          {showPreparedMessage ? 'إخفاء الرسالة الجاهزة' : 'عرض الرسالة الجاهزة'}
+                        </button>
+                        {showPreparedMessage && (
+                          <textarea
+                            readOnly
+                            value={generatedMessage}
+                            className="h-32 w-full rounded-xl border border-outline/20 bg-primary/60 p-3 text-right text-xs font-mono text-fixed focus:outline-none focus:ring-0"
+                          />
+                        )}
                       </div>
                     )}
 
@@ -411,9 +418,6 @@ export function PublicRentalContactPage() {
                                 tenantNationalId: formValues.tenantNationalId,
                                 message: generatedMessage,
                               });
-                              setReservedInquiryId(result.id);
-                              setReservedBedNumber(result.bedNumber ?? null);
-                              setRemainingAvailableBeds(result.remainingAvailableBeds ?? null);
                               const finalMessage = generateMessageContent({
                                 tenantName: formValues.tenantName,
                                 tenantPhone: formValues.tenantPhone,
@@ -423,6 +427,7 @@ export function PublicRentalContactPage() {
                                 remainingAvailableBeds: result.remainingAvailableBeds,
                               });
                               setGeneratedMessage(finalMessage);
+                              setShowPreparedMessage(false);
                               setCopied(await copyToClipboard(finalMessage));
 
                               setInquirySuccess(true);
@@ -460,18 +465,32 @@ export function PublicRentalContactPage() {
                         </p>
                       )}
 
+                      {inquirySuccess && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            window.open(whatsappGroupUrl, '_blank');
+                          }}
+                          className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 hover:bg-emerald-600 px-5 py-4 text-base font-black text-white transition shadow-lg shadow-emerald-500/20 cursor-pointer"
+                        >
+                          <MessageCircle className="h-5 w-5" />
+                          فتح واتساب وإرسال الطلب
+                        </button>
+                      )}
+
                       <button
                         type="button"
                         onClick={async () => {
                           const ok = await copyToClipboard(generatedMessage);
                           if (ok) {
+                            setCopied(true);
                             setCopiedAgain(true);
                             setTimeout(() => setCopiedAgain(false), 2000);
                           }
                         }}
                         className="w-full inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 px-4 py-3 text-sm font-bold text-fixed transition cursor-pointer"
                       >
-                        نسخ الرسالة
+                        {inquirySuccess ? 'نسخ الرسالة مرة أخرى' : 'نسخ الرسالة'}
                       </button>
                       {copiedAgain && (
                         <p className="text-center text-xs font-bold text-emerald-400 animate-pulse">
@@ -481,17 +500,6 @@ export function PublicRentalContactPage() {
 
                       {inquirySuccess && (
                         <>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              window.open(whatsappGroupUrl, '_blank');
-                            }}
-                            className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 hover:bg-emerald-600 px-5 py-4 text-base font-black text-white transition shadow-lg shadow-emerald-500/20 cursor-pointer"
-                          >
-                            <MessageCircle className="h-5 w-5" />
-                            فتح واتساب
-                          </button>
-
                           <Link
                             className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border border-outline bg-white/5 hover:bg-white/10 px-5 py-3 text-sm font-black text-fixed transition"
                             to={listingDetailHref}
