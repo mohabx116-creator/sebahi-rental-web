@@ -95,7 +95,7 @@ function getAvailableBeds(listing: { availableBeds?: number; totalBeds?: number 
   return listing.availableBeds ?? Math.max((listing.totalBeds ?? 4) - 0 - 0, 0);
 }
 
-const whatsappGroupUrl = 'https://chat.whatsapp.com/ECEZfbsvjlU43eDvKa9XUu';
+const whatsappPhone = '201224591618';
 
 function createClientRequestId() {
   if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
@@ -314,11 +314,11 @@ export function PublicRentalContactPage() {
                       <div className="mt-4 rounded-2xl border border-white/10 bg-primary/35 p-4">
                         <p className="text-sm font-black text-fixed">كل اللي عليك الآن:</p>
                         <p className="mt-2 text-sm leading-7 text-fixed-dim">
-                          افتح واتساب، الصق الرسالة داخل الشات، ثم اضغط إرسال.
+                          اضغط "فتح واتساب وإرسال الطلب"، وستجد رسالة الطلب جاهزة داخل الشات. راجعها ثم اضغط إرسال.
                         </p>
                       </div>
                       <p className="mt-3 text-xs font-bold leading-6 text-fixed-dim">
-                        تنبيه: الحجز تم مبدئيا. لإكمال الطلب، افتح واتساب والصق الرسالة ثم اضغط إرسال.
+                        لو لم تظهر الرسالة تلقائيا، اضغط "نسخ الرسالة مرة أخرى" ثم الصقها في واتساب.
                       </p>
                     </div>
                   ) : (
@@ -348,7 +348,7 @@ export function PublicRentalContactPage() {
                     <div className="grid gap-3 sm:grid-cols-3 pt-2">
                       {[
                         ['١', inquirySuccess ? 'افتح واتساب' : 'تم تجهيز بيانات الطلب'],
-                        ['٢', inquirySuccess ? 'الصق الرسالة' : 'اضغط "تأكيد الحجز وتجهيز واتساب"'],
+                        ['٢', inquirySuccess ? 'راجع الرسالة الجاهزة' : 'اضغط "تأكيد الحجز وتجهيز واتساب"'],
                         ['٣', inquirySuccess ? 'اضغط إرسال' : 'بعد نجاح الحجز ستظهر تعليمات واتساب'],
                       ].map(([step, label]) => (
                         <div className="rounded-2xl bg-tertiary/10 border border-tertiary/20 p-3" key={step}>
@@ -469,7 +469,8 @@ export function PublicRentalContactPage() {
                         <button
                           type="button"
                           onClick={() => {
-                            window.open(whatsappGroupUrl, '_blank');
+                            const whatsappUrl = `https://wa.me/${whatsappPhone}?text=${encodeURIComponent(generatedMessage)}`;
+                            window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
                           }}
                           className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 hover:bg-emerald-600 px-5 py-4 text-base font-black text-white transition shadow-lg shadow-emerald-500/20 cursor-pointer"
                         >
