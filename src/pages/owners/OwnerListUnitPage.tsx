@@ -1,14 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
-import { CheckCircle2, FileImage, Home, Loader2, ShieldCheck, Trash2, UploadCloud } from 'lucide-react';
+import { CheckCircle2, FileImage, Home, Loader2, Trash2, UploadCloud } from 'lucide-react';
 import { useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
-import { Link } from 'react-router-dom';
 import { z } from 'zod';
 import { ApiClientError } from '../../lib/api/api-client';
 import { createCloudinaryUploadSignature, createOwnerSubmission } from '../../lib/api/rental-service';
 import type { OwnerSubmissionImageInput, RentalFurnishingStatus } from '../../lib/api/types';
-import { ROUTES } from '../../lib/constants/routes';
 import { publicRentalBrand } from '../rentals/rental-format';
 
 const BASIC_FEATURES_MAP = {
@@ -75,7 +73,7 @@ const ownerSubmissionSchema = z.object({
   description: z.string().trim().optional(),
   buildingNumber: z.string().trim().min(1, 'اكتب رقم العمارة').max(100),
   apartmentNumber: z.string().trim().min(1, 'اكتب رقم الشقة').max(100),
-  policyAccepted: z.boolean().refine((value) => value === true, 'يجب الموافقة على سياسة الاسترجاع وشروط النشر'),
+  policyAccepted: z.boolean().refine((value) => value === true, 'يجب الموافقة على شروط النشر'),
 });
 
 type OwnerSubmissionFormInput = z.input<typeof ownerSubmissionSchema>;
@@ -316,8 +314,8 @@ export function OwnerListUnitPage() {
   return (
     <main className="pb-16 text-fixed">
       <section className="border-b border-outline/30 bg-primary/20">
-        <div className="mx-auto grid min-h-[330px] w-full max-w-7xl items-end gap-6 px-4 py-10 text-right sm:px-6 lg:grid-cols-[1fr_380px] lg:px-8">
-          <div>
+        <div className="mx-auto flex min-h-[330px] w-full max-w-7xl flex-col justify-end gap-6 px-4 py-10 text-right sm:px-6 lg:px-8">
+          <div className="max-w-3xl">
             <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold text-tertiary backdrop-blur-md">
               <Home className="h-4 w-4 text-tertiary" />
               أعلن عن وحدتك
@@ -325,49 +323,14 @@ export function OwnerListUnitPage() {
             <h1 className="mt-5 text-3xl font-black leading-[1.35] text-fixed sm:text-5xl">
               أعلن عن وحدتك داخل {publicRentalBrand.compoundAr}
             </h1>
-            <p className="mt-4 max-w-3xl text-base leading-8 text-fixed-dim">
+            <p className="mt-4 text-base leading-8 text-fixed-dim">
               أرسل بيانات وحدتك للإدارة، وسيتم مراجعتها قبل النشر. لا يتم نشر أي إعلان إلا بعد موافقة الإدارة.
-            </p>
-          </div>
-          <div className="rounded-[28px] border border-secondary/35 bg-secondary/20 p-5">
-            <ShieldCheck className="h-8 w-8 text-tertiary" />
-            <p className="mt-3 text-lg font-black text-fixed">الدفع الإلكتروني قيد التجهيز</p>
-            <p className="mt-2 text-sm leading-7 text-fixed-dim">
-              رسوم نشر الإعلان لا يتم تحصيلها داخل المنصة حاليًا، وسيتم تفعيلها بعد اعتماد بوابة الدفع.
             </p>
           </div>
         </div>
       </section>
 
-      <section className="mx-auto grid w-full max-w-7xl gap-6 px-4 py-8 sm:px-6 lg:grid-cols-[360px_1fr] lg:px-8">
-        <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
-          <div className="rounded-[28px] glass-panel p-5 text-right shadow-xl">
-            <h2 className="text-xl font-black text-fixed">خطوات النشر</h2>
-            <ol className="mt-5 space-y-3 text-sm leading-7 text-fixed-dim">
-              {[
-                'أرسل بيانات الوحدة',
-                'الإدارة تراجع الطلب',
-                'يتم التواصل معك لاستكمال النشر والدفع عند تفعيل الخدمة',
-                'يتم نشر الإعلان بعد الموافقة',
-              ].map((step, index) => (
-                <li key={step} className="flex gap-3">
-                  <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-secondary text-xs font-black text-white">
-                    {index + 1}
-                  </span>
-                  <span>{step}</span>
-                </li>
-              ))}
-            </ol>
-          </div>
-          <div className="rounded-[28px] glass-panel p-5 text-sm leading-7 text-fixed-dim shadow-xl">
-            <p className="font-black text-fixed">سياسة الاسترجاع</p>
-            <p className="mt-2">رسوم نشر الإعلان، عند تفعيل الدفع الإلكتروني، لا تكون مستردة بعد نشر الإعلان.</p>
-            <Link className="mt-3 inline-flex font-black text-tertiary hover:underline" to={ROUTES.REFUND_POLICY}>
-              قراءة السياسة كاملة
-            </Link>
-          </div>
-        </aside>
-
+      <section className="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="space-y-6">
           {success && (
             <section className="rounded-[28px] border border-secondary/35 bg-secondary/20 p-6 text-right space-y-4">
@@ -543,8 +506,7 @@ export function OwnerListUnitPage() {
               <label className="flex items-start gap-3 text-sm font-bold leading-7 text-fixed-dim">
                 <input className="mt-1.5 rounded border-outline bg-primary/45 text-secondary focus:ring-secondary/20" type="checkbox" {...register('policyAccepted')} disabled={isPending} />
                 <span>
-                  أوافق على سياسة الاسترجاع وشروط نشر الإعلان، وأقر بأن نشر الإعلان لا يتم إلا بعد مراجعة وموافقة الإدارة.
-                  <Link className="mx-1 font-black text-tertiary hover:underline" to={ROUTES.REFUND_POLICY}>سياسة الاسترجاع</Link>
+                  أوافق على شروط نشر الإعلان، وأقر بأن نشر الإعلان لا يتم إلا بعد مراجعة وموافقة الإدارة.
                 </span>
               </label>
               {errors.policyAccepted && <p className="mt-2 text-sm font-bold text-error">{errors.policyAccepted.message}</p>}
