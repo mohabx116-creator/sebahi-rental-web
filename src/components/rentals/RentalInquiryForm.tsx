@@ -124,7 +124,7 @@ export function RentalInquiryForm({
           </span>
           <h2 className="mt-4 text-2xl font-black leading-9 text-primary">سجل اهتمامك بالإعلان عبر مراجعة الإدارة</h2>
           <p className="mt-2 text-sm leading-7 text-on-surface-variant">
-            {intro ?? 'اترك بياناتك وسيقوم فريق كمبوند السبحي بمتابعة طلبك من خلال الإدارة، بدون إظهار بيانات المالك أو تأكيد خارجي.'}
+            {intro ?? 'اترك بياناتك وسيقوم فريق إدارة المنطقة بمتابعة طلبك من خلال الإدارة، بدون إظهار بيانات المالك أو تأكيد خارجي.'}
           </p>
           {listingTitle && (
             <p className="mt-3 text-sm font-bold leading-7 text-secondary">{listingTitle}</p>
@@ -138,7 +138,7 @@ export function RentalInquiryForm({
           <CheckCircle2 className="h-8 w-8 text-secondary" />
           <h3 className="mt-3 text-xl font-black text-primary">تم إرسال طلبك بنجاح</h3>
           <p className="mt-2 text-sm leading-7 text-on-surface-variant">
-            سيتواصل معك فريق كمبوند السبحي لمتابعة طلب المعاينة.
+            سيتواصل معك فريق إدارة المنطقة لمتابعة طلب المعاينة.
           </p>
           <div className="mt-4 flex flex-wrap gap-2 text-xs font-bold">
             <span className="rounded-full bg-white px-3 py-1.5 text-secondary">
@@ -235,7 +235,7 @@ export function RentalInquiryForm({
         </button>
 
         <p className="rounded-2xl bg-primary/5 p-3 text-xs leading-6 text-on-surface-variant">
-          إرسال هذا الطلب لا يفتح بيانات المالك. فريق كمبوند السبحي يراجع الطلب من لوحة الإدارة فقط.
+          إرسال هذا الطلب لا يفتح بيانات المالك. فريق إدارة المنطقة يراجع الطلب من لوحة الإدارة فقط.
         </p>
       </form>
     </section>

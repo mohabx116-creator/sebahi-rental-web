@@ -63,7 +63,7 @@ function DetailImageFallback({ title }: { title: string }) {
           {publicRentalBrand.rentalsTitle}
         </span>
         <div className="max-w-2xl">
-          <p className="text-sm font-bold text-tertiary">كمبوند السبحي</p>
+          <p className="text-sm font-bold text-tertiary">المنطقة المحيطة</p>
           <p className="mt-2 text-3xl font-black leading-[1.35] sm:text-5xl text-fixed">{title}</p>
         </div>
       </div>

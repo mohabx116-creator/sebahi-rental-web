@@ -22,7 +22,7 @@ import {
 } from './rental-format';
 
 const heroImage = '/hero-compound.png';
-const publicRentalCardLocation = 'كمبوند السبحي-حدائق العاشر من رمضان';
+const publicRentalCardLocation = 'المنطقة المحيطة-حدائق العاشر من رمضان';
 
 function getAvailableBedsText(availableBeds: number) {
   if (availableBeds <= 0) return 'لا توجد سراير متاحة';
@@ -63,7 +63,7 @@ function ListingImageFallback({ title }: { title: string }) {
           {publicRentalBrand.marketplaceLabel}
         </span>
         <div>
-          <p className="text-sm font-bold text-tertiary">كمبوند السبحي</p>
+          <p className="text-sm font-bold text-tertiary">المنطقة المحيطة</p>
           <p className="mt-2 text-2xl font-black leading-9 text-fixed">{title}</p>
         </div>
       </div>
@@ -418,7 +418,7 @@ export function PublicRentalsPage() {
             <Building2 className="mx-auto h-12 w-12 text-tertiary" />
             <h3 className="mt-4 text-2xl font-black text-fixed">لا توجد إعلانات إيجار متاحة حاليًا</h3>
             <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-fixed-dim">
-              لم نجد إعلانات تطابق الفلاتر الحالية داخل كمبوند السبحي. جرب إزالة بعض الفلاتر أو العودة لاحقا بعد نشر إعلانات جديدة.
+              لم نجد إعلانات تطابق الفلاتر الحالية في المنطقة المحيطة. جرب إزالة بعض الفلاتر أو العودة لاحقا بعد نشر إعلانات جديدة.
             </p>
             <Link className="mt-5 inline-flex min-h-11 items-center justify-center rounded-full bg-tertiary px-5 py-3 text-sm font-black text-primary shadow-lg shadow-tertiary/10" to={ROUTES.RENTALS}>
               عرض كل الإعلانات

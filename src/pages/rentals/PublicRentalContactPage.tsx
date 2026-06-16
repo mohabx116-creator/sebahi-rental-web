@@ -125,7 +125,7 @@ function ContactImageFallback({ title }: { title: string }) {
           طلب تواصل بالواتساب
         </span>
         <div>
-          <p className="text-sm font-bold text-tertiary">كمبوند السبحي</p>
+          <p className="text-sm font-bold text-tertiary">المنطقة المحيطة</p>
           <p className="mt-2 text-2xl font-black leading-9 text-fixed">{title}</p>
         </div>
       </div>
@@ -212,7 +212,7 @@ export function PublicRentalContactPage() {
         <Home className="h-14 w-14 text-tertiary" />
         <h1 className="mt-5 text-3xl font-black text-fixed">الإعلان غير موجود أو تم تحديث رابطه</h1>
         <p className="mt-3 leading-8 text-fixed-dim">
-          الإعلان غير موجود أو تم تحديث رابطه. يمكنك الرجوع إلى سوق إيجارات السبحي واختيار الرابط الحالي من قائمة الإعلانات.
+          الإعلان غير موجود أو تم تحديث رابطه. يمكنك الرجوع إلى سوق إيجارات المنطقة المحيطة واختيار الرابط الحالي من قائمة الإعلانات.
         </p>
         <Link className="mt-6 rounded-full bg-tertiary px-6 py-3 font-bold text-primary hover:bg-tertiary/90 transition shadow-lg shadow-tertiary/20" to={ROUTES.RENTALS}>
           العودة إلى الإيجارات

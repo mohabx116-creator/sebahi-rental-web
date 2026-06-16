@@ -12,8 +12,8 @@ export function PublicRentalShell() {
               <Building2 className="h-5 w-5" />
             </span>
             <div className="text-right">
-              <p className="text-sm font-black text-fixed sm:text-base">إيجارات كمبوند السبحي</p>
-              <p className="hidden text-xs font-medium text-fixed-dim sm:block">سوق الإيجارات داخل كمبوند السبحي</p>
+              <p className="text-sm font-black text-fixed sm:text-base">إيجارات المنطقة المحيطة</p>
+              <p className="hidden text-xs font-medium text-fixed-dim sm:block">سوق الإيجارات في المنطقة المحيطة</p>
             </div>
           </Link>
 
