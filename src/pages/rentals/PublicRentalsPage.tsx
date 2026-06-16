@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { ArrowLeft, BedDouble, Building2, Filter, Home, MapPin, ShieldCheck, Sparkles } from 'lucide-react';
-import { useState, useEffect } from 'react';
+
 import type { FormEvent } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { rentalApiService } from '../../lib/api/rental-service';
-import type { ApiData } from '../../lib/api/api-client';
+
 import type { RentalListing, RentalListingQuery } from '../../lib/api/types';
 import { ROUTES } from '../../lib/constants/routes';
 import { cn } from '../../lib/utils/cn';
@@ -223,43 +223,10 @@ export function PublicRentalsPage() {
     refetchIntervalInBackground: false,
     refetchOnWindowFocus: true,
     refetchOnReconnect: true,
+    staleTime: 5000,
   });
 
-  const [cachedData, setCachedData] = useState<ApiData<RentalListing[]> | null>(() => {
-    try {
-      const item = localStorage.getItem('public-rentals-listings-cache-v1');
-      if (item) {
-        const parsed = JSON.parse(item);
-        if (parsed && parsed.data && Array.isArray(parsed.data.data) && typeof parsed.savedAt === 'string') {
-          return parsed.data as ApiData<RentalListing[]>;
-        } else {
-          localStorage.removeItem('public-rentals-listings-cache-v1');
-        }
-      }
-    } catch (e) {
-      localStorage.removeItem('public-rentals-listings-cache-v1');
-    }
-    return null;
-  });
-
-  useEffect(() => {
-    if (listingsQuery.data) {
-      try {
-        localStorage.setItem(
-          'public-rentals-listings-cache-v1',
-          JSON.stringify({
-            data: listingsQuery.data,
-            savedAt: new Date().toISOString(),
-          })
-        );
-        setCachedData(listingsQuery.data);
-      } catch (e) {
-        console.error('Failed to save public rentals listings cache', e);
-      }
-    }
-  }, [listingsQuery.data]);
-
-  const listings = (listingsQuery.data ?? cachedData)?.data ?? [];
+  const listings = listingsQuery.data?.data ?? [];
   const selectedCondition = searchParams.get('unitCondition') || '';
   const featuredOnly = searchParams.get('featured') === 'true';
   const filteredListings = listings.filter((listing) => {
@@ -268,7 +235,7 @@ export function PublicRentalsPage() {
     return listing.unitCondition?.trim() === selectedCondition.trim();
   });
   const visibleListings = [...filteredListings].sort((a, b) => Number(b.isFeatured) - Number(a.isFeatured));
-  const paginationMeta = (listingsQuery.data ?? cachedData)?.meta;
+  const paginationMeta = listingsQuery.data?.meta;
   const totalCount = filteredListings.length;
   let activeFilters = 0;
   searchParams.forEach((value) => {
@@ -382,28 +349,17 @@ export function PublicRentalsPage() {
           </p>
         </div>
 
-        {listingsQuery.isFetching && !listingsQuery.data && cachedData && (
+        {listingsQuery.isFetching && !listingsQuery.data && (
           <div className="mb-6 rounded-[24px] bg-tertiary/10 border border-tertiary/20 p-4 text-right text-tertiary">
             <span className="text-sm font-bold">جاري تحديث أحدث العقارات...</span>
           </div>
         )}
 
-        {listingsQuery.isError && cachedData && (
-          <div className="mb-6 rounded-[24px] border border-error/20 bg-error-container/5 p-4 text-right flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <span className="text-sm font-bold text-error">تعذر تحديث البيانات الآن، يتم عرض آخر نسخة محفوظة.</span>
-            <button
-              className="rounded-full bg-error hover:bg-error/90 px-4 py-2 text-xs font-bold text-white transition shadow-sm"
-              type="button"
-              onClick={() => listingsQuery.refetch()}
-            >
-              إعادة المحاولة
-            </button>
-          </div>
-        )}
 
-        {listingsQuery.isLoading && !cachedData && <LoadingGrid />}
 
-        {listingsQuery.isError && !cachedData && (
+        {listingsQuery.isLoading && <LoadingGrid />}
+
+        {listingsQuery.isError && (
           <div className="rounded-[28px] border border-error/25 bg-error-container/10 p-6 text-right shadow-lg">
             <h3 className="text-xl font-black text-error">تعذر تحميل سوق الإيجارات</h3>
             <p className="mt-2 text-sm leading-7 text-fixed-dim">الخدمة لم ترجع بيانات الإعلانات حاليا. راجع اتصال الإنترنت أو حاول مرة أخرى بعد لحظات.</p>

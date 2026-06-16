@@ -189,9 +189,9 @@ export function PublicRentalDetailPage() {
   const compoundName = publicCompoundName(listing.compound?.name);
   const availableBeds = getAvailableBeds(listing);
   const unitFacts = [
-    { label: 'الغرف', value: `2`, icon: BedDouble },
+    { label: 'الغرف', value: listing.bedrooms != null ? `${listing.bedrooms}` : 'غير محدد', icon: BedDouble },
     { label: 'الدور', value: listing.floor != null ? `${listing.floor}` : 'غير محدد', icon: Building2 },
-    { label: 'المساحة', value: `63 م²`, icon: Ruler },
+    { label: 'المساحة', value: listing.areaSqm ? `${listing.areaSqm} م²` : 'غير محدد', icon: Ruler },
   ];
   const pricingItems = [
     { label: 'التأمين', value: listing.depositAmount ? formatRentalMoney(listing.depositAmount) : formatRentalMoney(toNumber(listing.monthlyRent) * 2) },
@@ -397,8 +397,8 @@ export function PublicRentalDetailPage() {
           <section className="rounded-[28px] glass-panel p-6 text-right">
             <h2 className="text-2xl font-black text-fixed">مواصفات الشقة</h2>
             <dl className="mt-5 grid gap-3 sm:grid-cols-2">
-              <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">المساحة</dt><dd className="mt-1 font-black text-tertiary">63 م²</dd></div>
-              <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">عدد الغرف</dt><dd className="mt-1 font-black text-tertiary">2</dd></div>
+              <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">المساحة</dt><dd className="mt-1 font-black text-tertiary">{listing.areaSqm ? `${listing.areaSqm} م²` : 'غير محدد'}</dd></div>
+              <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">عدد الغرف</dt><dd className="mt-1 font-black text-tertiary">{listing.bedrooms != null ? listing.bedrooms : 'غير محدد'}</dd></div>
               <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">الدور</dt><dd className="mt-1 font-black text-tertiary">{listing.floor ?? 'غير محدد'}</dd></div>
               <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">الشقة مكيفة</dt><dd className="mt-1 font-black text-tertiary">{listing.isAirConditioned ? 'نعم' : 'لا'}</dd></div>
               <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">التأمين</dt><dd className="mt-1 font-black text-tertiary">{listing.depositAmount ? formatRentalMoney(listing.depositAmount) : formatRentalMoney(toNumber(listing.monthlyRent) * 2)}</dd></div>
