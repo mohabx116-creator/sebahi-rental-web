@@ -1,14 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
-  BedDouble,
   Building2,
   ChevronRight,
   ChevronLeft,
   X,
   LockKeyhole,
   MapPin,
-  Ruler,
   Sparkles,
 } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
@@ -188,11 +186,6 @@ export function PublicRentalDetailPage() {
   );
   const compoundName = publicCompoundName(listing.compound?.name);
   const availableBeds = getAvailableBeds(listing);
-  const unitFacts = [
-    { label: 'الغرف', value: listing.bedrooms != null ? `${listing.bedrooms}` : 'غير محدد', icon: BedDouble },
-    { label: 'الدور', value: listing.floor != null ? `${listing.floor}` : 'غير محدد', icon: Building2 },
-    { label: 'المساحة', value: listing.areaSqm ? `${listing.areaSqm} م²` : 'غير محدد', icon: Ruler },
-  ];
   const pricingItems = [
     { label: 'التأمين', value: listing.depositAmount ? formatRentalMoney(listing.depositAmount) : formatRentalMoney(toNumber(listing.monthlyRent) * 2) },
   ];
@@ -324,19 +317,6 @@ export function PublicRentalDetailPage() {
               <div className="rounded-[26px] bg-secondary p-5 text-white border border-secondary/35 shadow-inner">
                 <p className="text-sm font-bold text-tertiary">إيجار الشقة الشهري</p>
                 <p className="mt-1 text-4xl font-black leading-tight text-white">{formatRentalMoney(listing.monthlyRent)}</p>
-              </div>
-
-              <div className="mt-4 grid grid-cols-3 gap-2">
-                {unitFacts.map((fact) => {
-                  const Icon = fact.icon;
-                  return (
-                    <div key={fact.label} className="rounded-2xl bg-primary/45 border border-outline/20 px-2 py-3 text-center">
-                      <Icon className="mx-auto mb-1 h-5 w-5 text-tertiary" />
-                      <p className="text-xs font-bold text-fixed-dim">{fact.label}</p>
-                      <p className="mt-1 text-sm font-black text-fixed">{fact.value}</p>
-                    </div>
-                  );
-                })}
               </div>
 
               <div className="mt-4 space-y-2 rounded-[24px] border border-outline/40 p-4 bg-white/5">
