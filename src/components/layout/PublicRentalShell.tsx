@@ -1,4 +1,4 @@
-import { Building2, FileText, Home, Mail, Megaphone, Phone, ShieldCheck } from 'lucide-react';
+import { Building2, Home, Mail, Megaphone, Phone } from 'lucide-react';
 import { Link, Outlet } from 'react-router-dom';
 import { ROUTES } from '../../lib/constants/routes';
 
@@ -35,38 +35,105 @@ export function PublicRentalShell() {
 
       <Outlet />
 
-      <footer className="border-t border-outline bg-surface-dim/40 text-fixed-dim">
-        <div className="mx-auto grid w-full max-w-7xl gap-6 px-4 py-10 text-right text-sm sm:px-6 lg:grid-cols-[1.2fr_1fr_1fr] lg:items-start lg:px-8">
-          <div className="space-y-3">
-            <p className="text-base font-extrabold text-tertiary">سوق إيجارات السبحي</p>
-            <p className="mt-1 leading-7 text-fixed-dim/90">منصة امنة لعرض وحدات الإيجار داخل كمبوند السبحي .</p>
-            <div className="flex items-center gap-2 font-bold text-secondary-container">
-              <ShieldCheck className="h-5 w-5 text-tertiary" />
-              لا يتم عرض بيانات المالك إلا عن طريق التواصل مع الادارة
+      <footer className="bg-primary text-white border-t border-white/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-right" dir="rtl">
+            {/* Column 1: Brand */}
+            <div className="space-y-3">
+              <h3 className="font-bold text-base text-white">مجمع الخدمات للمنطقة</h3>
+              <p className="text-sm text-gray-400 leading-relaxed">
+                منصة آمنة لعرض خدمات المنطقة
+              </p>
+            </div>
+
+            {/* Column 2: Contact/Support (Social Links) */}
+            <div className="space-y-3">
+              <h3 className="font-bold text-base text-white">للتواصل والدعم</h3>
+              <div className="flex flex-col gap-2 mt-2">
+                <a
+                  href="https://chat.whatsapp.com/ECEZfbsvjlU43eDvKa9XUu"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-sm text-emerald-400 hover:text-emerald-300 transition-colors w-fit"
+                >
+                  <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                  جروب الواتساب
+                </a>
+                <a
+                  href="https://www.facebook.com/share/g/1CzbCwjugk/?mibextid=KtfwRi"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 transition-colors w-fit"
+                >
+                  <span className="w-2 h-2 rounded-full bg-blue-400" />
+                  جروب الفيس بوك
+                </a>
+              </div>
+            </div>
+
+            {/* Column 3: Important Links */}
+            <div className="space-y-3">
+              <h3 className="font-bold text-base text-white">روابط مهمة</h3>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li>
+                  <a
+                    href="https://www.dalilsubhi.com/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-[#059669] transition-colors"
+                  >
+                    الصفحة الرئيسية
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://chat.whatsapp.com/ECEZfbsvjlU43eDvKa9XUu"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-[#059669] transition-colors"
+                  >
+                    جروب الواتساب
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://www.facebook.com/share/g/1CzbCwjugk/?mibextid=KtfwRi"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-[#059669] transition-colors"
+                  >
+                    جروب الفيس بوك
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* Column 4: Contact/Support (Old Rental Contact Info) */}
+            <div className="space-y-3">
+              <h3 className="font-bold text-base text-white">للتواصل والدعم</h3>
+              <div className="flex flex-col gap-2 mt-2">
+                <a
+                  className="flex items-center gap-2 text-sm text-gray-400 hover:text-[#059669] transition-colors w-fit"
+                  href="tel:+20123"
+                >
+                  <Phone className="h-4 w-4 text-emerald-400" />
+                  <span dir="ltr">+201234567890</span>
+                </a>
+                <a
+                  className="flex items-center gap-2 text-sm text-gray-400 hover:text-[#059669] transition-colors w-fit"
+                  href="mailto:dalilsubhi@gmail.com"
+                >
+                  <Mail className="h-4 w-4 text-emerald-400" />
+                  <span dir="ltr">dalilsubhi@gmail.com</span>
+                </a>
+              </div>
             </div>
           </div>
-          <div className="space-y-3">
-            <p className="text-base font-extrabold text-tertiary">للتواصل والدعم</p>
-            <a className="flex items-center gap-2 font-semibold hover:text-tertiary transition" href="tel:+20123">
-              <Phone className="h-4 w-4 text-tertiary" />
-              <span dir="ltr">+201234567890</span>
-            </a>
-            <a className="flex items-center gap-2 font-semibold hover:text-tertiary transition" href="mailto:dalilsubhi@gmail.com">
-              <Mail className="h-4 w-4 text-tertiary" />
-              <span dir="ltr">dalilsubhi@gmail.com</span>
-            </a>
-          </div>
-          <div className="space-y-3">
-            <p className="text-base font-extrabold text-tertiary">روابط مهمة</p>
-            <Link className="flex items-center gap-2 font-semibold hover:text-tertiary transition" to={ROUTES.OWNER_LIST_UNIT}>
-              <Megaphone className="h-4 w-4 text-tertiary" />
-              أعلن عن وحدتك
-            </Link>
-            <Link className="flex items-center gap-2 font-semibold hover:text-tertiary transition" to={ROUTES.REFUND_POLICY}>
-              <FileText className="h-4 w-4 text-tertiary" />
-              سياسة الاسترجاع
-            </Link>
-            <span className="block text-xs leading-6 text-fixed-dim/70">سياسة الخصوصية والشروط قيد الإعداد .</span>
+
+          <div className="border-t border-white/10 mt-8 pt-6 text-center">
+            <p className="text-xs text-gray-500">
+              © 2026 مجمع الخدمات للمنطقة
+            </p>
           </div>
         </div>
       </footer>
