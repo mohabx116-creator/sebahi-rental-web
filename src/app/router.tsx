@@ -4,7 +4,6 @@ import { PublicRentalShell } from '../components/layout/PublicRentalShell';
 import { ROUTES } from '../lib/constants/routes';
 import { NotFoundPage } from '../pages/NotFoundPage';
 import { OwnerListUnitPage } from '../pages/owners/OwnerListUnitPage';
-import { RefundPolicyPage } from '../pages/RefundPolicyPage';
 import { PublicRentalContactPage } from '../pages/rentals/PublicRentalContactPage';
 import { PublicRentalDetailPage } from '../pages/rentals/PublicRentalDetailPage';
 import { PublicRentalReservationPage } from '../pages/rentals/PublicRentalReservationPage';
@@ -22,7 +21,6 @@ export function AppRouter() {
           <Route path={ROUTES.RENTAL_CONTACT} element={<PublicRentalContactPage />} />
           <Route path={ROUTES.RENTAL_RESERVATION} element={<PublicRentalReservationPage />} />
           <Route path={ROUTES.OWNER_LIST_UNIT} element={<OwnerListUnitPage />} />
-          <Route path={ROUTES.REFUND_POLICY} element={<RefundPolicyPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>

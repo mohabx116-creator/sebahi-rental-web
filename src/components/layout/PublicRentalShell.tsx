@@ -1,4 +1,4 @@
-import { Building2, FileText, Home, Mail, Megaphone, Phone, ShieldCheck } from 'lucide-react';
+import { Building2, Home, Mail, Megaphone, Phone, ShieldCheck } from 'lucide-react';
 import { Link, Outlet } from 'react-router-dom';
 import { ROUTES } from '../../lib/constants/routes';
 
@@ -62,11 +62,6 @@ export function PublicRentalShell() {
               <Megaphone className="h-4 w-4 text-tertiary" />
               أعلن عن وحدتك
             </Link>
-            <Link className="flex items-center gap-2 font-semibold hover:text-tertiary transition" to={ROUTES.REFUND_POLICY}>
-              <FileText className="h-4 w-4 text-tertiary" />
-              سياسة الاسترجاع
-            </Link>
-            <span className="block text-xs leading-6 text-fixed-dim/70">سياسة الخصوصية والشروط قيد الإعداد .</span>
           </div>
         </div>
       </footer>
