@@ -71,7 +71,7 @@ const ownerSubmissionSchema = z.object({
   }),
   extraAmenitiesText: z.string().trim().optional(),
   description: z.string().trim().optional(),
-  policyAccepted: z.boolean().refine((value) => value === true, 'يجب الموافقة على سياسة الاسترجاع وشروط النشر'),
+  policyAccepted: z.boolean().refine((value) => value === true, 'يجب الموافقة على شروط النشر'),
 });
 
 type OwnerSubmissionFormInput = z.input<typeof ownerSubmissionSchema>;
@@ -326,27 +326,7 @@ export function OwnerListUnitPage() {
         </div>
       </section>
 
-      <section className="mx-auto grid w-full max-w-7xl gap-6 px-4 py-8 sm:px-6 lg:grid-cols-[360px_1fr] lg:px-8">
-        <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
-          <div className="rounded-[28px] glass-panel p-5 text-right text-sm leading-7 text-fixed-dim shadow-xl">
-            <h2 className="mb-4 text-xl font-black text-fixed">سياسة الاسترجاع</h2>
-            <ul className="space-y-3">
-              <li className="flex items-start gap-2">
-                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-tertiary"></span>
-                <span>لا يتم تحصيل أي رسوم إلا بعد مراجعة الطلب والتواصل معك.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-tertiary"></span>
-                <span>إذا لم يتم تفعيل الإعلان أو لم تتم الموافقة عليه، يتم رد أي مبلغ تم دفعه.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-tertiary"></span>
-                <span>بعد تفعيل الإعلان ونشره، لا يتم الاسترجاع إلا في حالة وجود خطأ من الإدارة.</span>
-              </li>
-            </ul>
-          </div>
-        </aside>
-
+      <section className="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="space-y-6">
           {success && (
             <section className="rounded-[28px] border border-secondary/35 bg-secondary/20 p-6 text-right space-y-4">
@@ -516,7 +496,7 @@ export function OwnerListUnitPage() {
               <label className="flex items-start gap-3 text-sm font-bold leading-7 text-fixed-dim">
                 <input className="mt-1.5 rounded border-outline bg-primary/45 text-secondary focus:ring-secondary/20" type="checkbox" {...register('policyAccepted')} disabled={isPending} />
                 <span>
-                  أوافق على سياسة الاسترجاع وشروط نشر الإعلان، وأقر بأن نشر الإعلان لا يتم إلا بعد مراجعة وموافقة الإدارة.
+                  أوافق على شروط نشر الإعلان، وأقر بأن نشر الإعلان لا يتم إلا بعد مراجعة وموافقة الإدارة.
                 </span>
               </label>
               {errors.policyAccepted && <p className="mt-2 text-sm font-bold text-error">{errors.policyAccepted.message}</p>}
