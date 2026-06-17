@@ -19,9 +19,7 @@ export function PublicRentalShell() {
           </Link>
 
           <nav className="flex items-center gap-2 text-sm font-bold text-fixed">
-            <Link className="hidden rounded-full px-4 py-2 transition duration-200 hover:bg-white/5 hover:text-tertiary sm:inline-flex" to="/rentals/sebahi-furnished-apartment-a101">
-              الإعلان المميز
-            </Link>
+
             <Link className="hidden items-center gap-2 rounded-full px-4 py-2 transition duration-200 hover:bg-white/5 hover:text-tertiary md:inline-flex" to={ROUTES.OWNER_LIST_UNIT}>
               <Megaphone className="h-4 w-4 text-tertiary" />
               أعلن عن وحدتك
