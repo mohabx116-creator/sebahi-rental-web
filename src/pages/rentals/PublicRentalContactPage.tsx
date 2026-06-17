@@ -291,19 +291,6 @@ export function PublicRentalContactPage() {
                 </div>
               )}
 
-              <div className="mt-5 rounded-[22px] border border-tertiary/25 bg-tertiary/5 p-4">
-                <h3 className="text-base font-black text-tertiary">حجز مبدئي بدون دفع الآن</h3>
-                <p className="mt-2 text-sm leading-6 text-fixed-dim">
-                  لا يوجد دفع داخل الموقع. بعد الحجز ستظهر لك رسالة واتساب جاهزة للإدارة.
-                </p>
-                <div className="mt-3 grid gap-2 sm:grid-cols-3">
-                  {['بدون دفع الآن', 'متابعة عبر واتساب', 'سرير واحد لكل طلب'].map((item) => (
-                    <div className="rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-xs font-bold text-fixed" key={item}>
-                      {item}
-                    </div>
-                  ))}
-                </div>
-              </div>
 
               <div className="mt-4 rounded-[22px] border border-outline/25 bg-primary/35 p-4">
                 <h3 className="text-base font-black text-fixed">خطوات بسيطة</h3>
