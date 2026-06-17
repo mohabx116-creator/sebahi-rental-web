@@ -645,9 +645,8 @@ export function PublicRentalContactPage() {
                     type="submit"
                   >
                     <CheckCircle2 className="h-5 w-5 text-white" />
-                    تجهيز رسالة الحجز
+                    تأكيد الحجز
                   </button>
-                  <p className="text-center text-xs font-bold leading-6 text-fixed-dim">تجهيز فقط، بدون حجز نهائي.</p>
                 </form>
               )}
             </div>
