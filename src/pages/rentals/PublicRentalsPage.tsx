@@ -21,7 +21,7 @@ import {
   toNumber,
 } from './rental-format';
 
-const heroImage = '/hero-compound.png';
+import heroImage from '../../assets/sebahi-gardens-hero.jpg';
 const publicRentalCardLocation = 'المنطقة المحيطة-حدائق العاشر من رمضان';
 
 function getAvailableBedsText(availableBeds: number) {
@@ -261,9 +261,9 @@ export function PublicRentalsPage() {
 
   return (
     <main className="pb-16 text-fixed">
-      <section className="relative overflow-hidden bg-primary text-white">
-        <img alt="" className="absolute inset-0 h-full w-full object-cover opacity-25" src={heroImage} />
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/40 via-primary/80 to-primary" />
+      <section className="relative overflow-hidden bg-[#05190c] text-white">
+        <img alt="" className="absolute inset-0 h-full w-full object-cover object-center opacity-40" src={heroImage} />
+        <div className="absolute inset-0 bg-gradient-to-b from-[rgba(5,25,12,0.72)] via-[rgba(5,25,12,0.86)] to-primary" />
         <div className="relative mx-auto grid min-h-[440px] w-full max-w-7xl items-end gap-8 px-4 pb-10 pt-16 sm:min-h-[540px] sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:px-8">
           <div className="max-w-3xl text-right">
             <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold text-tertiary backdrop-blur-md">
