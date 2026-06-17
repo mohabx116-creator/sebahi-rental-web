@@ -349,7 +349,7 @@ export function PublicRentalDetailPage() {
                 {availableBeds > 0 ? (
                   <Link className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-tertiary hover:bg-tertiary/90 px-5 py-4 text-base font-black text-primary shadow-xl shadow-tertiary/15 transition" to={`/rentals/${listing.slug}/contact`}>
                     <LockKeyhole className="h-5 w-5" />
-                    احجز سريرك الآن
+                    حجز الآن
                   </Link>
                 ) : (
                   <div className="rounded-2xl border border-error/25 bg-error-container/20 px-4 py-3 text-center text-sm font-black text-error">
@@ -357,11 +357,6 @@ export function PublicRentalDetailPage() {
                   </div>
                 )}
               </div>
-              {availableBeds > 0 && (
-                <p className="mt-3 text-center text-xs font-bold text-fixed-dim">
-                  حجز مبدئي بدون دفع الآن
-                </p>
-              )}
             </aside>
           </div>
         </div>
@@ -508,7 +503,7 @@ export function PublicRentalDetailPage() {
               to={`/rentals/${listing.slug}/contact`}
             >
               <LockKeyhole className="h-4 w-4" />
-              احجز سريرك الآن
+              حجز الآن
             </Link>
           </div>
         </div>
