@@ -1,5 +1,6 @@
-import { Building2, Home, Mail, Megaphone, Phone } from 'lucide-react';
+import { Home, Mail, Megaphone, Phone } from 'lucide-react';
 import { Link, Outlet } from 'react-router-dom';
+import dalilSubhiLogo from '../../assets/dalil-subhi-logo.jpg';
 import { ROUTES } from '../../lib/constants/routes';
 
 export function PublicRentalShell() {
@@ -8,8 +9,8 @@ export function PublicRentalShell() {
       <header className="sticky top-0 z-40 border-b border-outline bg-primary/80 backdrop-blur-xl shadow-lg">
         <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link className="flex items-center gap-3" to={ROUTES.RENTALS}>
-            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-secondary text-white shadow-lg shadow-secondary/20">
-              <Building2 className="h-5 w-5" />
+            <span className="flex h-10 w-10 overflow-hidden items-center justify-center rounded-2xl bg-white shadow-lg shadow-secondary/20 border border-outline/20">
+              <img src={dalilSubhiLogo} alt="دليل السبحي" className="h-full w-full object-contain mix-blend-multiply" />
             </span>
             <div className="text-right">
               <p className="text-sm font-black text-fixed sm:text-base">إيجارات المنطقة المحيطة</p>
