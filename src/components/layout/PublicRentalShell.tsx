@@ -114,10 +114,12 @@ export function PublicRentalShell() {
               <div className="flex flex-col gap-2 mt-2">
                 <a
                   className="flex items-center gap-2 text-sm text-gray-400 hover:text-[#059669] transition-colors w-fit"
-                  href="tel:+20123"
+                  href="https://wa.me/201224591618"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
                   <Phone className="h-4 w-4 text-emerald-400" />
-                  <span dir="ltr">+201234567890</span>
+                  <span dir="ltr">01224591618</span>
                 </a>
                 <a
                   className="flex items-center gap-2 text-sm text-gray-400 hover:text-[#059669] transition-colors w-fit"
