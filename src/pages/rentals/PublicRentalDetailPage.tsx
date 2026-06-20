@@ -149,6 +149,7 @@ export function PublicRentalDetailPage() {
   const { slug } = useParams();
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const listingQuery = useQuery({
     queryKey: ['rentals', 'public', 'listing', slug],
@@ -162,7 +163,12 @@ export function PublicRentalDetailPage() {
 
   useEffect(() => {
     setSelectedImageIndex(0);
+    setImageError(false);
   }, [slug]);
+
+  useEffect(() => {
+    setImageError(false);
+  }, [selectedImageIndex]);
 
   useEffect(() => {
     if (gallery.length <= 1) return;
@@ -277,70 +283,88 @@ export function PublicRentalDetailPage() {
 
           <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_420px] xl:items-start">
             <div className="min-w-0 space-y-4">
-              <div className="relative overflow-hidden rounded-[32px] glass-panel">
+              <div className="relative overflow-hidden rounded-[32px] glass-panel bg-white/40 border border-[#e4dac5]/60">
                 <div
-                  className="relative aspect-[4/3] sm:aspect-[16/10] lg:aspect-[16/8.5] bg-surface-dim cursor-pointer group"
+                  className="relative aspect-[4/3] sm:aspect-[16/10] lg:aspect-[16/8.5] bg-black cursor-pointer overflow-hidden group"
                   onClick={() => setIsLightboxOpen(true)}
                 >
-                  <DetailImageFallback title={title} />
-                  {activeImageUrl && (
+                  {!activeImageUrl || imageError ? (
+                    <DetailImageFallback title={title} />
+                  ) : (
                     <img
                       alt={getListingImageAlt(listing, activeImage)}
-                      className="relative h-full w-full object-cover transition duration-300 group-hover:opacity-90"
+                      className="relative h-full w-full object-contain transition duration-300 group-hover:opacity-95"
                       decoding="async"
                       loading="eager"
                       src={activeImageUrl}
                       {...{ fetchPriority: 'high' }}
-                      onError={(event) => {
-                        event.currentTarget.style.display = 'none';
+                      onError={() => {
+                        setImageError(true);
                       }}
                     />
                   )}
-
-                  {gallery.length > 1 && (
-                    <>
-                      <button
-                        aria-label="الصورة السابقة"
-                        className="absolute right-4 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full bg-primary/60 text-white hover:bg-primary/80 transition backdrop-blur-sm z-10"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedImageIndex((prev) => (prev - 1 + gallery.length) % gallery.length);
-                        }}
-                      >
-                        <ChevronRight className="h-6 w-6" />
-                      </button>
-                      <button
-                        aria-label="الصورة التالية"
-                        className="absolute left-4 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full bg-primary/60 text-white hover:bg-primary/80 transition backdrop-blur-sm z-10"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedImageIndex((prev) => (prev + 1) % gallery.length);
-                        }}
-                      >
-                        <ChevronLeft className="h-6 w-6" />
-                      </button>
-                    </>
-                  )}
                 </div>
-                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[rgba(31,44,34,0.88)] via-[rgba(31,44,34,0.28)] to-transparent p-5 text-white sm:p-7 pointer-events-none">
-                  <div className="flex flex-wrap items-center gap-2 pointer-events-auto">
-                    <span className="rounded-full border border-[#d9e5dc] bg-white/80 px-3 py-1 text-xs font-bold text-[#1f2c22] backdrop-blur-md">{listingStatusLabels[listing.status]}</span>
-                    {listing.isFeatured && (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-tertiary px-3 py-1 text-xs font-bold text-primary shadow-md">
-                        <Sparkles className="h-3.5 w-3.5 text-primary" />
-                        مميز
+
+                <div className="p-5 sm:p-7 space-y-5 text-right border-t border-[#e4dac5]/40 bg-white/20">
+                  <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between flex-row-reverse">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="rounded-full border border-[#e4dac5] bg-white/80 px-3 py-1 text-xs font-bold text-[#1f2c22] shadow-sm">
+                        {listingStatusLabels[listing.status]}
                       </span>
-                    )}
-                    <span className="rounded-full border border-[#d9e5dc] bg-white/80 px-3 py-1 text-xs font-bold text-[#1f2c22] backdrop-blur-md">{listingTypeLabels[listing.listingType]}</span>
-                    <span className="rounded-full border border-[#d9e5dc] bg-white/80 px-3 py-1 text-xs font-bold text-[#1f2c22] backdrop-blur-md">{listing.unitCondition || furnishingLabels[listing.furnishingStatus]}</span>
-                    {availableBeds > 0 && (
-                      <span className="rounded-full border border-emerald-500/25 bg-emerald-500/10 px-3 py-1 text-xs font-black text-emerald-800 backdrop-blur-md">
-                        {getAvailableBedsLabel(availableBeds)}
+                      {listing.isFeatured && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-tertiary px-3 py-1 text-xs font-bold text-primary shadow-sm">
+                          <Sparkles className="h-3.5 w-3.5 text-primary" />
+                          مميز
+                        </span>
+                      )}
+                      <span className="rounded-full border border-[#e4dac5] bg-white/80 px-3 py-1 text-xs font-bold text-[#1f2c22] shadow-sm">
+                        {listingTypeLabels[listing.listingType]}
                       </span>
+                      {(listing.unitCondition || furnishingLabels[listing.furnishingStatus]) && (
+                        <span className="rounded-full border border-[#e4dac5] bg-white/80 px-3 py-1 text-xs font-bold text-[#1f2c22] shadow-sm">
+                          {listing.unitCondition || furnishingLabels[listing.furnishingStatus]}
+                        </span>
+                      )}
+                      {availableBeds > 0 && (
+                        <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs font-black text-emerald-800 shadow-sm">
+                          {getAvailableBedsLabel(availableBeds)}
+                        </span>
+                      )}
+                    </div>
+
+                    {gallery.length > 1 && (
+                      <div className="flex items-center justify-between gap-3 sm:justify-end">
+                        <span className="text-xs font-bold text-[#5f6e62]">
+                          صورة {selectedImageIndex + 1} من {gallery.length}
+                        </span>
+                        <div className="flex items-center gap-1.5" dir="ltr">
+                          <button
+                            aria-label="الصورة السابقة"
+                            className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#e4dac5] bg-white/80 text-[#1f2c22] hover:bg-tertiary hover:text-primary transition shadow-sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedImageIndex((prev) => (prev - 1 + gallery.length) % gallery.length);
+                            }}
+                          >
+                            <ChevronLeft className="h-5 w-5" />
+                          </button>
+                          <button
+                            aria-label="الصورة التالية"
+                            className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#e4dac5] bg-white/80 text-[#1f2c22] hover:bg-tertiary hover:text-primary transition shadow-sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedImageIndex((prev) => (prev + 1) % gallery.length);
+                            }}
+                          >
+                            <ChevronRight className="h-5 w-5" />
+                          </button>
+                        </div>
+                      </div>
                     )}
                   </div>
-                  <h1 className="mt-3 max-w-4xl text-2xl font-black leading-[1.35] sm:text-4xl lg:text-5xl text-fixed pointer-events-auto">{title}</h1>
-                  <p className="mt-2 flex max-w-3xl items-center gap-2 text-sm text-[#f8f5ef] sm:text-base pointer-events-auto">
+
+                  <h1 className="text-2xl font-black leading-[1.35] sm:text-3xl lg:text-4xl text-[#1f2c22]">{title}</h1>
+                  <p className="flex items-center gap-2 text-sm text-[#5f6e62] sm:text-base">
                     <MapPin className="h-5 w-5 shrink-0 text-tertiary" />
                     {location}
                   </p>
@@ -348,7 +372,7 @@ export function PublicRentalDetailPage() {
               </div>
 
               {gallery.length > 1 && (
-                <div className="flex gap-2 sm:gap-3 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-white/10 snap-x">
+                <div className="flex gap-2 sm:gap-3 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-primary/10 snap-x">
                   {gallery.map((image, index) => {
                     const thumbUrl = image.optimizedUrls
                       ? (image.optimizedUrls.thumbnail ?? image.url)
@@ -360,8 +384,8 @@ export function PublicRentalDetailPage() {
                         className={cn(
                           "relative shrink-0 aspect-[4/3] w-24 sm:w-28 rounded-2xl overflow-hidden border-2 bg-surface-dim snap-start transition",
                           selectedImageIndex === index
-                            ? "border-tertiary shadow-lg shadow-tertiary/20 scale-95"
-                            : "border-outline/50 hover:border-white/30"
+                            ? "border-tertiary ring-2 ring-tertiary/30 scale-95 shadow-md"
+                            : "border-[#e4dac5] hover:border-tertiary/50"
                         )}
                         onClick={() => setSelectedImageIndex(index)}
                       >
