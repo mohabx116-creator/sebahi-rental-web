@@ -48,30 +48,6 @@ export function PublicRentalShell() {
             </div>
 
             <div className="space-y-3">
-              <h3 className="text-base font-bold text-[#1f2c22]">للتواصل والدعم</h3>
-              <div className="mt-2 flex flex-col gap-2">
-                <a
-                  href="https://chat.whatsapp.com/ECEZfbsvjlU43eDvKa9XUu"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex w-fit items-center gap-2 text-sm text-emerald-600 transition-colors hover:text-emerald-700"
-                >
-                  <span className="h-2 w-2 rounded-full bg-emerald-500" />
-                  خدمة العملاء
-                </a>
-                <a
-                  href="https://www.facebook.com/share/g/1CzbCwjugk/?mibextid=KtfwRi"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex w-fit items-center gap-2 text-sm text-blue-600 transition-colors hover:text-blue-700"
-                >
-                  <span className="h-2 w-2 rounded-full bg-blue-500" />
-                  جروب الفيس بوك
-                </a>
-              </div>
-            </div>
-
-            <div className="space-y-3">
               <h3 className="text-base font-bold text-[#1f2c22]">روابط مهمة</h3>
               <ul className="space-y-2 text-sm text-[#5f6e62]">
                 <li>
