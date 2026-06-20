@@ -5,28 +5,33 @@ import { ROUTES } from '../../lib/constants/routes';
 
 export function PublicRentalShell() {
   return (
-    <div className="min-h-dvh bg-primary text-fixed font-sans">
-      <header className="sticky top-0 z-40 border-b border-outline bg-primary/80 backdrop-blur-xl shadow-lg">
+    <div className="rentals-light min-h-dvh bg-[#f7f2e8] font-sans text-[#1f2c22]">
+      <header className="sticky top-0 z-40 border-b border-[#e4dac5] bg-white/80 shadow-[0_12px_40px_rgba(28,45,34,0.08)] backdrop-blur-xl">
         <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link className="flex items-center gap-3" to={ROUTES.RENTALS}>
-            <span className="flex h-10 w-10 overflow-hidden items-center justify-center rounded-2xl bg-white shadow-lg shadow-secondary/20 border border-outline/20">
-              <img src={dalilSubhiLogo} alt="دليل السبحي" className="h-full w-full object-contain mix-blend-multiply" />
+            <span className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-2xl border border-[#e4dac5] bg-white shadow-lg shadow-[0_10px_30px_rgba(28,45,34,0.08)]">
+              <img src={dalilSubhiLogo} alt="Ø¯Ù„ÙŠÙ„ Ø§Ù„Ø³Ø¨Ø­ÙŠ" className="h-full w-full object-contain mix-blend-multiply" />
             </span>
             <div className="text-right">
-              <p className="text-sm font-black text-fixed sm:text-base">إيجارات المنطقة المحيطة</p>
-              <p className="hidden text-xs font-medium text-fixed-dim sm:block">سوق الإيجارات في المنطقة المحيطة</p>
+              <p className="text-sm font-black text-[#1f2c22] sm:text-base">Ø¥ÙŠØ¬Ø§Ø±Ø§Øª Ø§Ù„Ù…Ù†Ø·Ù‚Ø© Ø§Ù„Ù…Ø­ÙŠØ·Ø©</p>
+              <p className="hidden text-xs font-medium text-[#5f6e62] sm:block">Ø³ÙˆÙ‚ Ø§Ù„Ø¥ÙŠØ¬Ø§Ø±Ø§Øª ÙÙŠ Ø§Ù„Ù…Ù†Ø·Ù‚Ø© Ø§Ù„Ù…Ø­ÙŠØ·Ø©</p>
             </div>
           </Link>
 
-          <nav className="flex items-center gap-2 text-sm font-bold text-fixed">
-
-            <Link className="hidden items-center gap-2 rounded-full px-4 py-2 transition duration-200 hover:bg-white/5 hover:text-tertiary md:inline-flex" to={ROUTES.OWNER_LIST_UNIT}>
+          <nav className="flex items-center gap-2 text-sm font-bold text-[#1f2c22]">
+            <Link
+              className="hidden items-center gap-2 rounded-full px-4 py-2 transition duration-200 hover:bg-[#f3ede2] hover:text-tertiary md:inline-flex"
+              to={ROUTES.OWNER_LIST_UNIT}
+            >
               <Megaphone className="h-4 w-4 text-tertiary" />
-              أعلن عن وحدتك
+              Ø£Ø¹Ù„Ù† Ø¹Ù† ÙˆØ­Ø¯ØªÙƒ
             </Link>
-            <Link className="inline-flex min-h-10 items-center gap-2 rounded-full bg-secondary px-5 py-2 text-white shadow-lg shadow-secondary/20 transition duration-200 hover:bg-secondary/90" to={ROUTES.RENTALS}>
+            <Link
+              className="inline-flex min-h-10 items-center gap-2 rounded-full bg-secondary px-5 py-2 text-white shadow-lg shadow-secondary/20 transition duration-200 hover:bg-secondary/90"
+              to={ROUTES.RENTALS}
+            >
               <Home className="h-4 w-4" />
-              الإيجارات
+              Ø§Ù„Ø¥ÙŠØ¬Ø§Ø±Ø§Øª
             </Link>
           </nav>
         </div>
@@ -34,54 +39,51 @@ export function PublicRentalShell() {
 
       <Outlet />
 
-      <footer className="bg-primary text-white border-t border-white/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-right" dir="rtl">
-            {/* Column 1: Brand */}
+      <footer className="border-t border-[#e4dac5] bg-[#f2ebde] text-[#243128]">
+        <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 gap-8 text-right md:grid-cols-4" dir="rtl">
             <div className="space-y-3">
-              <h3 className="font-bold text-base text-white">مجمع الخدمات للمنطقة</h3>
-              <p className="text-sm text-gray-400 leading-relaxed">
-                منصة آمنة لعرض خدمات المنطقة
+              <h3 className="text-base font-bold text-[#1f2c22]">Ù…Ø¬Ù…Ø¹ Ø§Ù„Ø®Ø¯Ù…Ø§Øª Ù„Ù„Ù…Ù†Ø·Ù‚Ø©</h3>
+              <p className="text-sm leading-relaxed text-[#5f6e62]">
+                Ù…Ù†ØµØ© Ø¢Ù…Ù†Ø© Ù„Ø¹Ø±Ø¶ Ø®Ø¯Ù…Ø§Øª Ø§Ù„Ù…Ù†Ø·Ù‚Ø©
               </p>
             </div>
 
-            {/* Column 2: Contact/Support (Social Links) */}
             <div className="space-y-3">
-              <h3 className="font-bold text-base text-white">للتواصل والدعم</h3>
-              <div className="flex flex-col gap-2 mt-2">
+              <h3 className="text-base font-bold text-[#1f2c22]">Ù„Ù„ØªÙˆØ§ØµÙ„ ÙˆØ§Ù„Ø¯Ø¹Ù…</h3>
+              <div className="mt-2 flex flex-col gap-2">
                 <a
                   href="https://chat.whatsapp.com/ECEZfbsvjlU43eDvKa9XUu"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-sm text-emerald-400 hover:text-emerald-300 transition-colors w-fit"
+                  className="inline-flex w-fit items-center gap-2 text-sm text-emerald-600 transition-colors hover:text-emerald-700"
                 >
-                  <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                  جروب الواتساب
+                  <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                  Ø¬Ø±ÙˆØ¨ Ø§Ù„ÙˆØ§ØªØ³Ø§Ø¨
                 </a>
                 <a
                   href="https://www.facebook.com/share/g/1CzbCwjugk/?mibextid=KtfwRi"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 transition-colors w-fit"
+                  className="inline-flex w-fit items-center gap-2 text-sm text-blue-600 transition-colors hover:text-blue-700"
                 >
-                  <span className="w-2 h-2 rounded-full bg-blue-400" />
-                  جروب الفيس بوك
+                  <span className="h-2 w-2 rounded-full bg-blue-500" />
+                  Ø¬Ø±ÙˆØ¨ Ø§Ù„ÙÙŠØ³ Ø¨ÙˆÙƒ
                 </a>
               </div>
             </div>
 
-            {/* Column 3: Important Links */}
             <div className="space-y-3">
-              <h3 className="font-bold text-base text-white">روابط مهمة</h3>
-              <ul className="space-y-2 text-sm text-gray-400">
+              <h3 className="text-base font-bold text-[#1f2c22]">Ø±ÙˆØ§Ø¨Ø· Ù…Ù‡Ù…Ø©</h3>
+              <ul className="space-y-2 text-sm text-[#5f6e62]">
                 <li>
                   <a
                     href="https://www.dalilsubhi.com/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-[#059669] transition-colors"
+                    className="transition-colors hover:text-emerald-700"
                   >
-                    الصفحة الرئيسية
+                    Ø§Ù„ØµÙØ­Ø© Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠØ©
                   </a>
                 </li>
                 <li>
@@ -89,9 +91,9 @@ export function PublicRentalShell() {
                     href="https://chat.whatsapp.com/ECEZfbsvjlU43eDvKa9XUu"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-[#059669] transition-colors"
+                    className="transition-colors hover:text-emerald-700"
                   >
-                    جروب الواتساب
+                    Ø¬Ø±ÙˆØ¨ Ø§Ù„ÙˆØ§ØªØ³Ø§Ø¨
                   </a>
                 </li>
                 <li>
@@ -99,41 +101,40 @@ export function PublicRentalShell() {
                     href="https://www.facebook.com/share/g/1CzbCwjugk/?mibextid=KtfwRi"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-[#059669] transition-colors"
+                    className="transition-colors hover:text-emerald-700"
                   >
-                    جروب الفيس بوك
+                    Ø¬Ø±ÙˆØ¨ Ø§Ù„ÙÙŠØ³ Ø¨ÙˆÙƒ
                   </a>
                 </li>
               </ul>
             </div>
 
-            {/* Column 4: Contact/Support (Old Rental Contact Info) */}
             <div className="space-y-3">
-              <h3 className="font-bold text-base text-white">للتواصل والدعم</h3>
-              <div className="flex flex-col gap-2 mt-2">
+              <h3 className="text-base font-bold text-[#1f2c22]">Ù„Ù„ØªÙˆØ§ØµÙ„ ÙˆØ§Ù„Ø¯Ø¹Ù…</h3>
+              <div className="mt-2 flex flex-col gap-2">
                 <a
-                  className="flex items-center gap-2 text-sm text-gray-400 hover:text-[#059669] transition-colors w-fit"
+                  className="flex w-fit items-center gap-2 text-sm text-[#5f6e62] transition-colors hover:text-emerald-700"
                   href="https://wa.me/201224591618"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <Phone className="h-4 w-4 text-emerald-400" />
+                  <Phone className="h-4 w-4 text-emerald-600" />
                   <span dir="ltr">01224591618</span>
                 </a>
                 <a
-                  className="flex items-center gap-2 text-sm text-gray-400 hover:text-[#059669] transition-colors w-fit"
+                  className="flex w-fit items-center gap-2 text-sm text-[#5f6e62] transition-colors hover:text-emerald-700"
                   href="mailto:dalilsubhi@gmail.com"
                 >
-                  <Mail className="h-4 w-4 text-emerald-400" />
+                  <Mail className="h-4 w-4 text-emerald-600" />
                   <span dir="ltr">dalilsubhi@gmail.com</span>
                 </a>
               </div>
             </div>
           </div>
 
-          <div className="border-t border-white/10 mt-8 pt-6 text-center">
-            <p className="text-xs text-gray-500">
-              © 2026 مجمع الخدمات للمنطقة
+          <div className="mt-8 border-t border-[#e4dac5] pt-6 text-center">
+            <p className="text-xs text-[#6d756a]">
+              Â© 2026 Ù…Ø¬Ù…Ø¹ Ø§Ù„Ø®Ø¯Ù…Ø§Øª Ù„Ù„Ù…Ù†Ø·Ù‚Ø©
             </p>
           </div>
         </div>

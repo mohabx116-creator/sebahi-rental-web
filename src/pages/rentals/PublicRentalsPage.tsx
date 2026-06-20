@@ -58,7 +58,7 @@ function ListingImageFallback({ title }: { title: string }) {
     <div className="absolute inset-0 flex flex-col justify-between overflow-hidden bg-primary p-5 text-white">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(214,178,94,0.35),transparent_34%),linear-gradient(135deg,rgba(255,255,255,0.08),transparent_38%)]" />
       <div className="relative flex h-full flex-col justify-between">
-        <span className="inline-flex w-fit items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-black text-tertiary backdrop-blur-md">
+        <span className="inline-flex w-fit items-center gap-2 rounded-full border border-[#e4dac5] bg-white/70 px-3 py-1.5 text-xs font-black text-tertiary shadow-sm backdrop-blur-md">
           <Home className="h-4 w-4 text-tertiary" />
           {publicRentalBrand.marketplaceLabel}
         </span>
@@ -115,7 +115,7 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
               </span>
             )}
           </div>
-          <div className="absolute inset-x-0 bottom-0 p-4 text-white">
+          <div className="absolute inset-x-0 bottom-0 p-4 text-[#1f2c22]">
             <p className="text-xs font-bold text-fixed-dim">إيجار الشقة الشهري</p>
             <p className="text-2xl font-black text-tertiary">{formatRentalMoney(listing.monthlyRent)}</p>
           </div>
@@ -135,7 +135,7 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <span className="rounded-full bg-secondary/25 border border-secondary/10 px-3 py-1 text-sm font-bold text-white">{listingTypeLabels[listing.listingType]}</span>
+            <span className="rounded-full bg-secondary/25 border border-secondary/10 px-3 py-1 text-sm font-bold text-[#1f2c22]">{listingTypeLabels[listing.listingType]}</span>
           <span className="rounded-full bg-tertiary/20 border border-tertiary/10 px-3 py-1 text-sm font-bold text-tertiary">{listing.unitCondition || furnishingLabels[listing.furnishingStatus]}</span>
           <span className={cn(
             "rounded-full border px-3 py-1 text-sm font-bold",
@@ -146,7 +146,7 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
             {bedsStatusText}
           </span>
           {listing.isAirConditioned && (
-            <span className="rounded-full bg-white/5 border border-white/10 px-3 py-1 text-sm font-bold text-fixed">
+            <span className="rounded-full border border-[#e4dac5] bg-white/70 px-3 py-1 text-sm font-bold text-[#1f2c22] shadow-sm">
               الشقة مكيفة
             </span>
           )}
@@ -196,14 +196,14 @@ function LoadingGrid() {
     <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
       {Array.from({ length: 6 }).map((_, index) => (
         <div key={index} className="h-[420px] animate-pulse rounded-[28px] bg-primary/30 border border-outline/30 shadow-lg">
-          <div className="h-48 rounded-t-[28px] bg-white/5" />
+          <div className="h-48 rounded-t-[28px] bg-[#ece3d2]" />
           <div className="space-y-4 p-5">
-            <div className="h-5 w-2/3 rounded-full bg-white/5" />
-            <div className="h-4 w-full rounded-full bg-white/5" />
+            <div className="h-5 w-2/3 rounded-full bg-[#ece3d2]" />
+            <div className="h-4 w-full rounded-full bg-[#ece3d2]" />
             <div className="grid grid-cols-3 gap-2">
-              <div className="h-16 rounded-2xl bg-white/5" />
-              <div className="h-16 rounded-2xl bg-white/5" />
-              <div className="h-16 rounded-2xl bg-white/5" />
+              <div className="h-16 rounded-2xl bg-[#ece3d2]" />
+              <div className="h-16 rounded-2xl bg-[#ece3d2]" />
+              <div className="h-16 rounded-2xl bg-[#ece3d2]" />
             </div>
           </div>
         </div>
@@ -261,29 +261,29 @@ export function PublicRentalsPage() {
 
   return (
     <main className="pb-16 text-fixed">
-      <section className="relative overflow-hidden bg-[#05190c] text-white">
-        <img alt="" className="absolute inset-0 h-full w-full object-cover object-center opacity-40" src={heroImage} />
-        <div className="absolute inset-0 bg-gradient-to-b from-[rgba(5,25,12,0.72)] via-[rgba(5,25,12,0.86)] to-primary" />
+      <section className="relative overflow-hidden bg-[#f7f2e8] text-white">
+        <img alt="" className="absolute inset-0 h-full w-full object-cover object-center opacity-18" src={heroImage} />
+        <div className="absolute inset-0 bg-gradient-to-b from-[rgba(255,253,248,0.66)] via-[rgba(247,242,232,0.9)] to-[#f0eadc]" />
         <div className="relative mx-auto grid min-h-[440px] w-full max-w-7xl items-end gap-8 px-4 pb-10 pt-16 sm:min-h-[540px] sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:px-8">
           <div className="max-w-3xl text-right">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold text-tertiary backdrop-blur-md">
+            <span className="inline-flex items-center gap-2 rounded-full border border-[#e4dac5] bg-white/70 px-4 py-2 text-sm font-bold text-tertiary shadow-sm backdrop-blur-md">
               <Home className="h-4 w-4" />
               {publicRentalBrand.marketplaceLabel}
             </span>
-            <h1 className="mt-5 text-4xl font-black leading-[1.25] sm:text-5xl lg:text-6xl text-fixed">
+            <h1 className="mt-5 text-4xl font-black leading-[1.25] text-[#1f2c22] sm:text-5xl lg:text-6xl">
               الإيجارات المتاحة في المنطقة
             </h1>
-            <p className="mt-5 max-w-2xl text-lg leading-9 text-fixed-dim">
+            <p className="mt-5 max-w-2xl text-lg leading-9 text-[#5f6e62]">
               تصفح إعلانات الإيجار المنشورة في المنطقة المحيطة، قارن السعر والمساحة وحالة الشقة، وابدأ طلب التواصل أو الحجز من خلال واتساب.
             </p>
-            <div className="mt-6 flex flex-wrap gap-3 text-sm font-bold text-fixed-dim">
-              <span className="rounded-full bg-white/5 border border-white/10 px-4 py-2 backdrop-blur-md">بحث سريع حسب السعر والمواصفات</span>
+            <div className="mt-6 flex flex-wrap gap-3 text-sm font-bold text-[#5f6e62]">
+              <span className="rounded-full border border-[#e4dac5] bg-white/70 px-4 py-2 shadow-sm backdrop-blur-md">بحث سريع حسب السعر والمواصفات</span>
             </div>
           </div>
 
-          <div className="rounded-[28px] border border-white/10 bg-white/5 p-6 text-right shadow-2xl backdrop-blur-md">
+          <div className="rounded-[28px] border border-[#e4dac5] bg-white/78 p-6 text-right shadow-[0_24px_70px_rgba(28,45,34,0.08)] backdrop-blur-md">
             <p className="text-sm font-bold text-tertiary">الإعلانات المتاحة</p>
-            <p className="mt-2 text-5xl font-black text-fixed">{new Intl.NumberFormat('ar-EG').format(totalCount)}</p>
+            <p className="mt-2 text-5xl font-black text-[#1f2c22]">{new Intl.NumberFormat('ar-EG').format(totalCount)}</p>
 
 
 
@@ -314,7 +314,7 @@ export function PublicRentalsPage() {
             <input className="peer sr-only" defaultChecked={featuredOnly} name="featured" type="checkbox" value="true" />
             <span className="flex min-h-24 items-center justify-between gap-4 rounded-[24px] border border-outline bg-primary/35 px-5 py-4 text-fixed transition hover:border-tertiary/60 hover:bg-primary/50 peer-checked:border-tertiary peer-checked:bg-tertiary/15 peer-checked:shadow-lg peer-checked:shadow-tertiary/10">
               <span className="flex items-center gap-3">
-                <span className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-tertiary peer-checked:border-tertiary/40">
+                <span className="flex h-12 w-12 items-center justify-center rounded-2xl border border-[#e4dac5] bg-white/70 text-tertiary shadow-sm peer-checked:border-tertiary/40">
                   <Sparkles className="h-6 w-6" />
                 </span>
                 <span>
@@ -322,13 +322,13 @@ export function PublicRentalsPage() {
                   <span className="mt-1 block text-sm font-bold text-fixed-dim">اعرض الإعلانات المميزة أولًا</span>
                 </span>
               </span>
-              <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white/20 bg-white/5 transition peer-checked:bg-white/10 peer-checked:[&>span]:scale-100">
+              <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-[#e4dac5] bg-white/70 transition peer-checked:bg-white peer-checked:[&>span]:scale-100">
                 <span className="h-3 w-3 scale-0 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.65)] transition" />
               </span>
             </span>
           </label>
           <div className="mt-4 flex justify-end gap-2">
-            <Link className="rounded-full border border-outline px-5 py-3 text-sm font-bold text-fixed bg-white/5 hover:bg-white/10 transition" to={ROUTES.RENTALS}>
+            <Link className="rounded-full border border-outline bg-[#fffdf8] px-5 py-3 text-sm font-bold text-fixed transition hover:bg-white" to={ROUTES.RENTALS}>
               مسح
             </Link>
             <button className="rounded-full bg-tertiary hover:bg-tertiary/90 px-6 py-3 text-sm font-black text-primary shadow-lg shadow-tertiary/20 transition" type="submit">
@@ -363,7 +363,7 @@ export function PublicRentalsPage() {
           <div className="rounded-[28px] border border-error/25 bg-error-container/10 p-6 text-right shadow-lg">
             <h3 className="text-xl font-black text-error">تعذر تحميل سوق الإيجارات</h3>
             <p className="mt-2 text-sm leading-7 text-fixed-dim">الخدمة لم ترجع بيانات الإعلانات حاليا. راجع اتصال الإنترنت أو حاول مرة أخرى بعد لحظات.</p>
-            <button className="mt-4 rounded-full bg-error px-5 py-3 text-sm font-bold text-white" type="button" onClick={() => listingsQuery.refetch()}>
+            <button className="mt-4 rounded-full bg-error px-5 py-3 text-sm font-bold !text-white" type="button" onClick={() => listingsQuery.refetch()}>
               إعادة المحاولة
             </button>
           </div>
@@ -402,7 +402,7 @@ export function PublicRentalsPage() {
             {paginationMeta?.hasNextPage && (
               <div className="mt-8 flex justify-center">
                 <Link
-                  className="inline-flex min-h-12 items-center justify-center rounded-full border border-outline bg-white/5 px-7 py-3 text-sm font-black text-fixed shadow-lg transition hover:bg-white/10"
+                  className="inline-flex min-h-12 items-center justify-center rounded-full border border-outline bg-[#fffdf8] px-7 py-3 text-sm font-black text-fixed shadow-lg transition hover:bg-white"
                   to={{
                     pathname: ROUTES.RENTALS,
                     search: (() => {

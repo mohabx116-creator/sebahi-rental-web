@@ -4,8 +4,8 @@
 
 @layer base {
   :root {
-    color: #f6f1df;
-    background: #111b10;
+    color: #1f2c22;
+    background: #f7f2e8;
     font-family: 'IBM Plex Sans Arabic', 'IBM Plex Sans', system-ui, sans-serif;
     font-synthesis: none;
     text-rendering: optimizeLegibility;
@@ -19,7 +19,7 @@
 
   html {
     direction: rtl;
-    background: #111b10;
+    background: #f7f2e8;
     scroll-behavior: smooth;
   }
 
@@ -27,7 +27,7 @@
     min-width: 320px;
     min-height: 100vh;
     margin: 0;
-    background: #111b10;
+    background: #f7f2e8;
     -webkit-tap-highlight-color: transparent;
     overflow-x: hidden;
   }
@@ -39,9 +39,9 @@
     pointer-events: none;
     content: "";
     background:
-      radial-gradient(circle at 20% 10%, rgba(214, 178, 94, 0.13), transparent 30%),
-      radial-gradient(circle at 78% 24%, rgba(16, 119, 96, 0.2), transparent 34%),
-      linear-gradient(180deg, #111b10 0%, #172414 48%, #08120b 100%);
+      radial-gradient(circle at 20% 10%, rgba(214, 178, 94, 0.18), transparent 30%),
+      radial-gradient(circle at 78% 24%, rgba(16, 119, 96, 0.12), transparent 34%),
+      linear-gradient(180deg, #faf6ef 0%, #f7f2e8 48%, #f0eadc 100%);
   }
 
   button,
@@ -64,42 +64,42 @@
 
 /* Premium Glassmorphic styles */
 .glass-panel {
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(28, 45, 34, 0.08);
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04)),
-    rgba(17, 27, 16, 0.72);
+    linear-gradient(135deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.62)),
+    rgba(255, 255, 255, 0.72);
   box-shadow:
-    0 24px 70px rgba(0, 0, 0, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(16px);
+    0 24px 70px rgba(28, 45, 34, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(18px);
 }
 
 .glass-card {
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(28, 45, 34, 0.08);
   background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)),
-    rgba(23, 36, 20, 0.78);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(12px);
+    linear-gradient(145deg, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.72)),
+    rgba(255, 255, 255, 0.8);
+  box-shadow: 0 12px 40px rgba(28, 45, 34, 0.08);
+  backdrop-filter: blur(14px);
   transition: all 0.3s ease;
 }
 
 .glass-card:hover {
-  border-color: rgba(214, 178, 94, 0.3);
+  border-color: rgba(214, 178, 94, 0.35);
   background:
-    linear-gradient(145deg, rgba(214, 178, 94, 0.08), rgba(255, 255, 255, 0.02)),
-    rgba(23, 36, 20, 0.84);
+    linear-gradient(145deg, rgba(214, 178, 94, 0.12), rgba(255, 255, 255, 0.76)),
+    rgba(255, 255, 255, 0.9);
   transform: translateY(-4px);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 20px 50px rgba(28, 45, 34, 0.12);
 }
 
 .glass-emerald {
-  border: 1px solid rgba(15, 79, 58, 0.25);
+  border: 1px solid rgba(15, 79, 58, 0.16);
   background:
-    linear-gradient(135deg, rgba(15, 79, 58, 0.15), rgba(11, 107, 79, 0.05)),
-    rgba(17, 27, 16, 0.8);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(12px);
+    linear-gradient(135deg, rgba(15, 79, 58, 0.08), rgba(11, 107, 79, 0.03)),
+    rgba(255, 255, 255, 0.86);
+  box-shadow: 0 12px 40px rgba(28, 45, 34, 0.08);
+  backdrop-filter: blur(14px);
 }
 
 
@@ -154,9 +154,9 @@
 .form-input {
   width: 100%;
   border-radius: 1rem !important; /* rounded-2xl */
-  border: 1px solid rgba(255, 255, 255, 0.14) !important; /* border-outline */
-  background-color: rgba(17, 27, 16, 0.45) !important; /* primary/45 bg */
-  color: #f6f1df !important; /* text-fixed */
+  border: 1px solid rgba(28, 45, 34, 0.12) !important; /* border-outline */
+  background-color: rgba(255, 255, 255, 0.78) !important;
+  color: #1f2c22 !important;
   text-align: right;
   padding: 0.75rem 1rem !important;
   transition: all 0.2s ease !important;
@@ -170,6 +170,79 @@
 }
 
 .form-input option {
-  background-color: #172414;
-  color: #f6f1df;
+  background-color: #fffdf8;
+  color: #1f2c22;
+}
+
+.rentals-light .text-fixed {
+  color: #1f2c22 !important;
+}
+
+.rentals-light .text-fixed-dim {
+  color: #5f6e62 !important;
+}
+
+.rentals-light main .text-white {
+  color: #1f2c22 !important;
+}
+
+.rentals-light .bg-primary {
+  background-color: rgba(255, 253, 248, 0.9) !important;
+}
+
+.rentals-light .bg-primary\/80 {
+  background-color: rgba(255, 253, 248, 0.88) !important;
+}
+
+.rentals-light .bg-primary\/50 {
+  background-color: rgba(255, 253, 248, 0.8) !important;
+}
+
+.rentals-light .bg-primary\/45 {
+  background-color: rgba(255, 253, 248, 0.76) !important;
+}
+
+.rentals-light .bg-primary\/40 {
+  background-color: rgba(255, 253, 248, 0.72) !important;
+}
+
+.rentals-light .bg-primary\/35 {
+  background-color: rgba(255, 253, 248, 0.68) !important;
+}
+
+.rentals-light .bg-primary\/30 {
+  background-color: rgba(255, 253, 248, 0.64) !important;
+}
+
+.rentals-light .bg-surface-dim {
+  background-color: #f3ede2 !important;
+}
+
+.rentals-light .border-outline {
+  border-color: #e4dac5 !important;
+}
+
+.rentals-light .border-outline\/40 {
+  border-color: rgba(228, 218, 197, 0.6) !important;
+}
+
+.rentals-light .border-outline\/30 {
+  border-color: rgba(228, 218, 197, 0.5) !important;
+}
+
+.rentals-light .border-outline\/20 {
+  border-color: rgba(228, 218, 197, 0.4) !important;
+}
+
+.rentals-light .border-outline-variant\/30 {
+  border-color: rgba(228, 218, 197, 0.45) !important;
+}
+
+.rentals-light .from-primary\/80 {
+  --tw-gradient-from: rgba(255, 253, 248, 0.88) !important;
+  --tw-gradient-to: rgba(255, 253, 248, 0) !important;
+}
+
+.rentals-light .to-primary {
+  --tw-gradient-to: #f7f2e8 !important;
 }
