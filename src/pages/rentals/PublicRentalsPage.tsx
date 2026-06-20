@@ -183,7 +183,7 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
           </Link>
           <div className="text-right">
             <p className="text-xs font-bold text-fixed-dim">التأمين</p>
-            <p className="text-base font-extrabold text-fixed">{depositAmount > 0 ? formatRentalMoney(depositAmount) : 'غير محدد'}</p>
+            <p className="text-base font-extrabold text-fixed">{depositAmount > 0 ? formatRentalMoney(depositAmount) : 'لا يوجد تأمين'}</p>
           </div>
         </div>
       </div>
