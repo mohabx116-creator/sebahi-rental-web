@@ -3,7 +3,6 @@ import { useQuery } from '@tanstack/react-query';
 import {
   ArrowLeft,
   Building2,
-  CheckCircle2,
   ChevronRight,
   Home,
   MessageCircle,
@@ -136,7 +135,6 @@ function ContactImageFallback({ title }: { title: string }) {
 export function PublicRentalContactPage() {
   const { slug } = useParams();
   const [isSubmitPending, setIsSubmitPending] = useState(false);
-  const [formValues, setFormValues] = useState<ContactFormValues | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isUnavailableError, setIsUnavailableError] = useState(false);
   const clientRequestIdRef = useRef(createClientRequestId());
@@ -169,10 +167,54 @@ export function PublicRentalContactPage() {
   const availableBeds = listing ? getAvailableBeds(listing) : 0;
 
   const onSubmit = handleSubmit(async (values) => {
-    if (!listing) return;
+    if (!listing || isSubmitPending || inFlightReservationRef.current) return;
+    inFlightReservationRef.current = true;
     setSubmitError(null);
     setIsUnavailableError(false);
-    setFormValues(values);
+    setIsSubmitPending(true);
+
+    try {
+      const result = await rentalApiService.createRentalInquiry(listing.id, {
+        clientRequestId: clientRequestIdRef.current,
+        tenantName: values.tenantName,
+        tenantPhone: values.tenantPhone,
+        tenantNationalId: values.tenantNationalId,
+        message: '',
+      });
+      const finalMessage = generateMessageContent({
+        tenantName: values.tenantName,
+        tenantPhone: values.tenantPhone,
+        tenantNationalId: values.tenantNationalId,
+        listing,
+        reservedBedNumber: result.bedNumber,
+        remainingAvailableBeds: result.remainingAvailableBeds,
+      });
+      const whatsappUrl = `https://wa.me/${whatsappPhone}?text=${encodeURIComponent(finalMessage)}`;
+      window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+      await copyToClipboard(finalMessage);
+    } catch (error) {
+      console.error(error);
+      let errorMessage = 'تعذر إتمام طلب الحجز، حاول مرة أخرى أو تواصل عبر واتساب';
+      if (error instanceof ApiClientError) {
+        if (
+          error.status === 409 ||
+          error.status === 410 ||
+          error.message?.includes('RENTAL_INQUIRY_LISTING_UNAVAILABLE') ||
+          error.message?.includes('not available') ||
+          error.message?.includes('unavailable') ||
+          error.message?.includes('متاحة')
+        ) {
+          errorMessage = 'لا توجد سراير متاحة لهذا الإعلان';
+          setIsUnavailableError(true);
+        } else if (error.message) {
+          errorMessage = error.message;
+        }
+      }
+      setSubmitError(errorMessage);
+    } finally {
+      inFlightReservationRef.current = false;
+      setIsSubmitPending(false);
+    }
   });
 
   if (listingQuery.isLoading) {
@@ -290,7 +332,7 @@ export function PublicRentalContactPage() {
                 </div>
               </div>
 
-              <div className="mt-7 space-y-5 text-right">
+              <form className="mt-7 space-y-5 text-right" onSubmit={onSubmit}>
                 <div className="rounded-2xl border border-[#d9e5dc] bg-[#f7fbf7] p-4">
                   <h3 className="text-base font-black text-[#1f2c22]">ملخص الطلب</h3>
                   <dl className="mt-3 space-y-1.5 text-sm">
@@ -319,154 +361,81 @@ export function PublicRentalContactPage() {
                   </dl>
                 </div>
 
-                <div className="flex flex-col gap-3 pt-2">
-                  {isUnavailableError ? (
-                    <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-right">
-                      <h4 className="text-base font-black text-error">السرير لم يعد متاحا</h4>
-                      <p className="mt-2 text-sm font-bold leading-6 text-[#526055]">
-                        تم حجزه من شخص آخر. اختر إعلاناً آخر من القائمة.
-                      </p>
-                      <Link
-                        className="mt-4 inline-flex min-h-11 w-full items-center justify-center rounded-2xl bg-white/5 px-4 py-3 text-sm font-black text-fixed transition hover:bg-white/10"
-                        to={ROUTES.RENTALS}
-                      >
-                        عرض الإعلانات المتاحة
-                      </Link>
-                    </div>
-                  ) : submitError && (
-                    <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm font-bold text-error">
-                      {submitError}
-                    </div>
-                  )}
+                {isUnavailableError ? (
+                  <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-right">
+                    <h4 className="text-base font-black text-error">السرير لم يعد متاحا</h4>
+                    <p className="mt-2 text-sm font-bold leading-6 text-[#526055]">
+                      تم حجزه من شخص آخر. اختر إعلاناً آخر من القائمة.
+                    </p>
+                    <Link
+                      className="mt-4 inline-flex min-h-11 w-full items-center justify-center rounded-2xl bg-white/5 px-4 py-3 text-sm font-black text-fixed transition hover:bg-white/10"
+                      to={ROUTES.RENTALS}
+                    >
+                      عرض الإعلانات المتاحة
+                    </Link>
+                  </div>
+                ) : submitError ? (
+                  <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm font-bold text-error">
+                    {submitError}
+                  </div>
+                ) : null}
 
-                  <button
-                    type="button"
-                    disabled={isSubmitPending || availableBeds <= 0 || !formValues}
-                    onClick={async () => {
-                      if (!listing || isSubmitPending || !formValues || inFlightReservationRef.current) return;
-                      inFlightReservationRef.current = true;
-                      setSubmitError(null);
-                      setIsUnavailableError(false);
-                      setIsSubmitPending(true);
-
-                      try {
-                        const result = await rentalApiService.createRentalInquiry(listing.id, {
-                          clientRequestId: clientRequestIdRef.current,
-                          tenantName: formValues.tenantName,
-                          tenantPhone: formValues.tenantPhone,
-                          tenantNationalId: formValues.tenantNationalId,
-                          message: '',
-                        });
-                        const finalMessage = generateMessageContent({
-                          tenantName: formValues.tenantName,
-                          tenantPhone: formValues.tenantPhone,
-                          tenantNationalId: formValues.tenantNationalId,
-                          listing,
-                          reservedBedNumber: result.bedNumber,
-                          remainingAvailableBeds: result.remainingAvailableBeds,
-                        });
-                        const whatsappUrl = `https://wa.me/${whatsappPhone}?text=${encodeURIComponent(finalMessage)}`;
-                        window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
-                        await copyToClipboard(finalMessage);
-                      } catch (error) {
-                        console.error(error);
-                        let errorMessage = 'تعذر إتمام طلب الحجز، حاول مرة أخرى أو تواصل عبر واتساب';
-                        if (error instanceof ApiClientError) {
-                          if (
-                            error.status === 409 ||
-                            error.status === 410 ||
-                            error.message?.includes('RENTAL_INQUIRY_LISTING_UNAVAILABLE') ||
-                            error.message?.includes('not available') ||
-                            error.message?.includes('unavailable') ||
-                            error.message?.includes('متاحة')
-                          ) {
-                            errorMessage = 'لا توجد سراير متاحة لهذا الإعلان';
-                            setIsUnavailableError(true);
-                          } else if (error.message) {
-                            errorMessage = error.message;
-                          }
-                        }
-                        setSubmitError(errorMessage);
-                      } finally {
-                        inFlightReservationRef.current = false;
-                        setIsSubmitPending(false);
-                      }
-                    }}
-                    className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 hover:bg-emerald-600 px-5 py-4 text-base font-black text-white transition disabled:cursor-not-allowed disabled:opacity-60 shadow-xl shadow-emerald-500/25 cursor-pointer"
-                  >
-                    <MessageCircle className="h-5 w-5" />
-                    {isSubmitPending ? 'جاري حجز السرير...' : 'تأكيد الحجز'}
-                  </button>
-                  <p className="text-center text-xs font-bold leading-6 text-[#526055]">
-                    بعد التأكيد سيفتح واتساب برسالة جاهزة لإرسال الطلب.
-                  </p>
-                </div>
-              </div>
-                <form className="mt-7 space-y-5" onSubmit={onSubmit}>
-                  {availableBeds <= 0 && (
-                    <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm font-bold text-error">
-                      لا توجد سراير متاحة لهذا الإعلان
-                    </div>
-                  )}
-                  <section className="rounded-[24px] border border-outline/25 bg-primary/35 p-4">
-                    <h3 className="text-base font-black text-fixed">بيانات التواصل</h3>
-                    <div className="mt-4 space-y-4">
-                      <label className="block">
-                        <span className="mb-2 block text-sm font-bold text-fixed-dim">الاسم بالكامل</span>
-                        <input
-                          className="w-full rounded-2xl border-outline bg-primary/40 text-right text-fixed focus:border-tertiary focus:ring-tertiary/20"
-                          disabled={isSubmitPending}
-                          {...register('tenantName')}
-                        />
-                        {errors.tenantName && <span className="mt-1 block text-sm font-bold text-error">{errors.tenantName.message}</span>}
-                      </label>
-
-                      <label className="block">
-                        <span className="mb-2 block text-sm font-bold text-fixed-dim">رقم الموبايل</span>
-                        <input
-                          className="w-full rounded-2xl border-outline bg-primary/40 text-right text-fixed focus:border-tertiary focus:ring-tertiary/20"
-                          disabled={isSubmitPending}
-                          inputMode="tel"
-                          {...register('tenantPhone')}
-                        />
-                        {errors.tenantPhone && <span className="mt-1 block text-sm font-bold text-error">{errors.tenantPhone.message}</span>}
-                      </label>
-                    </div>
-                  </section>
-
-                  <section className="rounded-[24px] border border-outline/25 bg-primary/35 p-4">
-                    <h3 className="text-base font-black text-fixed">بيانات التحقق</h3>
-                    <label className="mt-4 block">
-                      <span className="mb-2 block text-sm font-bold text-fixed-dim">الرقم القومي</span>
+                <section className="rounded-[24px] border border-[#d9e5dc] bg-white/80 p-4 shadow-sm">
+                  <h3 className="text-base font-black text-[#1f2c22]">بيانات التواصل</h3>
+                  <div className="mt-4 space-y-4">
+                    <label className="block">
+                      <span className="mb-2 block text-sm font-bold text-[#526055]">الاسم بالكامل</span>
                       <input
-                        className="w-full rounded-2xl border-outline bg-primary/40 text-right text-fixed focus:border-tertiary focus:ring-tertiary/20"
+                        className="w-full rounded-2xl border border-[#d9e5dc] bg-[#edf3ff] text-right text-[#1f2c22] focus:border-tertiary focus:ring-tertiary/20"
                         disabled={isSubmitPending}
-                        maxLength={14}
-                        placeholder="14 رقم باللغة الإنجليزية"
-                        {...register('tenantNationalId')}
+                        {...register('tenantName')}
                       />
-                      <span className="mt-2 block text-xs font-bold leading-6 text-fixed-dim">
-                        نستخدمه لتسجيل طلبك فقط.
-                      </span>
-                      {errors.tenantNationalId && <span className="mt-1 block text-sm font-bold text-error">{errors.tenantNationalId.message}</span>}
+                      {errors.tenantName && <span className="mt-1 block text-sm font-bold text-error">{errors.tenantName.message}</span>}
                     </label>
-                  </section>
 
-                  {submitError && (
-                    <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm font-bold text-error">
-                      {submitError}
-                    </div>
-                  )}
+                    <label className="block">
+                      <span className="mb-2 block text-sm font-bold text-[#526055]">رقم الموبايل</span>
+                      <input
+                        className="w-full rounded-2xl border border-[#d9e5dc] bg-[#edf3ff] text-right text-[#1f2c22] focus:border-tertiary focus:ring-tertiary/20"
+                        disabled={isSubmitPending}
+                        inputMode="tel"
+                        {...register('tenantPhone')}
+                      />
+                      {errors.tenantPhone && <span className="mt-1 block text-sm font-bold text-error">{errors.tenantPhone.message}</span>}
+                    </label>
+                  </div>
+                </section>
 
-                  <button
-                    className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 hover:bg-emerald-600 px-5 py-4 text-base font-black text-white transition disabled:cursor-not-allowed disabled:opacity-60 shadow-xl shadow-emerald-500/25 cursor-pointer"
-                    disabled={isSubmitPending || availableBeds <= 0}
-                    type="submit"
-                  >
-                    <CheckCircle2 className="h-5 w-5 text-white" />
-                    تأكيد الحجز
-                  </button>
-                </form>
+                <section className="rounded-[24px] border border-[#d9e5dc] bg-white/80 p-4 shadow-sm">
+                  <h3 className="text-base font-black text-[#1f2c22]">بيانات التحقق</h3>
+                  <label className="mt-4 block">
+                    <span className="mb-2 block text-sm font-bold text-[#526055]">الرقم القومي</span>
+                    <input
+                      className="w-full rounded-2xl border border-[#d9e5dc] bg-[#edf3ff] text-right text-[#1f2c22] focus:border-tertiary focus:ring-tertiary/20"
+                      disabled={isSubmitPending}
+                      maxLength={14}
+                      placeholder="14 رقم باللغة الإنجليزية"
+                      {...register('tenantNationalId')}
+                    />
+                    <span className="mt-2 block text-xs font-bold leading-6 text-[#526055]">
+                      نستخدمه لتسجيل طلبك فقط.
+                    </span>
+                    {errors.tenantNationalId && <span className="mt-1 block text-sm font-bold text-error">{errors.tenantNationalId.message}</span>}
+                  </label>
+                </section>
+
+                <button
+                  className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 hover:bg-emerald-600 px-5 py-4 text-base font-black text-white transition disabled:cursor-not-allowed disabled:opacity-60 shadow-xl shadow-emerald-500/25 cursor-pointer"
+                  disabled={isSubmitPending || availableBeds <= 0}
+                  type="submit"
+                >
+                  <MessageCircle className="h-5 w-5" />
+                  {isSubmitPending ? 'جاري حجز السرير...' : 'تأكيد الحجز'}
+                </button>
+                <p className="text-center text-xs font-bold leading-6 text-[#526055]">
+                  بعد التأكيد سيفتح واتساب برسالة جاهزة لإرسال الطلب.
+                </p>
+              </form>
             </div>
 
             <Link
