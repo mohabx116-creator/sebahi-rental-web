@@ -172,6 +172,7 @@ export function PublicRentalContactPage() {
     setSubmitError(null);
     setIsUnavailableError(false);
     setIsSubmitPending(true);
+    const whatsappWindow = window.open('about:blank', '_blank');
 
     try {
       const result = await rentalApiService.createRentalInquiry(listing.id, {
@@ -190,7 +191,11 @@ export function PublicRentalContactPage() {
         remainingAvailableBeds: result.remainingAvailableBeds,
       });
       const whatsappUrl = `https://wa.me/${whatsappPhone}?text=${encodeURIComponent(finalMessage)}`;
-      window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+      if (whatsappWindow) {
+        whatsappWindow.location.href = whatsappUrl;
+      } else {
+        window.location.href = whatsappUrl;
+      }
       await copyToClipboard(finalMessage);
     } catch (error) {
       console.error(error);
