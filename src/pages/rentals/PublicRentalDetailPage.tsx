@@ -5,6 +5,7 @@ import {
   Building2,
   ChevronRight,
   ChevronLeft,
+  MessageCircle,
   X,
   LockKeyhole,
   MapPin,
@@ -15,6 +16,7 @@ import { Link, useParams } from 'react-router-dom';
 import { rentalApiService } from '../../lib/api/rental-service';
 import { ROUTES } from '../../lib/constants/routes';
 import { cn } from '../../lib/utils/cn';
+import type { RentalListing } from '../../lib/api/types';
 import {
   formatRentalDate,
   formatRentalMoney,
@@ -42,7 +44,7 @@ const BASIC_FEATURES_MAP = {
 type BasicFeatureKey = keyof typeof BASIC_FEATURES_MAP;
 const BASIC_FEATURE_KEYS = Object.keys(BASIC_FEATURES_MAP) as BasicFeatureKey[];
 
-function getAvailableBeds(listing: { availableBeds?: number; totalBeds?: number }) {
+function getAvailableBeds(listing: { availableBeds?: number | null; totalBeds?: number | null }) {
   return listing.availableBeds ?? Math.max((listing.totalBeds ?? 4) - 0 - 0, 0);
 }
 
@@ -51,6 +53,65 @@ function getAvailableBedsLabel(count: number) {
   if (count === 1) return 'سرير واحد متاح فقط';
   if (count === 2) return 'متبقي سريران فقط';
   return `متاح الآن: ${count} سراير`;
+}
+
+const customerSupportWhatsAppUrl = 'https://wa.me/201224591618';
+
+function buildInquiryMessage(
+  listing: Pick<
+    RentalListing,
+    | 'slug'
+    | 'title'
+    | 'locationText'
+    | 'addressText'
+    | 'compound'
+    | 'monthlyRent'
+    | 'depositAmount'
+    | 'unitCondition'
+    | 'bedrooms'
+    | 'floor'
+    | 'areaSqm'
+    | 'totalBeds'
+    | 'availableBeds'
+  >,
+) {
+  const title = publicRentalText(listing.title);
+  const location = publicRentalText(
+    listing.locationText ?? listing.addressText ?? listing.compound?.address,
+    publicRentalBrand.compoundAr,
+  );
+  const availableBeds = getAvailableBeds(listing);
+  const totalBeds = listing.totalBeds ?? 4;
+  const monthlyRent = formatRentalMoney(listing.monthlyRent);
+  const depositAmount = toNumber(listing.depositAmount);
+
+  return [
+    'استفسار عن شقة للإيجار',
+    `- الإعلان: ${title}`,
+    `- المنطقة: ${location}`,
+    `- السعر الشهري: ${monthlyRent}`,
+    `- التأمين: ${depositAmount > 0 ? formatRentalMoney(depositAmount) : 'لا يوجد تأمين'}`,
+    `- الحالة: ${listing.unitCondition || 'غير محدد'}`,
+    `- الغرف: ${listing.bedrooms != null ? listing.bedrooms : 'غير محدد'}`,
+    `- الدور: ${listing.floor != null ? listing.floor : 'غير محدد'}`,
+    `- المساحة: ${listing.areaSqm ? `${listing.areaSqm} م²` : 'غير محددة'}`,
+    `- السراير المتاحة: ${availableBeds}`,
+    `- إجمالي السراير: ${totalBeds}`,
+    `- رابط الإعلان: ${window.location.origin}/rentals/${listing.slug}`,
+    'برجاء تأكيد التوفر والتواصل مع خدمة العملاء.',
+  ].join('\n');
+}
+
+async function copyToClipboard(text: string): Promise<boolean> {
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch (error) {
+    console.error('Failed to copy inquiry message', error);
+  }
+  return false;
 }
 
 function DetailImageFallback({ title }: { title: string }) {
@@ -196,6 +257,7 @@ export function PublicRentalDetailPage() {
   const pricingItems = [
     { label: 'التأمين', value: toNumber(listing.depositAmount) > 0 ? formatRentalMoney(listing.depositAmount) : 'لا يوجد تأمين' },
   ];
+  const inquiryMessage = buildInquiryMessage(listing);
 
   const activeImage = gallery[selectedImageIndex] || coverImage;
   const activeImageUrl = activeImage
@@ -205,7 +267,7 @@ export function PublicRentalDetailPage() {
     : '';
 
   return (
-    <main className="pb-32 text-fixed xl:pb-16">
+    <main className="public-rental-detail pb-32 text-fixed xl:pb-16">
       <section className="border-b border-outline/30 bg-primary/20">
         <div className="mx-auto w-full max-w-7xl px-4 py-5 sm:px-6 lg:px-8 lg:py-8">
           <Link className="mb-5 inline-flex min-h-10 items-center gap-2 rounded-full px-4 py-1 text-sm font-bold text-fixed-dim hover:text-tertiary hover:bg-white/5 transition" to={ROUTES.RENTALS}>
@@ -260,25 +322,25 @@ export function PublicRentalDetailPage() {
                     </>
                   )}
                 </div>
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-primary/90 via-primary/30 to-transparent p-5 text-white sm:p-7 pointer-events-none">
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[rgba(31,44,34,0.88)] via-[rgba(31,44,34,0.28)] to-transparent p-5 text-white sm:p-7 pointer-events-none">
                   <div className="flex flex-wrap items-center gap-2 pointer-events-auto">
-                    <span className="rounded-full bg-primary/80 border border-outline px-3 py-1 text-xs font-bold text-fixed backdrop-blur-md">{listingStatusLabels[listing.status]}</span>
+                    <span className="rounded-full border border-[#d9e5dc] bg-white/80 px-3 py-1 text-xs font-bold text-[#1f2c22] backdrop-blur-md">{listingStatusLabels[listing.status]}</span>
                     {listing.isFeatured && (
                       <span className="inline-flex items-center gap-1 rounded-full bg-tertiary px-3 py-1 text-xs font-bold text-primary shadow-md">
                         <Sparkles className="h-3.5 w-3.5 text-primary" />
                         مميز
                       </span>
                     )}
-                    <span className="rounded-full bg-white/5 border border-white/10 px-3 py-1 text-xs font-bold text-fixed backdrop-blur-md">{listingTypeLabels[listing.listingType]}</span>
-                    <span className="rounded-full bg-white/5 border border-white/10 px-3 py-1 text-xs font-bold text-fixed backdrop-blur-md">{listing.unitCondition || furnishingLabels[listing.furnishingStatus]}</span>
+                    <span className="rounded-full border border-[#d9e5dc] bg-white/80 px-3 py-1 text-xs font-bold text-[#1f2c22] backdrop-blur-md">{listingTypeLabels[listing.listingType]}</span>
+                    <span className="rounded-full border border-[#d9e5dc] bg-white/80 px-3 py-1 text-xs font-bold text-[#1f2c22] backdrop-blur-md">{listing.unitCondition || furnishingLabels[listing.furnishingStatus]}</span>
                     {availableBeds > 0 && (
-                      <span className="rounded-full border border-emerald-400/30 bg-emerald-500/15 px-3 py-1 text-xs font-black text-emerald-300 backdrop-blur-md">
+                      <span className="rounded-full border border-emerald-500/25 bg-emerald-500/10 px-3 py-1 text-xs font-black text-emerald-800 backdrop-blur-md">
                         {getAvailableBedsLabel(availableBeds)}
                       </span>
                     )}
                   </div>
                   <h1 className="mt-3 max-w-4xl text-2xl font-black leading-[1.35] sm:text-4xl lg:text-5xl text-fixed pointer-events-auto">{title}</h1>
-                  <p className="mt-2 flex max-w-3xl items-center gap-2 text-sm text-fixed-dim sm:text-base pointer-events-auto">
+                  <p className="mt-2 flex max-w-3xl items-center gap-2 text-sm text-[#f8f5ef] sm:text-base pointer-events-auto">
                     <MapPin className="h-5 w-5 shrink-0 text-tertiary" />
                     {location}
                   </p>
@@ -321,46 +383,46 @@ export function PublicRentalDetailPage() {
             </div>
 
             <aside className="self-start rounded-[32px] glass-panel p-5 text-right xl:sticky xl:top-24 xl:p-6">
-              <div className="rounded-[26px] bg-secondary p-5 text-white border border-secondary/35 shadow-inner">
-                <p className="text-sm font-bold text-tertiary">إيجار الشقة الشهري</p>
-                <p className="mt-1 text-4xl font-black leading-tight text-white">{formatRentalMoney(listing.monthlyRent)}</p>
+              <div className="rounded-[26px] border border-[#e4dac5] bg-gradient-to-br from-[#fdfaf4] to-[#eef5ef] p-5 text-[#1f2c22] shadow-[0_18px_40px_rgba(28,45,34,0.08)]">
+                <p className="text-sm font-bold text-[#5f6e62]">إيجار الشقة الشهري</p>
+                <p className="mt-1 text-4xl font-black leading-tight text-tertiary">{formatRentalMoney(listing.monthlyRent)}</p>
               </div>
 
               <div className="mt-4 grid grid-cols-3 gap-2">
                 {unitFacts.map((fact) => {
                   const Icon = fact.icon;
                   return (
-                    <div key={fact.label} className="rounded-2xl bg-primary/45 border border-outline/20 px-2 py-3 text-center">
+                    <div key={fact.label} className="rounded-2xl border border-[#e4dac5] bg-white/80 px-2 py-3 text-center shadow-sm">
                       <Icon className="mx-auto mb-1 h-5 w-5 text-tertiary" />
-                      <p className="text-xs font-bold text-fixed-dim">{fact.label}</p>
-                      <p className="mt-1 text-sm font-black text-fixed">{fact.value}</p>
+                      <p className="text-sm font-bold text-[#526055]">{fact.label}</p>
+                      <p className="mt-1 text-sm font-black text-[#1f2c22]">{fact.value}</p>
                     </div>
                   );
                 })}
               </div>
 
-              <div className="mt-4 space-y-2 rounded-[24px] border border-outline/40 p-4 bg-white/5">
+              <div className="mt-4 space-y-2 rounded-[24px] border border-[#e4dac5] bg-white/80 p-4 shadow-sm">
                 {pricingItems.map((item) => (
                   <div key={item.label} className="flex items-center justify-between gap-4 text-sm">
-                    <span className="font-bold text-fixed-dim">{item.label}</span>
+                    <span className="font-bold text-[#526055]">{item.label}</span>
                     <span className="font-black text-tertiary">{item.value}</span>
                   </div>
                 ))}
               </div>
 
-              <div className="mt-4 space-y-2 rounded-[24px] border border-outline/40 p-4 bg-white/5 text-sm">
-                <p className="pb-2 text-sm font-bold leading-7 text-fixed-dim">
+              <div className="mt-4 space-y-2 rounded-[24px] border border-[#e4dac5] bg-white/80 p-4 text-sm shadow-sm">
+                <p className="pb-2 text-sm font-bold leading-7 text-[#526055]">
                   الحجز يتم على سرير داخل الشقة، وليس على الشقة بالكامل.
                 </p>
-                <p className="border-b border-outline/25 pb-3 text-xs font-bold leading-6 text-fixed-dim">
+                <p className="border-b border-[#e4dac5] pb-3 text-sm font-bold leading-6 text-[#526055]">
                   سيتم تحديد رقم السرير تلقائيًا حسب أولوية الإتاحة: سرير 1 ثم سرير 2 ثم سرير 3 ثم سرير 4.
                 </p>
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-fixed-dim">عدد السراير المتاحة</span>
-                  <span className="font-black text-emerald-400">{getAvailableBedsLabel(availableBeds)}</span>
+                  <span className="font-bold text-[#526055]">عدد السراير المتاحة</span>
+                  <span className="font-black text-emerald-700">{getAvailableBedsLabel(availableBeds)}</span>
                 </div>
-                <div className="flex items-center justify-between border-t border-outline/25 pt-2">
-                  <span className="font-bold text-fixed-dim">إجمالي السراير</span>
+                <div className="flex items-center justify-between border-t border-[#e4dac5] pt-2">
+                  <span className="font-bold text-[#526055]">إجمالي السراير</span>
                   <span className="font-black text-tertiary">{listing.totalBeds ?? 4}</span>
                 </div>
               </div>
@@ -369,19 +431,31 @@ export function PublicRentalDetailPage() {
                 {availableBeds > 0 ? (
                   <Link className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-tertiary hover:bg-tertiary/90 px-5 py-4 text-base font-black text-primary shadow-xl shadow-tertiary/15 transition" to={`/rentals/${listing.slug}/contact`}>
                      <LockKeyhole className="h-5 w-5" />
-                     احجز سريرك الآن
+                     احجز الآن
                   </Link>
                 ) : (
                   <div className="rounded-2xl border border-error/25 bg-error-container/20 px-4 py-3 text-center text-sm font-black text-error">
                     لا توجد سراير متاحة لهذا الإعلان
                   </div>
                 )}
+                {availableBeds > 0 && (
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      const chatUrl = `${customerSupportWhatsAppUrl}?text=${encodeURIComponent(inquiryMessage)}`;
+                      window.open(chatUrl, '_blank', 'noopener,noreferrer');
+                      const copied = await copyToClipboard(inquiryMessage);
+                      if (!copied) {
+                        console.warn('Unable to copy inquiry message automatically');
+                      }
+                    }}
+                    className="flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border border-[#d9e5dc] bg-[#f7fbf7] px-5 py-3 text-sm font-black text-[#1f2c22] shadow-sm transition hover:bg-white"
+                  >
+                    <MessageCircle className="h-5 w-5 text-emerald-700" />
+                    استفسار
+                  </button>
+                )}
               </div>
-              {availableBeds > 0 && (
-                <p className="mt-3 text-center text-xs font-bold text-fixed-dim">
-                  حجز مبدئي بدون دفع الآن
-                </p>
-              )}
             </aside>
           </div>
         </div>
@@ -391,20 +465,20 @@ export function PublicRentalDetailPage() {
         <div className="space-y-6">
           <section className="rounded-[28px] glass-panel p-6 text-right">
             <h2 className="text-2xl font-black text-fixed">وصف الإعلان</h2>
-            <p className="mt-4 whitespace-pre-line text-base leading-9 text-fixed-dim">{description}</p>
+            <p className="mt-4 whitespace-pre-line text-base leading-9 text-[#526055]">{description}</p>
           </section>
 
           <section className="rounded-[28px] glass-panel p-6 text-right">
             <h2 className="text-2xl font-black text-fixed">مواصفات الشقة</h2>
             <dl className="mt-5 grid gap-3 sm:grid-cols-2">
-              <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">المساحة</dt><dd className="mt-1 font-black text-tertiary">{listing.areaSqm ? `${listing.areaSqm} م²` : 'غير محدد'}</dd></div>
-              <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">عدد الغرف</dt><dd className="mt-1 font-black text-tertiary">{listing.bedrooms != null ? listing.bedrooms : 'غير محدد'}</dd></div>
-              <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">الدور</dt><dd className="mt-1 font-black text-tertiary">{listing.floor ?? 'غير محدد'}</dd></div>
-              <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">الشقة مكيفة</dt><dd className="mt-1 font-black text-tertiary">{listing.isAirConditioned ? 'نعم' : 'لا'}</dd></div>
-              <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">التأمين</dt><dd className="mt-1 font-black text-tertiary">{toNumber(listing.depositAmount) > 0 ? formatRentalMoney(listing.depositAmount) : 'لا يوجد تأمين'}</dd></div>
-              <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">تاريخ النشر</dt><dd className="mt-1 font-black text-tertiary">{formatRentalDate(listing.publishedAt)}</dd></div>
-              <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">عدد السراير المتاحة</dt><dd className="mt-1 font-black text-emerald-400">{availableBeds}</dd></div>
-              <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">إجمالي السراير</dt><dd className="mt-1 font-black text-tertiary">{listing.totalBeds ?? 4}</dd></div>
+              <div className="rounded-2xl bg-white/80 border border-[#e4dac5] p-4"><dt className="text-sm text-[#526055]">المساحة</dt><dd className="mt-1 font-black text-tertiary">{listing.areaSqm ? `${listing.areaSqm} م²` : 'غير محدد'}</dd></div>
+              <div className="rounded-2xl bg-white/80 border border-[#e4dac5] p-4"><dt className="text-sm text-[#526055]">عدد الغرف</dt><dd className="mt-1 font-black text-tertiary">{listing.bedrooms != null ? listing.bedrooms : 'غير محدد'}</dd></div>
+              <div className="rounded-2xl bg-white/80 border border-[#e4dac5] p-4"><dt className="text-sm text-[#526055]">الدور</dt><dd className="mt-1 font-black text-tertiary">{listing.floor ?? 'غير محدد'}</dd></div>
+              <div className="rounded-2xl bg-white/80 border border-[#e4dac5] p-4"><dt className="text-sm text-[#526055]">الشقة مكيفة</dt><dd className="mt-1 font-black text-tertiary">{listing.isAirConditioned ? 'نعم' : 'لا'}</dd></div>
+              <div className="rounded-2xl bg-white/80 border border-[#e4dac5] p-4"><dt className="text-sm text-[#526055]">التأمين</dt><dd className="mt-1 font-black text-tertiary">{toNumber(listing.depositAmount) > 0 ? formatRentalMoney(listing.depositAmount) : 'لا يوجد تأمين'}</dd></div>
+              <div className="rounded-2xl bg-white/80 border border-[#e4dac5] p-4"><dt className="text-sm text-[#526055]">تاريخ النشر</dt><dd className="mt-1 font-black text-tertiary">{formatRentalDate(listing.publishedAt)}</dd></div>
+              <div className="rounded-2xl bg-white/80 border border-[#e4dac5] p-4"><dt className="text-sm text-[#526055]">عدد السراير المتاحة</dt><dd className="mt-1 font-black text-emerald-700">{availableBeds}</dd></div>
+              <div className="rounded-2xl bg-white/80 border border-[#e4dac5] p-4"><dt className="text-sm text-[#526055]">إجمالي السراير</dt><dd className="mt-1 font-black text-tertiary">{listing.totalBeds ?? 4}</dd></div>
             </dl>
           </section>
 
@@ -415,9 +489,9 @@ export function PublicRentalDetailPage() {
                 {BASIC_FEATURE_KEYS.map((key) => {
                   const isAvailable = listing.basicFeatures?.includes(key);
                   return (
-                    <div key={key} className="flex items-center justify-between rounded-2xl bg-primary/45 border border-outline/20 p-4">
-                      <span className="text-sm text-fixed-dim">{BASIC_FEATURES_MAP[key]}</span>
-                      <span className={cn("text-sm font-black", isAvailable ? "text-emerald-400" : "text-fixed/50")}>
+                    <div key={key} className="flex items-center justify-between rounded-2xl bg-white/80 border border-[#e4dac5] p-4">
+                      <span className="text-sm text-[#526055]">{BASIC_FEATURES_MAP[key]}</span>
+                      <span className={cn("text-sm font-black", isAvailable ? "text-emerald-700" : "text-[#7b807a]")}>
                         {isAvailable ? 'متوفر' : 'غير متوفر'}
                       </span>
                     </div>
@@ -441,7 +515,7 @@ export function PublicRentalDetailPage() {
           <section className="rounded-[28px] glass-panel p-6 text-right">
             <h2 className="text-2xl font-black text-fixed">الكماليات والمميزات الإضافية</h2>
             <div className="mt-5 rounded-2xl bg-primary/45 border border-outline/20 p-5">
-              <p className="whitespace-pre-line text-base leading-relaxed text-fixed-dim">
+              <p className="whitespace-pre-line text-base leading-relaxed text-[#526055]">
                 {listing.extraAmenitiesText || '-'}
               </p>
             </div>
@@ -451,8 +525,8 @@ export function PublicRentalDetailPage() {
         <div className="space-y-6">
           <section className="rounded-[28px] glass-panel p-6 text-right">
             <h2 className="text-xl font-black text-fixed">الموقع والكمبوند</h2>
-            <p className="mt-3 text-sm leading-7 text-fixed-dim">{compoundName}</p>
-            <p className="mt-1 text-sm leading-7 text-fixed-dim">{publicRentalText(listing.addressText ?? listing.compound?.address, 'القاهرة الجديدة')}</p>
+            <p className="mt-3 text-sm leading-7 text-[#526055]">{compoundName}</p>
+            <p className="mt-1 text-sm leading-7 text-[#526055]">{publicRentalText(listing.addressText ?? listing.compound?.address, 'القاهرة الجديدة')}</p>
           </section>
         </div>
       </section>
@@ -516,20 +590,34 @@ export function PublicRentalDetailPage() {
       )}
 
       {availableBeds > 0 && (
-        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-outline/30 bg-primary/95 px-4 pb-[calc(env(safe-area-inset-bottom)+0.65rem)] pt-2.5 shadow-2xl backdrop-blur-xl xl:hidden">
-          <div className="mx-auto flex max-w-7xl items-center gap-3">
-            <div className="min-w-0 flex-1 text-right">
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[#e4dac5] bg-[#fffdf8]/95 px-4 pb-[calc(env(safe-area-inset-bottom)+0.65rem)] pt-2.5 shadow-2xl backdrop-blur-xl xl:hidden">
+          <div className="mx-auto max-w-7xl space-y-2">
+            <div className="min-w-0 text-right">
               <p className="truncate text-sm font-black text-tertiary">{formatRentalMoney(listing.monthlyRent)}</p>
-              <p className="mt-1 text-xs font-bold text-fixed-dim">{getAvailableBedsLabel(availableBeds)}</p>
-              <p className="mt-0.5 text-[11px] font-bold text-fixed-dim">بدون دفع الآن</p>
+              <p className="mt-1 text-sm font-bold text-[#526055]">{getAvailableBedsLabel(availableBeds)}</p>
             </div>
             <Link
-              className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-2xl bg-tertiary px-4 py-3 text-sm font-black text-primary shadow-lg shadow-tertiary/20"
+              className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-tertiary px-4 py-3 text-sm font-black text-primary shadow-lg shadow-tertiary/20"
               to={`/rentals/${listing.slug}/contact`}
             >
               <LockKeyhole className="h-4 w-4" />
-              احجز سريرك الآن
+              احجز الآن
             </Link>
+            <button
+              type="button"
+              onClick={async () => {
+                const chatUrl = `${customerSupportWhatsAppUrl}?text=${encodeURIComponent(inquiryMessage)}`;
+                window.open(chatUrl, '_blank', 'noopener,noreferrer');
+                const copied = await copyToClipboard(inquiryMessage);
+                if (!copied) {
+                  console.warn('Unable to copy inquiry message automatically');
+                }
+              }}
+              className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border border-[#d9e5dc] bg-[#f7fbf7] px-4 py-3 text-sm font-black text-[#1f2c22] shadow-sm transition hover:bg-white"
+            >
+              <MessageCircle className="h-4 w-4 text-emerald-700" />
+              استفسار
+            </button>
           </div>
         </div>
       )}
