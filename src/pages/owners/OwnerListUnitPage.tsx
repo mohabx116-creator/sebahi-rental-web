@@ -299,6 +299,7 @@ export function OwnerListUnitPage() {
       apartmentNumber: values.apartmentNumber,
       bathrooms: 1,
       monthlyRent: values.monthlyRent,
+      depositAmount: depositAmount,
       isAirConditioned: values.isAirConditioned,
       basicFeatures: Object.keys(values.basicFeatures).filter(k => values.basicFeatures[k as BasicFeatureKey]),
       extraAmenitiesText: values.extraAmenitiesText || undefined,
@@ -402,7 +403,7 @@ export function OwnerListUnitPage() {
                 <Field label="الإيجار الشهري" error={errors.monthlyRent?.message}>
                   <input type="number" {...register('monthlyRent')} disabled={isPending} className="form-input" />
                 </Field>
-                <Field label="التأمين = شهرين من الإيجار">
+                <Field label="مبلغ التأمين (مقترح)">
                   <input type="number" value={depositAmount} disabled className="form-input opacity-60 cursor-not-allowed bg-primary/20 text-tertiary font-bold" />
                 </Field>
                 <Field label="عدد السراير" error={errors.totalBeds?.message}>
