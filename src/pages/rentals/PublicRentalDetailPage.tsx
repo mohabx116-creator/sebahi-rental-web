@@ -194,7 +194,7 @@ export function PublicRentalDetailPage() {
     { label: 'المساحة', value: `63 م²`, icon: Ruler },
   ];
   const pricingItems = [
-    { label: 'التأمين', value: listing.depositAmount ? formatRentalMoney(listing.depositAmount) : formatRentalMoney(toNumber(listing.monthlyRent) * 2) },
+    { label: 'التأمين', value: toNumber(listing.depositAmount) > 0 ? formatRentalMoney(listing.depositAmount) : 'لا يوجد تأمين' },
   ];
 
   const activeImage = gallery[selectedImageIndex] || coverImage;
@@ -401,7 +401,7 @@ export function PublicRentalDetailPage() {
               <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">عدد الغرف</dt><dd className="mt-1 font-black text-tertiary">2</dd></div>
               <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">الدور</dt><dd className="mt-1 font-black text-tertiary">{listing.floor ?? 'غير محدد'}</dd></div>
               <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">الشقة مكيفة</dt><dd className="mt-1 font-black text-tertiary">{listing.isAirConditioned ? 'نعم' : 'لا'}</dd></div>
-              <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">التأمين</dt><dd className="mt-1 font-black text-tertiary">{listing.depositAmount ? formatRentalMoney(listing.depositAmount) : formatRentalMoney(toNumber(listing.monthlyRent) * 2)}</dd></div>
+              <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">التأمين</dt><dd className="mt-1 font-black text-tertiary">{toNumber(listing.depositAmount) > 0 ? formatRentalMoney(listing.depositAmount) : 'لا يوجد تأمين'}</dd></div>
               <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">تاريخ النشر</dt><dd className="mt-1 font-black text-tertiary">{formatRentalDate(listing.publishedAt)}</dd></div>
               <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">عدد السراير المتاحة</dt><dd className="mt-1 font-black text-emerald-400">{availableBeds}</dd></div>
               <div className="rounded-2xl bg-primary/45 border border-outline/20 p-4"><dt className="text-sm text-fixed-dim">إجمالي السراير</dt><dd className="mt-1 font-black text-tertiary">{listing.totalBeds ?? 4}</dd></div>
