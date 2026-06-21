@@ -269,9 +269,10 @@ export function PublicRentalsPage() {
   const paginationMeta = listingsQuery.data?.meta;
   const hasClientOnlyFilters = Boolean(selectedCondition) || featuredOnly;
   const exactTotalCount = paginationMeta?.totalCount ?? listings.length;
+  const exactAvailableCount = paginationMeta?.availableCount ?? paginationMeta?.totalCount ?? listings.length;
   const visibleCount = visibleListings.length;
-  const displayedCount = hasClientOnlyFilters ? visibleCount : exactTotalCount;
-  const displayedCountLabel = hasClientOnlyFilters ? 'المعروض في هذه الصفحة' : 'الإعلانات المعروضة';
+  const heroCount = hasClientOnlyFilters ? visibleCount : exactAvailableCount;
+  const heroCountLabel = hasClientOnlyFilters ? 'المتاح في هذه الصفحة' : 'الإعلانات المتاحة';
   let activeFilters = 0;
   searchParams.forEach((value) => {
     if (value.trim()) activeFilters += 1;
@@ -317,8 +318,8 @@ export function PublicRentalsPage() {
           </div>
 
           <div className="rounded-[28px] border border-[#e4dac5] bg-white/78 p-6 text-right shadow-[0_24px_70px_rgba(28,45,34,0.08)] backdrop-blur-md">
-            <p className="text-sm font-bold text-tertiary">{displayedCountLabel}</p>
-            <p className="mt-2 text-5xl font-black text-[#1f2c22]">{new Intl.NumberFormat('ar-EG').format(displayedCount)}</p>
+            <p className="text-sm font-bold text-tertiary">{heroCountLabel}</p>
+            <p className="mt-2 text-5xl font-black text-[#1f2c22]">{new Intl.NumberFormat('ar-EG').format(heroCount)}</p>
 
 
 
@@ -381,9 +382,7 @@ export function PublicRentalsPage() {
               <span className="ml-2 text-xs text-tertiary/75 font-normal">(يتم تحديث العقارات تلقائيًا)</span>
               {listingsQuery.isFetching
                 ? 'جاري تحميل الإعلانات'
-                : hasClientOnlyFilters
-                  ? `المعروض في هذه الصفحة: ${new Intl.NumberFormat('ar-EG').format(visibleCount)}`
-                  : `${new Intl.NumberFormat('ar-EG').format(exactTotalCount)} نتيجة`}
+                : `${new Intl.NumberFormat('ar-EG').format(exactTotalCount)} نتيجة`}
             </>
           </p>
         </div>

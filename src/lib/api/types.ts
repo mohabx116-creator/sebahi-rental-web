@@ -2,6 +2,7 @@ export interface PaginatedMeta {
   page: number;
   limit: number;
   totalCount: number;
+  availableCount?: number;
   totalPages: number;
   hasNextPage: boolean;
   hasPreviousPage: boolean;
