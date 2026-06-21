@@ -13,8 +13,8 @@ export function PublicRentalShell() {
               <img src={dalilSubhiLogo} alt="دليل السبحي" className="h-full w-full object-contain mix-blend-multiply" />
             </span>
             <div className="text-right">
-              <p className="text-sm font-black text-[#1f2c22] sm:text-base">إيجارات المنطقة المحيطة</p>
-              <p className="hidden text-xs font-medium text-[#5f6e62] sm:block">سوق الإيجارات في المنطقة المحيطة</p>
+              <p className="text-sm font-black text-[#1f2c22] sm:text-base">إيجارات المنطقة</p>
+              <p className="hidden text-xs font-medium text-[#5f6e62] sm:block">بوابة متخصصة للإيجارات للمنطقة</p>
             </div>
           </Link>
 
@@ -78,6 +78,14 @@ export function PublicRentalShell() {
                     className="transition-colors hover:text-emerald-700"
                   >
                     جروب الفيس بوك
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://dalilsubhi.com/publishing-policy"
+                    className="transition-colors hover:text-emerald-700"
+                  >
+                    سياسة النشر والإعلان
                   </a>
                 </li>
               </ul>

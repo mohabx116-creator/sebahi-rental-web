@@ -519,6 +519,10 @@ export function OwnerListUnitPage() {
               </p>
             )}
 
+            <p className="text-sm text-fixed-dim text-center py-2">
+              بإرسال الإعلان، فإنك تقر بالاطلاع على <a href="https://dalilsubhi.com/publishing-policy" target="_blank" rel="noopener noreferrer" className="text-tertiary underline underline-offset-4 hover:text-tertiary/80 transition">سياسة النشر والإعلان</a> والالتزام بها.
+            </p>
+
             <button
               type="submit"
               disabled={isPending}
