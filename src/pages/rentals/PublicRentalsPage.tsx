@@ -319,7 +319,7 @@ export function PublicRentalsPage() {
       </section>
 
       <section className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <form className="rounded-[28px] glass-panel p-5 lg:p-6" onSubmit={handleFilterSubmit}>
+        <form key={searchParams.toString()} className="rounded-[28px] glass-panel p-5 lg:p-6" onSubmit={handleFilterSubmit}>
           <div className="mb-4 flex flex-col gap-2 text-right text-fixed sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-2">
               <Filter className="h-5 w-5 text-tertiary" />
@@ -349,8 +349,8 @@ export function PublicRentalsPage() {
                   <span className="mt-1 block text-sm font-bold text-fixed-dim">اعرض الوحدات التي تحتوي على تكييف فقط</span>
                 </span>
               </span>
-              <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-[#e4dac5] bg-white/70 transition peer-checked:bg-white peer-checked:[&>span]:scale-100">
-                <span className="h-3 w-3 scale-0 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.65)] transition" />
+              <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-[#e4dac5] bg-white/70 transition peer-checked:border-tertiary peer-checked:bg-white peer-checked:[&>span]:scale-100">
+                <span className="h-4 w-4 scale-0 rounded-full bg-tertiary shadow-[0_0_10px_rgba(138,109,34,0.4)] transition" />
               </span>
             </span>
           </label>

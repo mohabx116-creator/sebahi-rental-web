@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { CheckCircle2, FileImage, Home, Loader2, Trash2, UploadCloud } from 'lucide-react';
 import { useState } from 'react';
-import { useForm, useWatch } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { ApiClientError } from '../../lib/api/api-client';
 import { createCloudinaryUploadSignature, createOwnerSubmission } from '../../lib/api/rental-service';
@@ -58,6 +58,10 @@ const ownerSubmissionSchema = z.object({
   floor: requiredNumber(z.number({ error: 'الدور مطلوب.' }).int().min(0).max(50)),
   monthlyRent: requiredNumber(
     z.number({ error: 'الإيجار الشهري مطلوب.' }).positive('اكتب إيجارًا شهريًا صحيحًا'),
+  ),
+  depositAmount: z.preprocess(
+    (value) => (value === '' || value === null || value === undefined ? undefined : Number(value)),
+    z.number().min(0, 'التأمين لا يمكن أن يكون أقل من صفر').optional(),
   ),
   isAirConditioned: z.boolean().default(false),
   basicFeatures: z.record(z.string(), z.boolean()).default({
@@ -121,7 +125,7 @@ function buildWhatsAppMessage(values: OwnerSubmissionFormValues, submissionId: s
     values.floor !== undefined ? `الدور: ${values.floor}` : null,
     `عدد الغرف: 2`,
     `إيجار الشقة الشهري: ${values.monthlyRent} ج.م`,
-    `التأمين: ${values.monthlyRent * 2} ج.م`,
+    values.depositAmount !== undefined ? `التأمين: ${values.depositAmount} ج.م` : 'التأمين: غير محدد',
     values.totalBeds !== undefined ? `عدد السراير: ${values.totalBeds}` : null,
     `الشقة مكيفة: ${values.isAirConditioned ? 'نعم' : 'لا'}`,
     (() => {
@@ -150,7 +154,6 @@ export function OwnerListUnitPage() {
     handleSubmit,
     register,
     reset,
-    control,
   } = useForm<OwnerSubmissionFormInput, unknown, OwnerSubmissionFormValues>({
     resolver: zodResolver(ownerSubmissionSchema),
     defaultValues: {
@@ -169,9 +172,6 @@ export function OwnerListUnitPage() {
       },
     },
   });
-
-  const monthlyRentValue = useWatch({ control, name: 'monthlyRent' });
-  const depositAmount = (Number(monthlyRentValue) || 0) * 2;
 
   const submissionMutation = useMutation({
     mutationFn: createOwnerSubmission,
@@ -299,7 +299,7 @@ export function OwnerListUnitPage() {
       apartmentNumber: values.apartmentNumber,
       bathrooms: 1,
       monthlyRent: values.monthlyRent,
-      depositAmount: depositAmount,
+      depositAmount: values.depositAmount,
       isAirConditioned: values.isAirConditioned,
       basicFeatures: Object.keys(values.basicFeatures).filter(k => values.basicFeatures[k as BasicFeatureKey]),
       extraAmenitiesText: values.extraAmenitiesText || undefined,
@@ -403,8 +403,8 @@ export function OwnerListUnitPage() {
                 <Field label="الإيجار الشهري" error={errors.monthlyRent?.message}>
                   <input type="number" {...register('monthlyRent')} disabled={isPending} className="form-input" />
                 </Field>
-                <Field label="مبلغ التأمين (مقترح)">
-                  <input type="number" value={depositAmount} disabled className="form-input opacity-60 cursor-not-allowed bg-primary/20 text-tertiary font-bold" />
+                <Field label="مبلغ التأمين" error={errors.depositAmount?.message}>
+                  <input type="number" min="0" {...register('depositAmount')} disabled={isPending} className="form-input" placeholder="مثال: شهرين إيجار" />
                 </Field>
                 <Field label="عدد السراير" error={errors.totalBeds?.message}>
                   <input type="number" {...register('totalBeds')} disabled={isPending} className="form-input" />
@@ -440,12 +440,12 @@ export function OwnerListUnitPage() {
                 <div className="grid gap-3 sm:grid-cols-2">
                   {BASIC_FEATURE_KEYS.map((key) => (
                     <label key={key} className="flex items-center gap-3 text-sm font-bold text-fixed cursor-pointer">
-                      <input type="checkbox" {...register(`basicFeatures.${key}`)} disabled={isPending} className="rounded border-outline bg-primary/45 text-secondary focus:ring-secondary/20 h-5 w-5" />
+                      <input type="checkbox" {...register(`basicFeatures.${key}`)} disabled={isPending} className="h-5 w-5 cursor-pointer rounded border-outline bg-primary/45 text-tertiary accent-tertiary focus:ring-tertiary/20 transition" />
                       <span>{BASIC_FEATURES_MAP[key]}</span>
                     </label>
                   ))}
                   <label className="flex items-center gap-3 text-sm font-bold text-fixed cursor-pointer sm:col-span-2 pt-2 border-t border-outline/30 mt-2">
-                    <input type="checkbox" {...register('isAirConditioned')} disabled={isPending} className="rounded border-outline bg-primary/45 text-secondary focus:ring-secondary/20 h-5 w-5" />
+                    <input type="checkbox" {...register('isAirConditioned')} disabled={isPending} className="h-5 w-5 cursor-pointer rounded border-outline bg-primary/45 text-tertiary accent-tertiary focus:ring-tertiary/20 transition" />
                     <span>الشقة مكيفة</span>
                   </label>
                 </div>
