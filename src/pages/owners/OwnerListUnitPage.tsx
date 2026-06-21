@@ -442,7 +442,7 @@ export function OwnerListUnitPage() {
                     <label key={key} className="flex items-center gap-3 text-sm font-bold text-fixed cursor-pointer group">
                       <div className="relative flex items-center justify-center shrink-0">
                         <input type="checkbox" value={key} {...register('basicFeatures')} disabled={isPending} className="peer sr-only" />
-                        <div className="h-5 w-5 rounded-[6px] border-[1.5px] border-outline/80 bg-white/50 transition-colors peer-checked:border-tertiary peer-checked:bg-tertiary peer-focus-visible:ring-2 peer-focus-visible:ring-tertiary/30" />
+                        <div className="h-5 w-5 rounded-[5px] border-2 border-[#b5c2b8] bg-white transition-colors peer-checked:border-tertiary peer-checked:bg-tertiary peer-focus-visible:ring-2 peer-focus-visible:ring-tertiary/30 group-hover:border-[#96a69a]" />
                         <Check className="pointer-events-none absolute h-3.5 w-3.5 text-white opacity-0 transition-opacity peer-checked:opacity-100" strokeWidth={3.5} />
                       </div>
                       <span className="transition-colors group-hover:text-tertiary peer-checked:text-tertiary">{BASIC_FEATURES_MAP[key]}</span>
@@ -451,7 +451,7 @@ export function OwnerListUnitPage() {
                   <label className="flex items-center gap-3 text-sm font-bold text-fixed cursor-pointer sm:col-span-2 pt-2 border-t border-outline/30 mt-2 group">
                     <div className="relative flex items-center justify-center shrink-0">
                       <input type="checkbox" {...register('isAirConditioned')} disabled={isPending} className="peer sr-only" />
-                      <div className="h-5 w-5 rounded-[6px] border-[1.5px] border-outline/80 bg-white/50 transition-colors peer-checked:border-tertiary peer-checked:bg-tertiary peer-focus-visible:ring-2 peer-focus-visible:ring-tertiary/30" />
+                      <div className="h-5 w-5 rounded-[5px] border-2 border-[#b5c2b8] bg-white transition-colors peer-checked:border-tertiary peer-checked:bg-tertiary peer-focus-visible:ring-2 peer-focus-visible:ring-tertiary/30 group-hover:border-[#96a69a]" />
                       <Check className="pointer-events-none absolute h-3.5 w-3.5 text-white opacity-0 transition-opacity peer-checked:opacity-100" strokeWidth={3.5} />
                     </div>
                     <span className="transition-colors group-hover:text-tertiary peer-checked:text-tertiary">الشقة مكيفة</span>

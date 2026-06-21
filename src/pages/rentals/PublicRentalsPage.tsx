@@ -340,7 +340,7 @@ export function PublicRentalsPage() {
           <label className="mt-4 flex cursor-pointer items-center gap-3 text-right group w-fit">
             <div className="relative flex items-center justify-center shrink-0">
               <input className="peer sr-only" defaultChecked={airConditionedOnly} name="airConditioned" type="checkbox" value="true" />
-              <div className="h-6 w-6 rounded-[6px] border-2 border-outline/80 bg-white/50 transition-colors peer-checked:border-tertiary peer-checked:bg-tertiary peer-focus-visible:ring-2 peer-focus-visible:ring-tertiary/30" />
+              <div className="h-6 w-6 rounded-[6px] border-2 border-[#b5c2b8] bg-white transition-colors peer-checked:border-tertiary peer-checked:bg-tertiary peer-focus-visible:ring-2 peer-focus-visible:ring-tertiary/30 group-hover:border-[#96a69a]" />
               <Check className="pointer-events-none absolute h-4 w-4 text-white opacity-0 transition-opacity peer-checked:opacity-100" strokeWidth={3.5} />
             </div>
             <div>
