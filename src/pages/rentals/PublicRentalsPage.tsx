@@ -267,7 +267,11 @@ export function PublicRentalsPage() {
   });
   const visibleListings = [...filteredListings].sort((a, b) => Number(b.isFeatured) - Number(a.isFeatured));
   const paginationMeta = listingsQuery.data?.meta;
-  const totalCount = filteredListings.length;
+  const hasClientOnlyFilters = Boolean(selectedCondition) || featuredOnly;
+  const exactTotalCount = paginationMeta?.totalCount ?? listings.length;
+  const visibleCount = visibleListings.length;
+  const displayedCount = hasClientOnlyFilters ? visibleCount : exactTotalCount;
+  const displayedCountLabel = hasClientOnlyFilters ? 'المعروض في هذه الصفحة' : 'الإعلانات المعروضة';
   let activeFilters = 0;
   searchParams.forEach((value) => {
     if (value.trim()) activeFilters += 1;
@@ -313,8 +317,8 @@ export function PublicRentalsPage() {
           </div>
 
           <div className="rounded-[28px] border border-[#e4dac5] bg-white/78 p-6 text-right shadow-[0_24px_70px_rgba(28,45,34,0.08)] backdrop-blur-md">
-            <p className="text-sm font-bold text-tertiary">الإعلانات المتاحة</p>
-            <p className="mt-2 text-5xl font-black text-[#1f2c22]">{new Intl.NumberFormat('ar-EG').format(totalCount)}</p>
+            <p className="text-sm font-bold text-tertiary">{displayedCountLabel}</p>
+            <p className="mt-2 text-5xl font-black text-[#1f2c22]">{new Intl.NumberFormat('ar-EG').format(displayedCount)}</p>
 
 
 
@@ -371,11 +375,15 @@ export function PublicRentalsPage() {
 
       <section className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-6 flex items-center justify-between gap-4 border-b border-outline/40 pb-4">
-          <h2 className="text-2xl font-black text-fixed">إعلانات إيجار متاحة</h2>
+          <h2 className="text-2xl font-black text-fixed">إعلانات إيجار معروضة</h2>
           <p className="text-sm font-bold text-fixed-dim">
             <>
               <span className="ml-2 text-xs text-tertiary/75 font-normal">(يتم تحديث العقارات تلقائيًا)</span>
-              {listingsQuery.isFetching ? 'جاري تحميل الإعلانات' : `${new Intl.NumberFormat('ar-EG').format(totalCount)} نتيجة`}
+              {listingsQuery.isFetching
+                ? 'جاري تحميل الإعلانات'
+                : hasClientOnlyFilters
+                  ? `المعروض في هذه الصفحة: ${new Intl.NumberFormat('ar-EG').format(visibleCount)}`
+                  : `${new Intl.NumberFormat('ar-EG').format(exactTotalCount)} نتيجة`}
             </>
           </p>
         </div>
@@ -413,6 +421,19 @@ export function PublicRentalsPage() {
           </div>
         )}
 
+        {!listingsQuery.isLoading && !listingsQuery.isError && listings.length > 0 && visibleListings.length === 0 && (
+          <div className="rounded-[28px] glass-panel p-8 text-center">
+            <Building2 className="mx-auto h-12 w-12 text-tertiary" />
+            <h3 className="mt-4 text-2xl font-black text-fixed">لا توجد إعلانات مطابقة لهذه الصفحة</h3>
+            <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-fixed-dim">
+              هذه الفلاتر محلية على الواجهة، لذلك نعرض فقط ما ظهر في الصفحة الحالية. يمكنك الانتقال للصفحة التالية أو إزالة التصفية المحلية.
+            </p>
+            <Link className="mt-5 inline-flex min-h-11 items-center justify-center rounded-full bg-tertiary px-5 py-3 text-sm font-black text-primary shadow-lg shadow-tertiary/10" to={ROUTES.RENTALS}>
+              إزالة التصفية
+            </Link>
+          </div>
+        )}
+
         {visibleListings.length > 0 && (
           <>
             <div
@@ -430,24 +451,25 @@ export function PublicRentalsPage() {
                 <RentalListingCard key={listing.id} listing={listing} />
               ))}
             </div>
-            {paginationMeta?.hasNextPage && (
-              <div className="mt-8 flex justify-center">
-                <Link
-                  className="inline-flex min-h-12 items-center justify-center rounded-full border border-outline bg-[#fffdf8] px-7 py-3 text-sm font-black text-fixed shadow-lg transition hover:bg-white"
-                  to={{
-                    pathname: ROUTES.RENTALS,
-                    search: (() => {
-                      const next = new URLSearchParams(searchParams);
-                      next.set('page', String((paginationMeta.page ?? query.page ?? 1) + 1));
-                      return next.toString();
-                    })(),
-                  }}
-                >
-                  تحميل المزيد
-                </Link>
-              </div>
-            )}
           </>
+        )}
+
+        {paginationMeta?.hasNextPage && (
+          <div className="mt-8 flex justify-center">
+            <Link
+              className="inline-flex min-h-12 items-center justify-center rounded-full border border-outline bg-[#fffdf8] px-7 py-3 text-sm font-black text-fixed shadow-lg transition hover:bg-white"
+              to={{
+                pathname: ROUTES.RENTALS,
+                search: (() => {
+                  const next = new URLSearchParams(searchParams);
+                  next.set('page', String((paginationMeta.page ?? query.page ?? 1) + 1));
+                  return next.toString();
+                })(),
+              }}
+            >
+              تحميل المزيد
+            </Link>
+          </div>
         )}
       </section>
     </main>
