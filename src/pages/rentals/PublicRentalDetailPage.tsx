@@ -43,6 +43,7 @@ const BASIC_FEATURES_MAP = {
 } as const;
 type BasicFeatureKey = keyof typeof BASIC_FEATURES_MAP;
 const BASIC_FEATURE_KEYS = Object.keys(BASIC_FEATURES_MAP) as BasicFeatureKey[];
+const PUBLIC_RENTAL_DETAIL_STALE_TIME_MS = 30_000;
 
 function getAvailableBeds(listing: { availableBeds?: number | null; totalBeds?: number | null }) {
   return listing.availableBeds ?? Math.max((listing.totalBeds ?? 4) - 0 - 0, 0);
@@ -148,6 +149,7 @@ export function PublicRentalDetailPage() {
     queryKey: ['rentals', 'public', 'listing', slug],
     queryFn: () => rentalApiService.getPublicRentalListingBySlug(slug ?? ''),
     enabled: Boolean(slug),
+    staleTime: PUBLIC_RENTAL_DETAIL_STALE_TIME_MS,
   });
 
   const listing = listingQuery.data;

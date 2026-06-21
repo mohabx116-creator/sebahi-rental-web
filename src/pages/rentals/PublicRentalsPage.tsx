@@ -1,7 +1,7 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { ArrowLeft, BedDouble, Building2, Filter, Home, MapPin, ShieldCheck, Sparkles } from 'lucide-react';
 
-import type { FormEvent } from 'react';
+import type { FocusEvent, FormEvent, PointerEvent } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { rentalApiService } from '../../lib/api/rental-service';
 
@@ -23,6 +23,7 @@ import {
 
 import heroImage from '../../assets/sebahi-gardens-hero.jpg';
 const publicRentalCardLocation = 'المنطقة المحيطة-حدائق العاشر من رمضان';
+const PUBLIC_RENTAL_DETAIL_STALE_TIME_MS = 30_000;
 
 function getAvailableBedsText(availableBeds: number) {
   if (availableBeds <= 0) return 'لا توجد سراير متاحة';
@@ -32,6 +33,19 @@ function getAvailableBedsText(availableBeds: number) {
 
 function getBasicsSummary(listing: RentalListing) {
   return (listing.basicFeatures || []).length >= 7 ? 'الأساسيات مكتملة' : 'أساسيات غير مكتملة';
+}
+
+function prefetchRentalListingDetail(queryClient: QueryClient, slug: string) {
+  if (!slug) return;
+
+  const queryKey = ['rentals', 'public', 'listing', slug] as const;
+  if (queryClient.getQueryData(queryKey)) return;
+
+  void queryClient.prefetchQuery({
+    queryKey,
+    queryFn: () => rentalApiService.getPublicRentalListingBySlug(slug),
+    staleTime: PUBLIC_RENTAL_DETAIL_STALE_TIME_MS,
+  });
 }
 
 function buildQuery(searchParams: URLSearchParams): RentalListingQuery {
@@ -72,6 +86,7 @@ function ListingImageFallback({ title }: { title: string }) {
 }
 
 function RentalListingCard({ listing }: { listing: RentalListing }) {
+  const queryClient = useQueryClient();
   const coverImage = getListingCoverImage(listing);
   const title = publicRentalText(listing.title);
   const location = publicRentalCardLocation;
@@ -80,6 +95,19 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
   const availableBeds = listing.availableBeds ?? Math.max((listing.totalBeds ?? 4) - 0 - 0, 0);
   const bedsStatusText = getAvailableBedsText(availableBeds);
   const basicsSummary = getBasicsSummary(listing);
+  const handlePrefetch = () => {
+    prefetchRentalListingDetail(queryClient, listing.slug);
+  };
+
+  const handlePointerDown = (event: PointerEvent<HTMLElement>) => {
+    if (event.pointerType === 'mouse' || event.pointerType === 'pen' || event.pointerType === 'touch') {
+      handlePrefetch();
+    }
+  };
+
+  const handleFocus = (_event: FocusEvent<HTMLElement>) => {
+    handlePrefetch();
+  };
 
   return (
     <article
@@ -87,6 +115,9 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
         'group overflow-hidden rounded-[28px] glass-card',
         listing.isFeatured && 'border-tertiary/40 shadow-2xl shadow-tertiary/10 ring-1 ring-tertiary/20'
       )}
+      onFocusCapture={handleFocus}
+      onMouseEnter={handlePrefetch}
+      onPointerDownCapture={handlePointerDown}
     >
       <Link className="block" to={`/rentals/${listing.slug}`}>
         <div className="relative aspect-[4/3] overflow-hidden bg-surface-dim">
@@ -223,7 +254,7 @@ export function PublicRentalsPage() {
     refetchIntervalInBackground: false,
     refetchOnWindowFocus: true,
     refetchOnReconnect: true,
-    staleTime: 5000,
+    staleTime: PUBLIC_RENTAL_DETAIL_STALE_TIME_MS,
   });
 
   const listings = listingsQuery.data?.data ?? [];
