@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query';
-import { ArrowLeft, BedDouble, Building2, Filter, Home, MapPin, ShieldCheck, Sparkles } from 'lucide-react';
+import { ArrowLeft, BedDouble, Building2, Filter, Home, MapPin, ShieldCheck } from 'lucide-react';
 
 import type { FocusEvent, FormEvent, PointerEvent } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -70,7 +70,7 @@ function buildQuery(searchParams: URLSearchParams): RentalListingQuery {
 function ListingImageFallback({ title }: { title: string }) {
   return (
     <div className="absolute inset-0 flex flex-col justify-between overflow-hidden bg-primary p-5 text-white">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(214,178,94,0.35),transparent_34%),linear-gradient(135deg,rgba(255,255,255,0.08),transparent_38%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(214,178,94,0.18),transparent_34%),linear-gradient(135deg,rgba(255,255,255,0.04),transparent_38%)]" />
       <div className="relative flex h-full flex-col justify-between">
         <span className="inline-flex w-fit items-center gap-2 rounded-full border border-[#e4dac5] bg-white/70 px-3 py-1.5 text-xs font-black text-tertiary shadow-sm backdrop-blur-md">
           <Home className="h-4 w-4 text-tertiary" />
@@ -95,6 +95,7 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
   const availableBeds = listing.availableBeds ?? Math.max((listing.totalBeds ?? 4) - 0 - 0, 0);
   const bedsStatusText = getAvailableBedsText(availableBeds);
   const basicsSummary = getBasicsSummary(listing);
+  const hasAirConditioning = Boolean(listing.isAirConditioned);
   const handlePrefetch = () => {
     prefetchRentalListingDetail(queryClient, listing.slug);
   };
@@ -112,8 +113,8 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
   return (
     <article
       className={cn(
-        'group overflow-hidden rounded-[28px] glass-card',
-        listing.isFeatured && 'border-tertiary/40 shadow-2xl shadow-tertiary/10 ring-1 ring-tertiary/20'
+        'group overflow-hidden rounded-[28px] glass-card border-[#e8ddc9] shadow-[0_24px_60px_rgba(28,45,34,0.06)]',
+        listing.isFeatured && 'ring-1 ring-tertiary/20'
       )}
       onFocusCapture={handleFocus}
       onMouseEnter={handlePrefetch}
@@ -134,87 +135,80 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
               }}
             />
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent opacity-90" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent opacity-40" />
           <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-3 p-4">
-            <span className="rounded-full bg-primary/80 border border-outline px-3 py-1 text-xs font-bold text-fixed backdrop-blur-md">
+            <span className="rounded-full border border-white/20 bg-[#1f2c22]/70 px-3 py-1 text-xs font-bold text-white shadow-sm backdrop-blur-md">
               {listingStatusLabels[listing.status]}
             </span>
-            {listing.isFeatured && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-tertiary px-3 py-1 text-xs font-bold text-primary shadow-md">
-                <Sparkles className="h-3.5 w-3.5" />
-                مميز
-              </span>
-            )}
-          </div>
-          <div className="absolute inset-x-0 bottom-0 p-4 text-[#1f2c22]">
-            <p className="text-xs font-bold text-fixed-dim">إيجار الشقة الشهري</p>
-            <p className="text-2xl font-black text-tertiary">{formatRentalMoney(listing.monthlyRent)}</p>
           </div>
         </div>
       </Link>
 
       <div className="space-y-4 p-5 text-right">
         <div>
-          <p className="text-sm font-bold text-tertiary">{compoundName}</p>
-          <Link className="mt-1 block text-xl font-bold leading-8 text-fixed hover:text-tertiary transition" to={`/rentals/${listing.slug}`}>
+          <p className="text-sm font-extrabold text-[#2f5d47]">{compoundName}</p>
+          <Link className="mt-1 block text-[1.15rem] font-black leading-8 text-[#1d2a21] transition hover:text-tertiary" to={`/rentals/${listing.slug}`}>
             {title}
           </Link>
-          <p className="mt-2 flex items-center gap-2 text-sm text-fixed-dim">
-            <MapPin className="h-4 w-4 shrink-0 text-secondary-fixed" />
+          <p className="mt-2 flex items-center gap-2 text-sm font-medium text-[#59685e]">
+            <MapPin className="h-4 w-4 shrink-0 text-[#6f8173]" />
             <span className="line-clamp-1">{location}</span>
           </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-            <span className="rounded-full bg-secondary/25 border border-secondary/10 px-3 py-1 text-sm font-bold text-[#1f2c22]">{listingTypeLabels[listing.listingType]}</span>
-          <span className="rounded-full bg-tertiary/20 border border-tertiary/10 px-3 py-1 text-sm font-bold text-tertiary">{listing.unitCondition || furnishingLabels[listing.furnishingStatus]}</span>
+            <span className="rounded-full border border-[#d8e0d6] bg-[#f7f5ef] px-3 py-1 text-sm font-bold text-[#243025]">{listingTypeLabels[listing.listingType]}</span>
+          <span className="rounded-full border border-[#d7d0be] bg-[#fbf7ef] px-3 py-1 text-sm font-bold text-[#7b5d14]">{listing.unitCondition || furnishingLabels[listing.furnishingStatus]}</span>
           <span className={cn(
             "rounded-full border px-3 py-1 text-sm font-bold",
             availableBeds > 0 
-              ? "bg-emerald-500/20 border-emerald-500/30 text-emerald-400"
-              : "bg-rose-500/20 border-rose-500/30 text-rose-400"
+              ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+              : "border-rose-200 bg-rose-50 text-rose-700"
           )}>
             {bedsStatusText}
           </span>
-          {listing.isAirConditioned && (
-            <span className="rounded-full border border-[#e4dac5] bg-white/70 px-3 py-1 text-sm font-bold text-[#1f2c22] shadow-sm">
+          {hasAirConditioning && (
+            <span className="rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-sm font-bold text-sky-800 shadow-sm">
               الشقة مكيفة
             </span>
           )}
         </div>
 
-        <div className="grid grid-cols-3 gap-2 text-center text-sm text-fixed-dim">
-          <span className="rounded-2xl bg-primary/40 border border-outline-variant/30 px-2 py-3">
-            <Building2 className="mx-auto mb-1 h-5 w-5 text-tertiary" />
-            {listing.floor != null ? `الدور ${listing.floor}` : `${listing.totalBeds || 4} سراير`}
+        <div className="rounded-[24px] border border-[#e7dcc5] bg-[#fffdf8] p-4">
+          <div className="flex items-end justify-between gap-3">
+            <div className="text-right">
+              <p className="text-xs font-bold tracking-wide text-[#7d6c49]">إيجار الشقة الشهري</p>
+              <p className="mt-1 text-3xl font-black leading-none text-[#132015]">{formatRentalMoney(listing.monthlyRent)}</p>
+            </div>
+            <div className="rounded-full border border-[#e7dcc5] bg-white px-3 py-2 text-xs font-bold text-[#6a5b39]">
+              قابل للحجز
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-3 gap-2 text-center text-sm text-[#526155]">
+          <span className="rounded-2xl border border-[#e8ddc9] bg-[#fcfaf5] px-2 py-3">
+            <Building2 className="mx-auto mb-1 h-5 w-5 text-[#8a6d22]" />
+            <span className="font-semibold text-[#344138]">{listing.floor != null ? `الدور ${listing.floor}` : `${listing.totalBeds || 4} سراير`}</span>
           </span>
-          <span className="rounded-2xl bg-primary/40 border border-outline-variant/30 px-2 py-3">
-            <ShieldCheck className="mx-auto mb-1 h-5 w-5 text-tertiary" />
-            {basicsSummary}
+          <span className="rounded-2xl border border-[#e8ddc9] bg-[#fcfaf5] px-2 py-3">
+            <ShieldCheck className="mx-auto mb-1 h-5 w-5 text-[#8a6d22]" />
+            <span className="font-semibold text-[#344138]">{basicsSummary}</span>
           </span>
-          <span className="rounded-2xl bg-primary/40 border border-outline-variant/30 px-2 py-3">
-            {listing.isAirConditioned ? (
-              <>
-                <Sparkles className="mx-auto mb-1 h-5 w-5 text-tertiary" />
-                مكيفة
-              </>
-            ) : (
-              <>
-                <BedDouble className="mx-auto mb-1 h-5 w-5 text-tertiary" />
-                عدد السراير المتاحة: {availableBeds}
-              </>
-            )}
+          <span className="rounded-2xl border border-[#e8ddc9] bg-[#fcfaf5] px-2 py-3">
+            <BedDouble className="mx-auto mb-1 h-5 w-5 text-[#8a6d22]" />
+            <span className="font-semibold text-[#344138]">عدد السراير المتاحة: {availableBeds}</span>
           </span>
         </div>
 
-        <div className="flex items-center justify-between gap-4 border-t border-outline/40 pt-4">
+        <div className="flex items-center justify-between gap-4 border-t border-[#e8ddc9] pt-4">
           <Link className="inline-flex min-h-11 items-center gap-2 rounded-full bg-tertiary hover:bg-tertiary/95 px-5 py-3 text-sm font-black text-primary shadow-lg shadow-tertiary/10 transition" to={`/rentals/${listing.slug}`}>
             عرض التفاصيل
             <ArrowLeft className="h-4 w-4 text-primary" />
           </Link>
           <div className="text-right">
-            <p className="text-xs font-bold text-fixed-dim">التأمين</p>
-            <p className="text-base font-extrabold text-fixed">{depositAmount > 0 ? formatRentalMoney(depositAmount) : 'لا يوجد تأمين'}</p>
+            <p className="text-xs font-bold text-[#7d6c49]">التأمين</p>
+            <p className="text-base font-extrabold text-[#1d2a21]">{depositAmount > 0 ? formatRentalMoney(depositAmount) : 'لا يوجد تأمين'}</p>
           </div>
         </div>
       </div>
@@ -259,15 +253,15 @@ export function PublicRentalsPage() {
 
   const listings = listingsQuery.data?.data ?? [];
   const selectedCondition = searchParams.get('unitCondition') || '';
-  const featuredOnly = searchParams.get('featured') === 'true';
+  const airConditionedOnly = searchParams.get('airConditioned') === 'true';
   const filteredListings = listings.filter((listing) => {
-    if (featuredOnly && !listing.isFeatured) return false;
+    if (airConditionedOnly && !listing.isAirConditioned) return false;
     if (!selectedCondition) return true;
     return listing.unitCondition?.trim() === selectedCondition.trim();
   });
   const visibleListings = [...filteredListings].sort((a, b) => Number(b.isFeatured) - Number(a.isFeatured));
   const paginationMeta = listingsQuery.data?.meta;
-  const hasClientOnlyFilters = Boolean(selectedCondition) || featuredOnly;
+  const hasClientOnlyFilters = Boolean(selectedCondition) || airConditionedOnly;
   const exactTotalCount = paginationMeta?.totalCount ?? listings.length;
   const exactAvailableCount = paginationMeta?.availableCount ?? paginationMeta?.totalCount ?? listings.length;
   const visibleCount = visibleListings.length;
@@ -288,7 +282,7 @@ export function PublicRentalsPage() {
       if (value) next.set(key, value);
     });
 
-    if (formData.get('featured') === 'true') next.set('featured', 'true');
+    if (formData.get('airConditioned') === 'true') next.set('airConditioned', 'true');
 
 
 
@@ -309,9 +303,6 @@ export function PublicRentalsPage() {
             <h1 className="mt-5 text-4xl font-black leading-[1.25] text-[#1f2c22] sm:text-5xl lg:text-6xl">
               الإيجارات المتاحة في المنطقة
             </h1>
-            <p className="mt-5 max-w-2xl text-lg leading-9 text-[#5f6e62]">
-              تصفح إعلانات الإيجار المنشورة في المنطقة المحيطة، قارن السعر والمساحة وحالة الشقة، وابدأ طلب التواصل أو الحجز من خلال واتساب.
-            </p>
             <div className="mt-6 flex flex-wrap gap-3 text-sm font-bold text-[#5f6e62]">
               <span className="rounded-full border border-[#e4dac5] bg-white/70 px-4 py-2 shadow-sm backdrop-blur-md">بحث سريع حسب السعر والمواصفات</span>
             </div>
@@ -347,15 +338,15 @@ export function PublicRentalsPage() {
             <input className="rounded-2xl border-outline bg-primary/45 py-3 px-4 text-right text-fixed focus:border-tertiary focus:ring-tertiary/20" defaultValue={searchParams.get('maxRent') ?? ''} min="0" name="maxRent" placeholder="أعلى سعر شهري" type="number" />
           </div>
           <label className="mt-4 block cursor-pointer text-right">
-            <input className="peer sr-only" defaultChecked={featuredOnly} name="featured" type="checkbox" value="true" />
+            <input className="peer sr-only" defaultChecked={airConditionedOnly} name="airConditioned" type="checkbox" value="true" />
             <span className="flex min-h-24 items-center justify-between gap-4 rounded-[24px] border border-outline bg-primary/35 px-5 py-4 text-fixed transition hover:border-tertiary/60 hover:bg-primary/50 peer-checked:border-tertiary peer-checked:bg-tertiary/15 peer-checked:shadow-lg peer-checked:shadow-tertiary/10">
               <span className="flex items-center gap-3">
                 <span className="flex h-12 w-12 items-center justify-center rounded-2xl border border-[#e4dac5] bg-white/70 text-tertiary shadow-sm peer-checked:border-tertiary/40">
-                  <Sparkles className="h-6 w-6" />
+                  <Home className="h-6 w-6" />
                 </span>
                 <span>
-                  <span className="block text-lg font-black">الإعلانات المميزة فقط</span>
-                  <span className="mt-1 block text-sm font-bold text-fixed-dim">اعرض الإعلانات المميزة أولًا</span>
+                  <span className="block text-lg font-black">مكيفة فقط</span>
+                  <span className="mt-1 block text-sm font-bold text-fixed-dim">اعرض الوحدات التي تحتوي على تكييف فقط</span>
                 </span>
               </span>
               <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-[#e4dac5] bg-white/70 transition peer-checked:bg-white peer-checked:[&>span]:scale-100">
