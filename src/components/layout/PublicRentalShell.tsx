@@ -41,34 +41,10 @@ export function PublicRentalShell() {
 
       <footer className="border-t border-[#e4dac5] bg-[#f2ebde] text-[#243128]">
         <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-8 text-right md:grid-cols-4" dir="rtl">
+          <div className="grid grid-cols-1 gap-8 text-right md:grid-cols-2" dir="rtl">
             <div className="space-y-3">
               <h3 className="text-base font-bold text-[#1f2c22]">مجمع الخدمات للمنطقة</h3>
               <p className="text-sm leading-relaxed text-[#5f6e62]">منصة آمنة لعرض خدمات المنطقة</p>
-            </div>
-
-            <div className="space-y-3">
-              <h3 className="text-base font-bold text-[#1f2c22]">للتواصل والدعم</h3>
-              <div className="mt-2 flex flex-col gap-2">
-                <a
-                  href="https://chat.whatsapp.com/ECEZfbsvjlU43eDvKa9XUu"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex w-fit items-center gap-2 text-sm text-emerald-600 transition-colors hover:text-emerald-700"
-                >
-                  <span className="h-2 w-2 rounded-full bg-emerald-500" />
-                  خدمة العملاء
-                </a>
-                <a
-                  href="https://www.facebook.com/share/g/1CzbCwjugk/?mibextid=KtfwRi"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex w-fit items-center gap-2 text-sm text-blue-600 transition-colors hover:text-blue-700"
-                >
-                  <span className="h-2 w-2 rounded-full bg-blue-500" />
-                  جروب الفيس بوك
-                </a>
-              </div>
             </div>
 
             <div className="space-y-3">

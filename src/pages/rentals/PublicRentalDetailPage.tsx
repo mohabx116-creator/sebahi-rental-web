@@ -114,19 +114,12 @@ async function copyToClipboard(text: string): Promise<boolean> {
   return false;
 }
 
-function DetailImageFallback({ title }: { title: string }) {
+function DetailImageFallback() {
   return (
-    <div className="absolute inset-0 flex flex-col justify-between overflow-hidden bg-primary p-6 text-white sm:p-8">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_22%,rgba(214,178,94,0.35),transparent_30%),linear-gradient(135deg,rgba(255,255,255,0.08),transparent_42%)]" />
-      <div className="relative flex h-full flex-col justify-between">
-        <span className="inline-flex w-fit items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-black text-tertiary backdrop-blur-md">
-          <Building2 className="h-4 w-4 text-tertiary" />
-          {publicRentalBrand.rentalsTitle}
-        </span>
-        <div className="max-w-2xl">
-          <p className="text-sm font-bold text-tertiary">المنطقة المحيطة</p>
-          <p className="mt-2 text-3xl font-black leading-[1.35] sm:text-5xl text-fixed">{title}</p>
-        </div>
+    <div className="absolute inset-0 flex items-center justify-center overflow-hidden bg-[#eef2ee] p-6 text-center sm:p-8">
+      <div className="flex max-w-sm flex-col items-center gap-3 text-[#5f6e62]">
+        <Building2 className="h-10 w-10 text-tertiary" />
+        <p className="text-sm font-bold">الصورة غير متاحة حاليا</p>
       </div>
     </div>
   );
@@ -289,7 +282,7 @@ export function PublicRentalDetailPage() {
                   onClick={() => setIsLightboxOpen(true)}
                 >
                   {!activeImageUrl || imageError ? (
-                    <DetailImageFallback title={title} />
+                    <DetailImageFallback />
                   ) : (
                     <img
                       alt={getListingImageAlt(listing, activeImage)}
