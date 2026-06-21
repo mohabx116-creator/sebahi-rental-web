@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query';
-import { ArrowLeft, BedDouble, Building2, Filter, Home, MapPin, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, BedDouble, Building2, Check, Filter, Home, MapPin, ShieldCheck } from 'lucide-react';
 
 import type { FocusEvent, FormEvent, PointerEvent } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -337,22 +337,16 @@ export function PublicRentalsPage() {
             <input className="rounded-2xl border-outline bg-primary/45 py-3 px-4 text-right text-fixed focus:border-tertiary focus:ring-tertiary/20" defaultValue={searchParams.get('minRent') ?? ''} min="0" name="minRent" placeholder="أقل سعر شهري" type="number" />
             <input className="rounded-2xl border-outline bg-primary/45 py-3 px-4 text-right text-fixed focus:border-tertiary focus:ring-tertiary/20" defaultValue={searchParams.get('maxRent') ?? ''} min="0" name="maxRent" placeholder="أعلى سعر شهري" type="number" />
           </div>
-          <label className="mt-4 block cursor-pointer text-right">
-            <input className="peer sr-only" defaultChecked={airConditionedOnly} name="airConditioned" type="checkbox" value="true" />
-            <span className="flex min-h-24 items-center justify-between gap-4 rounded-[24px] border border-outline bg-primary/35 px-5 py-4 text-fixed transition hover:border-tertiary/60 hover:bg-primary/50 peer-checked:border-tertiary peer-checked:bg-tertiary/15 peer-checked:shadow-lg peer-checked:shadow-tertiary/10">
-              <span className="flex items-center gap-3">
-                <span className="flex h-12 w-12 items-center justify-center rounded-2xl border border-[#e4dac5] bg-white/70 text-tertiary shadow-sm peer-checked:border-tertiary/40">
-                  <Home className="h-6 w-6" />
-                </span>
-                <span>
-                  <span className="block text-lg font-black">مكيفة فقط</span>
-                  <span className="mt-1 block text-sm font-bold text-fixed-dim">اعرض الوحدات التي تحتوي على تكييف فقط</span>
-                </span>
-              </span>
-              <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-[#e4dac5] bg-white/70 transition peer-checked:border-tertiary peer-checked:bg-white peer-checked:[&>span]:scale-100">
-                <span className="h-4 w-4 scale-0 rounded-full bg-tertiary shadow-[0_0_10px_rgba(138,109,34,0.4)] transition" />
-              </span>
-            </span>
+          <label className="mt-4 flex cursor-pointer items-center gap-3 text-right group w-fit">
+            <div className="relative flex items-center justify-center shrink-0">
+              <input className="peer sr-only" defaultChecked={airConditionedOnly} name="airConditioned" type="checkbox" value="true" />
+              <div className="h-6 w-6 rounded-[6px] border-2 border-outline/80 bg-white/50 transition-colors peer-checked:border-tertiary peer-checked:bg-tertiary peer-focus-visible:ring-2 peer-focus-visible:ring-tertiary/30" />
+              <Check className="pointer-events-none absolute h-4 w-4 text-white opacity-0 transition-opacity peer-checked:opacity-100" strokeWidth={3.5} />
+            </div>
+            <div>
+              <span className="block text-base font-bold text-fixed transition-colors group-hover:text-tertiary peer-checked:text-tertiary">مكيفة فقط</span>
+              <span className="mt-0.5 block text-xs text-fixed-dim">اعرض الوحدات التي تحتوي على تكييف فقط</span>
+            </div>
           </label>
           <div className="mt-4 flex justify-end gap-2">
             <Link className="rounded-full border border-outline bg-[#fffdf8] px-5 py-3 text-sm font-bold text-fixed transition hover:bg-white" to={ROUTES.RENTALS}>

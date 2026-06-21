@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
-import { CheckCircle2, FileImage, Home, Loader2, Trash2, UploadCloud } from 'lucide-react';
+import { Check, CheckCircle2, FileImage, Home, Loader2, Trash2, UploadCloud } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -64,15 +64,15 @@ const ownerSubmissionSchema = z.object({
     z.number().min(0, 'التأمين لا يمكن أن يكون أقل من صفر').optional(),
   ),
   isAirConditioned: z.boolean().default(false),
-  basicFeatures: z.record(z.string(), z.boolean()).default({
-    internet: true,
-    basic_appliances: true,
-    water_motor: true,
-    desks: true,
-    window_mesh: true,
-    water_heater: true,
-    water_filter: true,
-  }),
+  basicFeatures: z.array(z.string()).default([
+    'internet',
+    'basic_appliances',
+    'water_motor',
+    'desks',
+    'window_mesh',
+    'water_heater',
+    'water_filter',
+  ]),
   extraAmenitiesText: z.string().trim().optional(),
   description: z.string().trim().optional(),
   buildingNumber: z.string().trim().min(1, 'اكتب رقم العمارة').max(100),
@@ -129,8 +129,8 @@ function buildWhatsAppMessage(values: OwnerSubmissionFormValues, submissionId: s
     values.totalBeds !== undefined ? `عدد السراير: ${values.totalBeds}` : null,
     `الشقة مكيفة: ${values.isAirConditioned ? 'نعم' : 'لا'}`,
     (() => {
-      const selected = Object.keys(values.basicFeatures || {}).filter(k => values.basicFeatures[k as BasicFeatureKey]) as BasicFeatureKey[];
-      if (selected.length === BASIC_FEATURE_KEYS.length) return "الأساسيات: كلها موجودة";
+      const selected = (values.basicFeatures || []) as BasicFeatureKey[];
+      if (selected.length >= BASIC_FEATURE_KEYS.length) return "الأساسيات: كلها موجودة";
       if (selected.length === 0) return "الأساسيات: غير متوفرة";
       const missing = BASIC_FEATURE_KEYS.filter(k => !selected.includes(k)).map(k => BASIC_FEATURES_MAP[k]);
       return `الأساسيات: كلها موجودة عدا: ${missing.join('، ')}`;
@@ -161,15 +161,15 @@ export function OwnerListUnitPage() {
       policyAccepted: false,
       totalBeds: 4,
       isAirConditioned: false,
-      basicFeatures: {
-        internet: true,
-        basic_appliances: true,
-        water_motor: true,
-        desks: true,
-        window_mesh: true,
-        water_heater: true,
-        water_filter: true,
-      },
+      basicFeatures: [
+        'internet',
+        'basic_appliances',
+        'water_motor',
+        'desks',
+        'window_mesh',
+        'water_heater',
+        'water_filter',
+      ],
     },
   });
 
@@ -301,7 +301,7 @@ export function OwnerListUnitPage() {
       monthlyRent: values.monthlyRent,
       depositAmount: values.depositAmount,
       isAirConditioned: values.isAirConditioned,
-      basicFeatures: Object.keys(values.basicFeatures).filter(k => values.basicFeatures[k as BasicFeatureKey]),
+      basicFeatures: values.isAirConditioned ? Array.from(new Set([...values.basicFeatures, 'air_conditioner'])) : values.basicFeatures,
       extraAmenitiesText: values.extraAmenitiesText || undefined,
       description: values.description || undefined,
       images,
@@ -439,14 +439,22 @@ export function OwnerListUnitPage() {
                 <p className="text-xs text-fixed-dim">كل الأساسيات محددة افتراضيًا، لو في حاجة غير متوفرة في الشقة شيل العلامة من أمامها.</p>
                 <div className="grid gap-3 sm:grid-cols-2">
                   {BASIC_FEATURE_KEYS.map((key) => (
-                    <label key={key} className="flex items-center gap-3 text-sm font-bold text-fixed cursor-pointer">
-                      <input type="checkbox" {...register(`basicFeatures.${key}`)} disabled={isPending} className="h-5 w-5 cursor-pointer rounded border-outline bg-primary/45 text-tertiary accent-tertiary focus:ring-tertiary/20 transition" />
-                      <span>{BASIC_FEATURES_MAP[key]}</span>
+                    <label key={key} className="flex items-center gap-3 text-sm font-bold text-fixed cursor-pointer group">
+                      <div className="relative flex items-center justify-center shrink-0">
+                        <input type="checkbox" value={key} {...register('basicFeatures')} disabled={isPending} className="peer sr-only" />
+                        <div className="h-5 w-5 rounded-[6px] border-[1.5px] border-outline/80 bg-white/50 transition-colors peer-checked:border-tertiary peer-checked:bg-tertiary peer-focus-visible:ring-2 peer-focus-visible:ring-tertiary/30" />
+                        <Check className="pointer-events-none absolute h-3.5 w-3.5 text-white opacity-0 transition-opacity peer-checked:opacity-100" strokeWidth={3.5} />
+                      </div>
+                      <span className="transition-colors group-hover:text-tertiary peer-checked:text-tertiary">{BASIC_FEATURES_MAP[key]}</span>
                     </label>
                   ))}
-                  <label className="flex items-center gap-3 text-sm font-bold text-fixed cursor-pointer sm:col-span-2 pt-2 border-t border-outline/30 mt-2">
-                    <input type="checkbox" {...register('isAirConditioned')} disabled={isPending} className="h-5 w-5 cursor-pointer rounded border-outline bg-primary/45 text-tertiary accent-tertiary focus:ring-tertiary/20 transition" />
-                    <span>الشقة مكيفة</span>
+                  <label className="flex items-center gap-3 text-sm font-bold text-fixed cursor-pointer sm:col-span-2 pt-2 border-t border-outline/30 mt-2 group">
+                    <div className="relative flex items-center justify-center shrink-0">
+                      <input type="checkbox" {...register('isAirConditioned')} disabled={isPending} className="peer sr-only" />
+                      <div className="h-5 w-5 rounded-[6px] border-[1.5px] border-outline/80 bg-white/50 transition-colors peer-checked:border-tertiary peer-checked:bg-tertiary peer-focus-visible:ring-2 peer-focus-visible:ring-tertiary/30" />
+                      <Check className="pointer-events-none absolute h-3.5 w-3.5 text-white opacity-0 transition-opacity peer-checked:opacity-100" strokeWidth={3.5} />
+                    </div>
+                    <span className="transition-colors group-hover:text-tertiary peer-checked:text-tertiary">الشقة مكيفة</span>
                   </label>
                 </div>
               </div>
