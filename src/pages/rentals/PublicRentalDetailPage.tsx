@@ -9,7 +9,7 @@ import {
   X,
   LockKeyhole,
   MapPin,
-  Ruler,
+  ShieldCheck,
   Sparkles,
 } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
@@ -54,6 +54,10 @@ function getAvailableBedsLabel(count: number) {
   if (count === 1) return 'سرير واحد متاح فقط';
   if (count === 2) return 'متبقي سريران فقط';
   return `متاح الآن: ${count} سراير`;
+}
+
+function getBasicsSummary(listing: Pick<RentalListing, 'basicFeatures'>) {
+  return (listing.basicFeatures || []).length >= 7 ? 'الأساسيات مكتملة' : 'أساسيات غير مكتملة';
 }
 
 const customerSupportWhatsAppUrl = 'https://wa.me/201224591618';
@@ -250,11 +254,6 @@ export function PublicRentalDetailPage() {
   );
   const compoundName = publicCompoundName(listing.compound?.name);
   const availableBeds = getAvailableBeds(listing);
-  const unitFacts = [
-    { label: 'الغرف', value: listing.bedrooms != null ? `${listing.bedrooms}` : 'غير محدد', icon: BedDouble },
-    { label: 'الدور', value: listing.floor != null ? `${listing.floor}` : 'غير محدد', icon: Building2 },
-    { label: 'المساحة', value: listing.areaSqm ? `${listing.areaSqm} م²` : 'غير محدد', icon: Ruler },
-  ];
   const pricingItems = [
     { label: 'التأمين', value: toNumber(listing.depositAmount) > 0 ? formatRentalMoney(listing.depositAmount) : 'لا يوجد تأمين' },
   ];
@@ -407,17 +406,19 @@ export function PublicRentalDetailPage() {
                 <p className="mt-1 text-4xl font-black leading-tight text-tertiary">{formatRentalMoney(listing.monthlyRent)}</p>
               </div>
 
-              <div className="mt-4 grid grid-cols-3 gap-2">
-                {unitFacts.map((fact) => {
-                  const Icon = fact.icon;
-                  return (
-                    <div key={fact.label} className="rounded-2xl border border-[#e4dac5] bg-white/80 px-2 py-3 text-center shadow-sm">
-                      <Icon className="mx-auto mb-1 h-5 w-5 text-tertiary" />
-                      <p className="text-sm font-bold text-[#526055]">{fact.label}</p>
-                      <p className="mt-1 text-sm font-black text-[#1f2c22]">{fact.value}</p>
-                    </div>
-                  );
-                })}
+              <div className="mt-4 grid grid-cols-3 gap-2 text-center text-sm text-[#526155]">
+                <span className="rounded-2xl border border-[#e8ddc9] bg-[#fcfaf5] px-2 py-3 shadow-sm">
+                  <Building2 className="mx-auto mb-1 h-5 w-5 text-[#8a6d22]" />
+                  <span className="font-semibold text-[#344138]">{listing.floor != null ? `الدور ${listing.floor}` : `${listing.totalBeds || 4} سراير`}</span>
+                </span>
+                <span className="rounded-2xl border border-[#e8ddc9] bg-[#fcfaf5] px-2 py-3 shadow-sm">
+                  <ShieldCheck className="mx-auto mb-1 h-5 w-5 text-[#8a6d22]" />
+                  <span className="font-semibold text-[#344138]">{getBasicsSummary(listing)}</span>
+                </span>
+                <span className="rounded-2xl border border-[#e8ddc9] bg-[#fcfaf5] px-2 py-3 shadow-sm">
+                  <BedDouble className="mx-auto mb-1 h-5 w-5 text-[#8a6d22]" />
+                  <span className="font-semibold text-[#344138]">عدد السراير المتاحة: {availableBeds}</span>
+                </span>
               </div>
 
               <div className="mt-4 space-y-2 rounded-[24px] border border-[#e4dac5] bg-white/80 p-4 shadow-sm">
