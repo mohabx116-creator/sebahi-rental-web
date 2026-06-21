@@ -431,12 +431,14 @@ export function PublicRentalDetailPage() {
               </div>
 
               <div className="mt-4 space-y-2 rounded-[24px] border border-[#e4dac5] bg-white/80 p-4 text-sm shadow-sm">
-                <p className="pb-2 text-sm font-bold leading-7 text-[#526055]">
-                  الحجز يتم على سرير داخل الشقة، وليس على الشقة بالكامل.
+                <p className={cn("text-sm font-bold leading-7 text-[#526055]", (listing.totalBeds != null && listing.totalBeds > 0) ? "pb-2" : "pb-3 border-b border-[#e4dac5]")}>
+                  يمكن الحجز على سرير أو غرفة أو الشقة بالكامل، وفقًا لنوع الإعلان وما هو موضح في تفاصيله.
                 </p>
-                <p className="border-b border-[#e4dac5] pb-3 text-sm font-bold leading-6 text-[#526055]">
-                  سيتم تحديد رقم السرير تلقائيًا حسب أولوية الإتاحة: سرير 1 ثم سرير 2 ثم سرير 3 ثم سرير 4.
-                </p>
+                {listing.totalBeds != null && listing.totalBeds > 0 && (
+                  <p className="border-b border-[#e4dac5] pb-3 text-sm font-bold leading-6 text-[#526055]">
+                    في إعلانات الأسرّة، يتم تحديد السرير المتاح تلقائيًا حسب أولوية الحجز.
+                  </p>
+                )}
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-[#526055]">عدد السراير المتاحة</span>
                   <span className="font-black text-emerald-700">{getAvailableBedsLabel(availableBeds)}</span>
