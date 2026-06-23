@@ -8,6 +8,7 @@ import { rentalApiService } from '../../lib/api/rental-service';
 import type { RentalListing, RentalListingQuery } from '../../lib/api/types';
 import { ROUTES } from '../../lib/constants/routes';
 import { cn } from '../../lib/utils/cn';
+import { MobileOwnerAcquisitionCta } from '../../components/layout/MobileOwnerAcquisitionCta';
 import {
   formatRentalMoney,
   furnishingLabels,
@@ -290,7 +291,7 @@ export function PublicRentalsPage() {
   }
 
   return (
-    <main className="pb-16 text-fixed">
+    <main className="pb-32 text-fixed">
       <section className="relative overflow-hidden bg-[#f7f2e8] text-white">
         <img alt="" className="absolute inset-0 h-full w-full object-cover object-center opacity-18" src={heroImage} />
         <div className="absolute inset-0 bg-gradient-to-b from-[rgba(255,253,248,0.66)] via-[rgba(247,242,232,0.9)] to-[#f0eadc]" />
@@ -456,6 +457,8 @@ export function PublicRentalsPage() {
           </div>
         )}
       </section>
+
+      <MobileOwnerAcquisitionCta />
     </main>
   );
 }
