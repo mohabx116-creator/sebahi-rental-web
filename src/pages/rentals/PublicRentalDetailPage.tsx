@@ -278,7 +278,7 @@ export function PublicRentalDetailPage() {
 
           <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_420px] xl:items-start">
             <div className="min-w-0 space-y-4">
-              <div className="relative overflow-hidden rounded-[32px] glass-panel bg-white/40 border border-[#e4dac5]/60">
+              <div className="relative overflow-hidden rounded-[32px] glass-panel bg-white/40 border border-[#d2c4aa]/80">
                 <div
                   className="relative aspect-[4/3] sm:aspect-[16/10] lg:aspect-[16/8.5] bg-black cursor-pointer overflow-hidden group"
                   onClick={() => setIsLightboxOpen(true)}
@@ -300,10 +300,10 @@ export function PublicRentalDetailPage() {
                   )}
                 </div>
 
-                <div className="p-5 sm:p-7 space-y-5 text-right border-t border-[#e4dac5]/40 bg-white/20">
+                <div className="p-5 sm:p-7 space-y-5 text-right border-t border-[#d2c4aa]/60 bg-white/20">
                   <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between flex-row-reverse">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="rounded-full border border-[#e4dac5] bg-white/80 px-3 py-1 text-xs font-bold text-[#1f2c22] shadow-sm">
+                      <span className="rounded-full border border-[#d2c4aa] bg-white/80 px-3 py-1 text-xs font-bold text-[#132015] shadow-sm">
                         {listingStatusLabels[listing.status]}
                       </span>
                       {listing.isFeatured && (
@@ -312,11 +312,11 @@ export function PublicRentalDetailPage() {
                           مميز
                         </span>
                       )}
-                      <span className="rounded-full border border-[#e4dac5] bg-white/80 px-3 py-1 text-xs font-bold text-[#1f2c22] shadow-sm">
+                      <span className="rounded-full border border-[#d2c4aa] bg-white/80 px-3 py-1 text-xs font-bold text-[#132015] shadow-sm">
                         {listingTypeLabels[listing.listingType]}
                       </span>
                       {(listing.unitCondition || furnishingLabels[listing.furnishingStatus]) && (
-                        <span className="rounded-full border border-[#e4dac5] bg-white/80 px-3 py-1 text-xs font-bold text-[#1f2c22] shadow-sm">
+                        <span className="rounded-full border border-[#d2c4aa] bg-white/80 px-3 py-1 text-xs font-bold text-[#132015] shadow-sm">
                           {listing.unitCondition || furnishingLabels[listing.furnishingStatus]}
                         </span>
                       )}
@@ -329,13 +329,13 @@ export function PublicRentalDetailPage() {
 
                     {gallery.length > 1 && (
                       <div className="flex items-center justify-between gap-3 sm:justify-end">
-                        <span className="text-xs font-bold text-[#5f6e62]">
+                        <span className="text-xs font-bold text-[#3e4d41]">
                           صورة {selectedImageIndex + 1} من {gallery.length}
                         </span>
                         <div className="flex items-center gap-1.5" dir="ltr">
                           <button
                             aria-label="الصورة السابقة"
-                            className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#e4dac5] bg-white/80 text-[#1f2c22] hover:bg-tertiary hover:text-primary transition shadow-sm"
+                            className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#d2c4aa] bg-white/80 text-[#132015] hover:bg-tertiary hover:text-primary transition shadow-sm"
                             onClick={(e) => {
                               e.stopPropagation();
                               setSelectedImageIndex((prev) => (prev - 1 + gallery.length) % gallery.length);
@@ -345,7 +345,7 @@ export function PublicRentalDetailPage() {
                           </button>
                           <button
                             aria-label="الصورة التالية"
-                            className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#e4dac5] bg-white/80 text-[#1f2c22] hover:bg-tertiary hover:text-primary transition shadow-sm"
+                            className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#d2c4aa] bg-white/80 text-[#132015] hover:bg-tertiary hover:text-primary transition shadow-sm"
                             onClick={(e) => {
                               e.stopPropagation();
                               setSelectedImageIndex((prev) => (prev + 1) % gallery.length);
@@ -359,7 +359,7 @@ export function PublicRentalDetailPage() {
                   </div>
 
                   <h1 className="text-2xl font-black leading-[1.35] sm:text-3xl lg:text-4xl text-[#1f2c22]">{title}</h1>
-                  <p className="flex items-center gap-2 text-sm text-[#5f6e62] sm:text-base">
+                  <p className="flex items-center gap-2 text-sm text-[#3e4d41] sm:text-base">
                     <MapPin className="h-5 w-5 shrink-0 text-tertiary" />
                     {location}
                   </p>
@@ -380,7 +380,7 @@ export function PublicRentalDetailPage() {
                           "relative shrink-0 aspect-[4/3] w-24 sm:w-28 rounded-2xl overflow-hidden border-2 bg-surface-dim snap-start transition",
                           selectedImageIndex === index
                             ? "border-tertiary ring-2 ring-tertiary/30 scale-95 shadow-md"
-                            : "border-[#e4dac5] hover:border-tertiary/50"
+                            : "border-[#d2c4aa] hover:border-tertiary/50"
                         )}
                         onClick={() => setSelectedImageIndex(index)}
                       >
@@ -402,45 +402,45 @@ export function PublicRentalDetailPage() {
             </div>
 
             <aside className="self-start rounded-[32px] glass-panel p-5 text-right xl:sticky xl:top-24 xl:p-6">
-              <div className="rounded-[26px] border border-[#e4dac5] bg-gradient-to-br from-[#fdfaf4] to-[#eef5ef] p-5 text-[#1f2c22] shadow-[0_18px_40px_rgba(28,45,34,0.08)]">
-                <p className="text-sm font-bold text-[#5f6e62]">إيجار الشقة الشهري</p>
+              <div className="rounded-[26px] border border-[#d2c4aa] bg-gradient-to-br from-[#fdfaf4] to-[#eef5ef] p-5 text-[#1f2c22] shadow-[0_18px_40px_rgba(28,45,34,0.08)]">
+                <p className="text-sm font-bold text-[#3e4d41]">إيجار الشقة الشهري</p>
                 <p className="mt-1 text-4xl font-black leading-tight text-tertiary">{formatRentalMoney(listing.monthlyRent)}</p>
               </div>
 
-              <div className="mt-4 grid grid-cols-3 gap-2 text-center text-sm text-[#526155]">
-                <span className="rounded-2xl border border-[#e8ddc9] bg-[#fcfaf5] px-2 py-3 shadow-sm">
+              <div className="mt-4 grid grid-cols-3 gap-2 text-center text-sm text-[#38473d]">
+                <span className="rounded-2xl border border-[#d6c9b3] bg-[#fcfaf5] px-2 py-3 shadow-sm">
                   <Building2 className="mx-auto mb-1 h-5 w-5 text-[#8a6d22]" />
-                  <span className="font-semibold text-[#344138]">{listing.floor != null ? `الدور ${listing.floor}` : `${listing.totalBeds || 4} سراير`}</span>
+                  <span className="font-semibold text-[#202c23]">{listing.floor != null ? `الدور ${listing.floor}` : `${listing.totalBeds || 4} سراير`}</span>
                 </span>
-                <span className="rounded-2xl border border-[#e8ddc9] bg-[#fcfaf5] px-2 py-3 shadow-sm">
+                <span className="rounded-2xl border border-[#d6c9b3] bg-[#fcfaf5] px-2 py-3 shadow-sm">
                   <ShieldCheck className="mx-auto mb-1 h-5 w-5 text-[#8a6d22]" />
-                  <span className="font-semibold text-[#344138]">{getBasicsSummary(listing)}</span>
+                  <span className="font-semibold text-[#202c23]">{getBasicsSummary(listing)}</span>
                 </span>
-                <span className="rounded-2xl border border-[#e8ddc9] bg-[#fcfaf5] px-2 py-3 shadow-sm">
+                <span className="rounded-2xl border border-[#d6c9b3] bg-[#fcfaf5] px-2 py-3 shadow-sm">
                   <BedDouble className="mx-auto mb-1 h-5 w-5 text-[#8a6d22]" />
-                  <span className="font-semibold text-[#344138]">عدد السراير المتاحة: {availableBeds}</span>
+                  <span className="font-semibold text-[#202c23]">عدد السراير المتاحة: {availableBeds}</span>
                 </span>
               </div>
 
-              <div className="mt-4 space-y-2 rounded-[24px] border border-[#e4dac5] bg-white/80 p-4 shadow-sm">
+              <div className="mt-4 space-y-2 rounded-[24px] border border-[#d2c4aa] bg-white/80 p-4 shadow-sm">
                 {pricingItems.map((item) => (
                   <div key={item.label} className="flex items-center justify-between gap-4 text-sm">
-                    <span className="font-bold text-[#526055]">{item.label}</span>
+                    <span className="font-bold text-[#38473d]">{item.label}</span>
                     <span className="font-black text-tertiary">{item.value}</span>
                   </div>
                 ))}
               </div>
 
-              <div className="mt-4 space-y-2 rounded-[24px] border border-[#e4dac5] bg-white/80 p-4 text-sm shadow-sm">
-                <p className="pb-3 border-b border-[#e4dac5] text-sm font-bold leading-7 text-[#526055]">
+              <div className="mt-4 space-y-2 rounded-[24px] border border-[#d2c4aa] bg-white/80 p-4 text-sm shadow-sm">
+                <p className="pb-3 border-b border-[#d2c4aa] text-sm font-bold leading-7 text-[#38473d]">
                   يمكن الحجز على سرير أو غرفة أو الشقة بالكامل.
                 </p>
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-[#526055]">عدد السراير المتاحة</span>
+                  <span className="font-bold text-[#38473d]">عدد السراير المتاحة</span>
                   <span className="font-black text-emerald-700">{getAvailableBedsLabel(availableBeds)}</span>
                 </div>
-                <div className="flex items-center justify-between border-t border-[#e4dac5] pt-2">
-                  <span className="font-bold text-[#526055]">إجمالي السراير</span>
+                <div className="flex items-center justify-between border-t border-[#d2c4aa] pt-2">
+                  <span className="font-bold text-[#38473d]">إجمالي السراير</span>
                   <span className="font-black text-tertiary">{listing.totalBeds ?? 4}</span>
                 </div>
               </div>
@@ -467,7 +467,7 @@ export function PublicRentalDetailPage() {
                         console.warn('Unable to copy inquiry message automatically');
                       }
                     }}
-                    className="flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border border-[#d9e5dc] bg-[#f7fbf7] px-5 py-3 text-sm font-black text-[#1f2c22] shadow-sm transition hover:bg-white"
+                    className="flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border border-[#b8c7bc] bg-[#f7fbf7] px-5 py-3 text-sm font-black text-[#111913] shadow-sm transition hover:bg-white"
                   >
                     <MessageCircle className="h-5 w-5 text-emerald-700" />
                     استفسار
@@ -487,20 +487,20 @@ export function PublicRentalDetailPage() {
         <div className="space-y-6">
           <section className="rounded-[28px] glass-panel p-6 text-right">
             <h2 className="text-2xl font-black text-fixed">وصف الإعلان</h2>
-            <p className="mt-4 whitespace-pre-line text-base leading-9 text-[#526055]">{description}</p>
+            <p className="mt-4 whitespace-pre-line text-base leading-9 text-[#38473d]">{description}</p>
           </section>
 
           <section className="rounded-[28px] glass-panel p-6 text-right">
             <h2 className="text-2xl font-black text-fixed">مواصفات الشقة</h2>
             <dl className="mt-5 grid gap-3 sm:grid-cols-2">
-              <div className="rounded-2xl bg-white/80 border border-[#e4dac5] p-4"><dt className="text-sm text-[#526055]">المساحة</dt><dd className="mt-1 font-black text-tertiary">{listing.areaSqm ? `${listing.areaSqm} م²` : 'غير محدد'}</dd></div>
-              <div className="rounded-2xl bg-white/80 border border-[#e4dac5] p-4"><dt className="text-sm text-[#526055]">عدد الغرف</dt><dd className="mt-1 font-black text-tertiary">{listing.bedrooms != null ? listing.bedrooms : 'غير محدد'}</dd></div>
-              <div className="rounded-2xl bg-white/80 border border-[#e4dac5] p-4"><dt className="text-sm text-[#526055]">الدور</dt><dd className="mt-1 font-black text-tertiary">{listing.floor ?? 'غير محدد'}</dd></div>
-              <div className="rounded-2xl bg-white/80 border border-[#e4dac5] p-4"><dt className="text-sm text-[#526055]">الشقة مكيفة</dt><dd className="mt-1 font-black text-tertiary">{listing.isAirConditioned ? 'نعم' : 'لا'}</dd></div>
-              <div className="rounded-2xl bg-white/80 border border-[#e4dac5] p-4"><dt className="text-sm text-[#526055]">التأمين</dt><dd className="mt-1 font-black text-tertiary">{toNumber(listing.depositAmount) > 0 ? formatRentalMoney(listing.depositAmount) : 'لا يوجد تأمين'}</dd></div>
-              <div className="rounded-2xl bg-white/80 border border-[#e4dac5] p-4"><dt className="text-sm text-[#526055]">تاريخ النشر</dt><dd className="mt-1 font-black text-tertiary">{formatRentalDate(listing.publishedAt)}</dd></div>
-              <div className="rounded-2xl bg-white/80 border border-[#e4dac5] p-4"><dt className="text-sm text-[#526055]">عدد السراير المتاحة</dt><dd className="mt-1 font-black text-emerald-700">{availableBeds}</dd></div>
-              <div className="rounded-2xl bg-white/80 border border-[#e4dac5] p-4"><dt className="text-sm text-[#526055]">إجمالي السراير</dt><dd className="mt-1 font-black text-tertiary">{listing.totalBeds ?? 4}</dd></div>
+              <div className="rounded-2xl bg-white/80 border border-[#d2c4aa] p-4"><dt className="text-sm text-[#38473d]">المساحة</dt><dd className="mt-1 font-black text-tertiary">{listing.areaSqm ? `${listing.areaSqm} م²` : 'غير محدد'}</dd></div>
+              <div className="rounded-2xl bg-white/80 border border-[#d2c4aa] p-4"><dt className="text-sm text-[#38473d]">عدد الغرف</dt><dd className="mt-1 font-black text-tertiary">{listing.bedrooms != null ? listing.bedrooms : 'غير محدد'}</dd></div>
+              <div className="rounded-2xl bg-white/80 border border-[#d2c4aa] p-4"><dt className="text-sm text-[#38473d]">الدور</dt><dd className="mt-1 font-black text-tertiary">{listing.floor ?? 'غير محدد'}</dd></div>
+              <div className="rounded-2xl bg-white/80 border border-[#d2c4aa] p-4"><dt className="text-sm text-[#38473d]">الشقة مكيفة</dt><dd className="mt-1 font-black text-tertiary">{listing.isAirConditioned ? 'نعم' : 'لا'}</dd></div>
+              <div className="rounded-2xl bg-white/80 border border-[#d2c4aa] p-4"><dt className="text-sm text-[#38473d]">التأمين</dt><dd className="mt-1 font-black text-tertiary">{toNumber(listing.depositAmount) > 0 ? formatRentalMoney(listing.depositAmount) : 'لا يوجد تأمين'}</dd></div>
+              <div className="rounded-2xl bg-white/80 border border-[#d2c4aa] p-4"><dt className="text-sm text-[#38473d]">تاريخ النشر</dt><dd className="mt-1 font-black text-tertiary">{formatRentalDate(listing.publishedAt)}</dd></div>
+              <div className="rounded-2xl bg-white/80 border border-[#d2c4aa] p-4"><dt className="text-sm text-[#38473d]">عدد السراير المتاحة</dt><dd className="mt-1 font-black text-emerald-700">{availableBeds}</dd></div>
+              <div className="rounded-2xl bg-white/80 border border-[#d2c4aa] p-4"><dt className="text-sm text-[#38473d]">إجمالي السراير</dt><dd className="mt-1 font-black text-tertiary">{listing.totalBeds ?? 4}</dd></div>
             </dl>
           </section>
 
@@ -511,8 +511,8 @@ export function PublicRentalDetailPage() {
                 {BASIC_FEATURE_KEYS.map((key) => {
                   const isAvailable = listing.basicFeatures?.includes(key);
                   return (
-                    <div key={key} className="flex items-center justify-between rounded-2xl bg-white/80 border border-[#e4dac5] p-4">
-                      <span className="text-sm text-[#526055]">{BASIC_FEATURES_MAP[key]}</span>
+                    <div key={key} className="flex items-center justify-between rounded-2xl bg-white/80 border border-[#d2c4aa] p-4">
+                      <span className="text-sm text-[#38473d]">{BASIC_FEATURES_MAP[key]}</span>
                       <span className={cn("text-sm font-black", isAvailable ? "text-emerald-700" : "text-[#7b807a]")}>
                         {isAvailable ? 'متوفر' : 'غير متوفر'}
                       </span>
@@ -520,7 +520,7 @@ export function PublicRentalDetailPage() {
                   );
                 })}
               </div>
-              <div className="rounded-2xl bg-tertiary/10 border border-tertiary/20 p-4 text-center">
+              <div className="rounded-2xl bg-tertiary/10 border border-tertiary/40 p-4 text-center">
                 <span className="text-sm font-bold text-tertiary">
                   {(() => {
                     const selected = listing.basicFeatures || [];
@@ -536,8 +536,8 @@ export function PublicRentalDetailPage() {
 
           <section className="rounded-[28px] glass-panel p-6 text-right">
             <h2 className="text-2xl font-black text-fixed">الكماليات والمميزات الإضافية</h2>
-            <div className="mt-5 rounded-2xl bg-primary/45 border border-outline/20 p-5">
-              <p className="whitespace-pre-line text-base leading-relaxed text-[#526055]">
+            <div className="mt-5 rounded-2xl bg-primary/45 border border-outline/40 p-5">
+              <p className="whitespace-pre-line text-base leading-relaxed text-[#38473d]">
                 {listing.extraAmenitiesText || '-'}
               </p>
             </div>
@@ -547,8 +547,8 @@ export function PublicRentalDetailPage() {
         <div className="space-y-6">
           <section className="rounded-[28px] glass-panel p-6 text-right">
             <h2 className="text-xl font-black text-fixed">الموقع والكمبوند</h2>
-            <p className="mt-3 text-sm leading-7 text-[#526055]">{compoundName}</p>
-            <p className="mt-1 text-sm leading-7 text-[#526055]">{publicRentalText(listing.addressText ?? listing.compound?.address, 'القاهرة الجديدة')}</p>
+            <p className="mt-3 text-sm leading-7 text-[#38473d]">{compoundName}</p>
+            <p className="mt-1 text-sm leading-7 text-[#38473d]">{publicRentalText(listing.addressText ?? listing.compound?.address, 'القاهرة الجديدة')}</p>
           </section>
         </div>
       </section>
@@ -612,11 +612,11 @@ export function PublicRentalDetailPage() {
       )}
 
       {availableBeds > 0 && (
-        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[#e4dac5] bg-[#fffdf8]/95 px-4 pb-[calc(env(safe-area-inset-bottom)+0.65rem)] pt-2.5 shadow-2xl backdrop-blur-xl xl:hidden">
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[#d2c4aa] bg-[#fffdf8]/95 px-4 pb-[calc(env(safe-area-inset-bottom)+0.65rem)] pt-2.5 shadow-2xl backdrop-blur-xl xl:hidden">
           <div className="mx-auto max-w-7xl space-y-2">
             <div className="min-w-0 text-right">
               <p className="truncate text-sm font-black text-tertiary">{formatRentalMoney(listing.monthlyRent)}</p>
-              <p className="mt-1 text-sm font-bold text-[#526055]">{getAvailableBedsLabel(availableBeds)}</p>
+              <p className="mt-1 text-sm font-bold text-[#38473d]">{getAvailableBedsLabel(availableBeds)}</p>
             </div>
             <Link
               className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-tertiary px-4 py-3 text-sm font-black text-primary shadow-lg shadow-tertiary/20"
@@ -635,7 +635,7 @@ export function PublicRentalDetailPage() {
                   console.warn('Unable to copy inquiry message automatically');
                 }
               }}
-              className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border border-[#d9e5dc] bg-[#f7fbf7] px-4 py-3 text-sm font-black text-[#1f2c22] shadow-sm transition hover:bg-white"
+              className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border border-[#b8c7bc] bg-[#f7fbf7] px-4 py-3 text-sm font-black text-[#111913] shadow-sm transition hover:bg-white"
             >
               <MessageCircle className="h-4 w-4 text-emerald-700" />
               استفسار

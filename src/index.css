@@ -64,7 +64,7 @@
 
 /* Premium Glassmorphic styles */
 .glass-panel {
-  border: 1px solid rgba(28, 45, 34, 0.08);
+  border: 1px solid rgba(28, 45, 34, 0.16);
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.62)),
     rgba(255, 255, 255, 0.72);
@@ -75,7 +75,7 @@
 }
 
 .glass-card {
-  border: 1px solid rgba(28, 45, 34, 0.08);
+  border: 1px solid rgba(28, 45, 34, 0.16);
   background:
     linear-gradient(145deg, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.72)),
     rgba(255, 255, 255, 0.8);
@@ -154,7 +154,7 @@
 .form-input {
   width: 100%;
   border-radius: 1rem !important; /* rounded-2xl */
-  border: 1px solid rgba(28, 45, 34, 0.12) !important; /* border-outline */
+  border: 1px solid rgba(28, 45, 34, 0.22) !important; /* border-outline */
   background-color: rgba(255, 255, 255, 0.78) !important;
   color: #1f2c22 !important;
   text-align: right;
@@ -179,7 +179,7 @@
 }
 
 .rentals-light .text-fixed-dim {
-  color: #5f6e62 !important;
+  color: #3e4d41 !important;
 }
 
 .rentals-light main .text-white {
@@ -219,23 +219,23 @@
 }
 
 .rentals-light .border-outline {
-  border-color: #e4dac5 !important;
+  border-color: #d2c4aa !important;
 }
 
 .rentals-light .border-outline\/40 {
-  border-color: rgba(228, 218, 197, 0.6) !important;
+  border-color: rgba(210, 196, 170, 0.6) !important;
 }
 
 .rentals-light .border-outline\/30 {
-  border-color: rgba(228, 218, 197, 0.5) !important;
+  border-color: rgba(210, 196, 170, 0.5) !important;
 }
 
 .rentals-light .border-outline\/20 {
-  border-color: rgba(228, 218, 197, 0.4) !important;
+  border-color: rgba(210, 196, 170, 0.4) !important;
 }
 
 .rentals-light .border-outline-variant\/30 {
-  border-color: rgba(228, 218, 197, 0.45) !important;
+  border-color: rgba(210, 196, 170, 0.45) !important;
 }
 
 .rentals-light .from-primary\/80 {

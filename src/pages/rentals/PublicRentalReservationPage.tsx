@@ -166,7 +166,7 @@ export function PublicRentalReservationPage() {
               )}
 
               {reservation.listing && (
-                <section className="rounded-[28px] bg-primary/45 border border-outline/25 p-5 shadow-md">
+                <section className="rounded-[28px] bg-primary/45 border border-outline/45 p-5 shadow-md">
                   <p className="text-sm font-bold text-tertiary">الإعلان المرتبط</p>
                   <h2 className="mt-2 text-2xl font-black leading-9 text-fixed">{listingTitle}</h2>
                   <p className="mt-2 text-sm text-fixed-dim">
@@ -182,7 +182,7 @@ export function PublicRentalReservationPage() {
               )}
             </div>
 
-            <aside className="space-y-4 rounded-[28px] bg-primary/40 border border-outline/20 p-5 lg:sticky lg:top-24">
+            <aside className="space-y-4 rounded-[28px] bg-primary/40 border border-outline/40 p-5 lg:sticky lg:top-24">
               <div>
                 <p className="text-sm font-bold text-fixed-dim">نوع الطلب</p>
                 <p className="mt-1 text-2xl font-black text-tertiary">

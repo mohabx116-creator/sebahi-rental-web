@@ -291,7 +291,7 @@ export function PublicRentalContactPage() {
                 </div>
                 <h1 className="mt-4 text-2xl font-black leading-9 text-fixed">{title}</h1>
                 <div className="mt-5">
-                  <div className="rounded-3xl bg-primary/45 border border-outline/25 p-4">
+                  <div className="rounded-3xl bg-primary/45 border border-outline/45 p-4">
                     <p className="text-xs font-bold text-fixed-dim">إيجار الشقة الشهري</p>
                     <p className="mt-1 text-xl font-black text-tertiary">{formatRentalMoney(listing.monthlyRent)}</p>
                   </div>
@@ -319,7 +319,7 @@ export function PublicRentalContactPage() {
               )}
 
 
-              <div className="mt-4 rounded-[22px] border border-outline/25 bg-primary/35 p-4">
+              <div className="mt-4 rounded-[22px] border border-outline/45 bg-primary/35 p-4">
                 <h3 className="text-base font-black text-fixed">خطوات بسيطة</h3>
                 <div className="mt-3 grid gap-2 sm:grid-cols-3">
                   {[
@@ -327,7 +327,7 @@ export function PublicRentalContactPage() {
                     ['٢', 'أكد الحجز'],
                     ['٣', 'أرسل واتساب'],
                   ].map(([step, label]) => (
-                    <div className="flex items-center gap-2 rounded-2xl bg-primary/45 border border-outline/20 px-3 py-2" key={step}>
+                    <div className="flex items-center gap-2 rounded-2xl bg-primary/45 border border-outline/40 px-3 py-2" key={step}>
                       <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-secondary text-xs font-black text-white">
                         {step}
                       </span>
@@ -338,30 +338,30 @@ export function PublicRentalContactPage() {
               </div>
 
               <form className="mt-7 space-y-5 text-right" onSubmit={onSubmit}>
-                <div className="rounded-2xl border border-[#d9e5dc] bg-[#f7fbf7] p-4">
-                  <h3 className="text-base font-black text-[#1f2c22]">ملخص الطلب</h3>
+                <div className="rounded-2xl border border-[#b8c7bc] bg-[#f7fbf7] p-4">
+                  <h3 className="text-base font-black text-[#111913]">ملخص الطلب</h3>
                   <dl className="mt-3 space-y-1.5 text-sm">
                     <div className="flex items-center justify-between gap-4">
-                      <dt className="font-bold text-[#526055]">الإعلان</dt>
-                      <dd className="max-w-[60%] truncate font-black text-[#1f2c22]">{title}</dd>
+                      <dt className="font-bold text-[#38473d]">الإعلان</dt>
+                      <dd className="max-w-[60%] truncate font-black text-[#111913]">{title}</dd>
                     </div>
                     <div className="flex items-center justify-between gap-4">
-                      <dt className="font-bold text-[#526055]">الإيجار</dt>
+                      <dt className="font-bold text-[#38473d]">الإيجار</dt>
                       <dd className="font-black text-tertiary">{formatRentalMoney(listing.monthlyRent)}</dd>
                     </div>
                     {listing.depositAmount && (
                       <div className="flex items-center justify-between gap-4">
-                        <dt className="font-bold text-[#526055]">التأمين</dt>
+                        <dt className="font-bold text-[#38473d]">التأمين</dt>
                         <dd className="font-black text-tertiary">{formatRentalMoney(listing.depositAmount)}</dd>
                       </div>
                     )}
                     <div className="flex items-center justify-between gap-4">
-                      <dt className="font-bold text-[#526055]">السراير المطلوبة</dt>
-                      <dd className="font-black text-[#1f2c22]">1</dd>
+                      <dt className="font-bold text-[#38473d]">السراير المطلوبة</dt>
+                      <dd className="font-black text-[#111913]">1</dd>
                     </div>
                     <div className="flex items-center justify-between gap-4">
-                      <dt className="font-bold text-[#526055]">المتابعة</dt>
-                      <dd className="font-black text-[#1f2c22]">واتساب</dd>
+                      <dt className="font-bold text-[#38473d]">المتابعة</dt>
+                      <dd className="font-black text-[#111913]">واتساب</dd>
                     </div>
                   </dl>
                 </div>
@@ -385,13 +385,13 @@ export function PublicRentalContactPage() {
                   </div>
                 ) : null}
 
-                <section className="rounded-[24px] border border-[#d9e5dc] bg-white/80 p-4 shadow-sm">
-                  <h3 className="text-base font-black text-[#1f2c22]">بيانات التواصل</h3>
+                <section className="rounded-[24px] border border-[#b8c7bc] bg-white/80 p-4 shadow-sm">
+                  <h3 className="text-base font-black text-[#111913]">بيانات التواصل</h3>
                   <div className="mt-4 space-y-4">
                     <label className="block">
-                      <span className="mb-2 block text-sm font-bold text-[#526055]">الاسم بالكامل</span>
+                      <span className="mb-2 block text-sm font-bold text-[#38473d]">الاسم بالكامل</span>
                       <input
-                        className="w-full rounded-2xl border border-[#d9e5dc] bg-[#edf3ff] text-right text-[#1f2c22] focus:border-tertiary focus:ring-tertiary/20"
+                        className="w-full rounded-2xl border border-[#b8c7bc] bg-[#edf3ff] text-right text-[#111913] focus:border-tertiary focus:ring-tertiary/20"
                         disabled={isSubmitPending}
                         {...register('tenantName')}
                       />
@@ -399,9 +399,9 @@ export function PublicRentalContactPage() {
                     </label>
 
                     <label className="block">
-                      <span className="mb-2 block text-sm font-bold text-[#526055]">رقم الموبايل</span>
+                      <span className="mb-2 block text-sm font-bold text-[#38473d]">رقم الموبايل</span>
                       <input
-                        className="w-full rounded-2xl border border-[#d9e5dc] bg-[#edf3ff] text-right text-[#1f2c22] focus:border-tertiary focus:ring-tertiary/20"
+                        className="w-full rounded-2xl border border-[#b8c7bc] bg-[#edf3ff] text-right text-[#111913] focus:border-tertiary focus:ring-tertiary/20"
                         disabled={isSubmitPending}
                         inputMode="tel"
                         {...register('tenantPhone')}
@@ -411,18 +411,18 @@ export function PublicRentalContactPage() {
                   </div>
                 </section>
 
-                <section className="rounded-[24px] border border-[#d9e5dc] bg-white/80 p-4 shadow-sm">
-                  <h3 className="text-base font-black text-[#1f2c22]">بيانات التحقق</h3>
+                <section className="rounded-[24px] border border-[#b8c7bc] bg-white/80 p-4 shadow-sm">
+                  <h3 className="text-base font-black text-[#111913]">بيانات التحقق</h3>
                   <label className="mt-4 block">
-                    <span className="mb-2 block text-sm font-bold text-[#526055]">الرقم القومي</span>
+                    <span className="mb-2 block text-sm font-bold text-[#38473d]">الرقم القومي</span>
                     <input
-                      className="w-full rounded-2xl border border-[#d9e5dc] bg-[#edf3ff] text-right text-[#1f2c22] focus:border-tertiary focus:ring-tertiary/20"
+                      className="w-full rounded-2xl border border-[#b8c7bc] bg-[#edf3ff] text-right text-[#111913] focus:border-tertiary focus:ring-tertiary/20"
                       disabled={isSubmitPending}
                       maxLength={14}
                       placeholder="14 رقم باللغة الإنجليزية"
                       {...register('tenantNationalId')}
                     />
-                    <span className="mt-2 block text-xs font-bold leading-6 text-[#526055]">
+                    <span className="mt-2 block text-xs font-bold leading-6 text-[#38473d]">
                       نستخدمه لتسجيل طلبك فقط.
                     </span>
                     {errors.tenantNationalId && <span className="mt-1 block text-sm font-bold text-error">{errors.tenantNationalId.message}</span>}
