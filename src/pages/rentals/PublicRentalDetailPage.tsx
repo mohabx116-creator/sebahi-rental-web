@@ -16,7 +16,7 @@ import { Link, useParams } from 'react-router-dom';
 import { rentalApiService } from '../../lib/api/rental-service';
 import { ROUTES } from '../../lib/constants/routes';
 import { cn } from '../../lib/utils/cn';
-import { MobileOwnerAcquisitionCta } from '../../components/layout/MobileOwnerAcquisitionCta';
+import { InlineOwnerAcquisitionCta } from '../../components/layout/MobileOwnerAcquisitionCta';
 import type { RentalListing } from '../../lib/api/types';
 import {
   formatRentalDate,
@@ -476,6 +476,10 @@ export function PublicRentalDetailPage() {
               </div>
             </aside>
           </div>
+
+          <div className="mt-5">
+            <InlineOwnerAcquisitionCta />
+          </div>
         </div>
       </section>
 
@@ -640,7 +644,6 @@ export function PublicRentalDetailPage() {
         </div>
       )}
 
-      <MobileOwnerAcquisitionCta />
     </main>
   );
 }
