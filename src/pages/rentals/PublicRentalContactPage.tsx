@@ -15,6 +15,7 @@ import { z } from 'zod';
 import { ApiClientError } from '../../lib/api/api-client';
 import { rentalApiService } from '../../lib/api/rental-service';
 import { ROUTES } from '../../lib/constants/routes';
+import { getFallbackPublicRentalBySlug } from './rental-fallback';
 import {
   formatRentalMoney,
   furnishingLabels,
@@ -139,11 +140,20 @@ export function PublicRentalContactPage() {
   const [isUnavailableError, setIsUnavailableError] = useState(false);
   const clientRequestIdRef = useRef(createClientRequestId());
   const inFlightReservationRef = useRef(false);
+  const fallbackListing = slug ? getFallbackPublicRentalBySlug(slug) : undefined;
 
   const listingQuery = useQuery({
     queryKey: ['rentals', 'public', 'listing', slug],
-    queryFn: () => rentalApiService.getPublicRentalListingBySlug(slug ?? ''),
+    queryFn: async () => {
+      try {
+        return await rentalApiService.getPublicRentalListingBySlug(slug ?? '');
+      } catch {
+        return fallbackListing;
+      }
+    },
+    initialData: fallbackListing,
     enabled: Boolean(slug),
+    staleTime: 0,
   });
 
   const {

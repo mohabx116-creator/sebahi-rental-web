@@ -18,6 +18,7 @@ import { ROUTES } from '../../lib/constants/routes';
 import { cn } from '../../lib/utils/cn';
 import { InlineOwnerAcquisitionCta } from '../../components/layout/MobileOwnerAcquisitionCta';
 import type { RentalListing } from '../../lib/api/types';
+import { getFallbackPublicRentalBySlug } from './rental-fallback';
 import {
   formatRentalDate,
   formatRentalMoney,
@@ -44,7 +45,6 @@ const BASIC_FEATURES_MAP = {
 } as const;
 type BasicFeatureKey = keyof typeof BASIC_FEATURES_MAP;
 const BASIC_FEATURE_KEYS = Object.keys(BASIC_FEATURES_MAP) as BasicFeatureKey[];
-const PUBLIC_RENTAL_DETAIL_STALE_TIME_MS = 30_000;
 
 function getAvailableBeds(listing: { availableBeds?: number | null; totalBeds?: number | null }) {
   return listing.availableBeds ?? Math.max((listing.totalBeds ?? 4) - 0 - 0, 0);
@@ -149,12 +149,20 @@ export function PublicRentalDetailPage() {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const fallbackListing = slug ? getFallbackPublicRentalBySlug(slug) : undefined;
 
   const listingQuery = useQuery({
     queryKey: ['rentals', 'public', 'listing', slug],
-    queryFn: () => rentalApiService.getPublicRentalListingBySlug(slug ?? ''),
+    queryFn: async () => {
+      try {
+        return await rentalApiService.getPublicRentalListingBySlug(slug ?? '');
+      } catch {
+        return fallbackListing;
+      }
+    },
+    initialData: fallbackListing,
     enabled: Boolean(slug),
-    staleTime: PUBLIC_RENTAL_DETAIL_STALE_TIME_MS,
+    staleTime: 0,
   });
 
   const listing = listingQuery.data;
