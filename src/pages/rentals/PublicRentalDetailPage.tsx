@@ -61,7 +61,7 @@ function getBasicsSummary(listing: Pick<RentalListing, 'basicFeatures'>) {
   return (listing.basicFeatures || []).length >= 7 ? 'الأساسيات مكتملة' : 'أساسيات غير مكتملة';
 }
 
-const customerSupportWhatsAppUrl = 'https://wa.me/201224591618';
+const customerSupportWhatsAppGroupUrl = 'https://chat.whatsapp.com/ECEZfbsvjlU43eDvKa9XUu';
 
 function buildInquiryMessage(
   listing: Pick<
@@ -468,8 +468,7 @@ export function PublicRentalDetailPage() {
                   <button
                     type="button"
                     onClick={async () => {
-                      const chatUrl = `${customerSupportWhatsAppUrl}?text=${encodeURIComponent(inquiryMessage)}`;
-                      window.open(chatUrl, '_blank', 'noopener,noreferrer');
+                      window.open(customerSupportWhatsAppGroupUrl, '_blank', 'noopener,noreferrer');
                       const copied = await copyToClipboard(inquiryMessage);
                       if (!copied) {
                         console.warn('Unable to copy inquiry message automatically');
@@ -636,8 +635,7 @@ export function PublicRentalDetailPage() {
             <button
               type="button"
               onClick={async () => {
-                const chatUrl = `${customerSupportWhatsAppUrl}?text=${encodeURIComponent(inquiryMessage)}`;
-                window.open(chatUrl, '_blank', 'noopener,noreferrer');
+                window.open(customerSupportWhatsAppGroupUrl, '_blank', 'noopener,noreferrer');
                 const copied = await copyToClipboard(inquiryMessage);
                 if (!copied) {
                   console.warn('Unable to copy inquiry message automatically');
