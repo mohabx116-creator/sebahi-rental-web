@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { ApiResponse, PaginatedMeta } from './types';
 
-const DEFAULT_API_BASE_URL = 'https://compound-os-api.onrender.com/api/v1';
+const DEFAULT_API_BASE_URL = 'https://compound-os-api-replica.onrender.com/api/v1';
 
 export type ApiClientErrorCode = 'HTTP_ERROR' | 'API_ERROR' | 'INVALID_RESPONSE' | 'NETWORK_ERROR' | 'UNKNOWN_ERROR';
 

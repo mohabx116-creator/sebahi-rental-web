@@ -14,7 +14,7 @@
 ## Environment
 
 ```env
-VITE_API_BASE_URL="https://compound-os-api.onrender.com/api/v1"
+VITE_API_BASE_URL="https://compound-os-api-replica.onrender.com/api/v1"
 ```
 
 ## Scripts
