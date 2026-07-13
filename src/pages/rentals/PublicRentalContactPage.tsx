@@ -14,6 +14,7 @@ import { Link, useParams } from 'react-router-dom';
 import { z } from 'zod';
 import { ApiClientError } from '../../lib/api/api-client';
 import { rentalApiService } from '../../lib/api/rental-service';
+import type { RentalListing } from '../../lib/api/types';
 import { ROUTES } from '../../lib/constants/routes';
 import { getFallbackPublicRentalBySlug } from './rental-fallback';
 import {
@@ -21,6 +22,7 @@ import {
   furnishingLabels,
   getListingCoverImage,
   getListingImageAlt,
+  getRentalBedCounts,
   getOptimizedListingImageUrl,
   listingStatusLabels,
   listingTypeLabels,
@@ -41,6 +43,16 @@ const contactSchema = z.object({
 });
 
 type ContactFormValues = z.infer<typeof contactSchema>;
+type ContactInquiryListing = Pick<
+  RentalListing,
+  'slug' | 'title' | 'monthlyRent' | 'depositAmount' | 'unitCondition' | 'bedrooms' | 'floor' | 'areaSqm' | 'totalBeds' | 'availableBeds'
+> & {
+  id: string;
+  unitId?: string | null;
+  locationText?: string | null;
+  addressText?: string | null;
+  compound?: { address?: string | null } | null;
+};
 
 async function copyToClipboard(text: string): Promise<boolean> {
   try {
@@ -65,13 +77,14 @@ function generateMessageContent({
   tenantName: string;
   tenantPhone: string;
   tenantNationalId: string;
-  listing: any;
+  listing: ContactInquiryListing;
   reservedBedNumber?: number | null;
   remainingAvailableBeds?: number | null;
 }) {
   const listingUrl = `${window.location.origin}/rentals/${listing.slug}`;
-  const availableBeds = listing.availableBeds ?? Math.max((listing.totalBeds ?? 4) - 0 - 0, 0);
-  const totalBeds = listing.totalBeds ?? 4;
+  const bedCounts = getRentalBedCounts(listing);
+  const availableBeds = bedCounts.availableBeds;
+  const totalBeds = bedCounts.totalBeds;
   const remainingBeds =
     remainingAvailableBeds ?? (reservedBedNumber ? Math.max(availableBeds - 1, 0) : availableBeds);
   return `طلب حجز سرير:
@@ -92,7 +105,7 @@ function generateMessageContent({
 }
 
 function getAvailableBeds(listing: { availableBeds?: number; totalBeds?: number }) {
-  return listing.availableBeds ?? Math.max((listing.totalBeds ?? 4) - 0 - 0, 0);
+  return getRentalBedCounts(listing).availableBeds;
 }
 
 function getAvailableBedsLabel(count: number) {

@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { ArrowLeft, BedDouble, Building2, Check, Filter, Home, MapPin, ShieldCheck } from 'lucide-react';
-import type { FocusEvent, FormEvent, PointerEvent } from 'react';
+import type { FormEvent, PointerEvent } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { rentalApiService } from '../../lib/api/rental-service';
 import type { RentalListing, RentalListingQuery } from '../../lib/api/types';
@@ -14,6 +14,7 @@ import {
   getListingCoverImage,
   getListingImageAlt,
   getOptimizedListingImageUrl,
+  getRentalBedCounts,
   listingStatusLabels,
   listingTypeLabels,
   publicRentalBrand,
@@ -86,7 +87,8 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
   const location = publicRentalCardLocation;
   const compoundName = publicRentalBrand.compoundAr;
   const depositAmount = toNumber(listing.depositAmount);
-  const availableBeds = listing.availableBeds ?? Math.max((listing.totalBeds ?? 4), 0);
+  const bedCounts = getRentalBedCounts(listing);
+  const availableBeds = bedCounts.availableBeds;
   const bedsStatusText = getAvailableBedsText(availableBeds);
   const basicsSummary = getBasicsSummary(listing);
   const hasAirConditioning = Boolean(listing.isAirConditioned);
@@ -101,7 +103,7 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
     }
   };
 
-  const handleFocus = (_event: FocusEvent<HTMLElement>) => {
+  const handleFocus = () => {
     handlePrefetch();
   };
 
@@ -193,7 +195,7 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
           <span className="rounded-2xl border border-[#d6c9b3] bg-[#fcfaf5] px-2 py-3">
             <Building2 className="mx-auto mb-1 h-5 w-5 text-[#6e5314]" />
             <span className="font-bold text-[#202c23]">
-              {listing.floor != null ? `الدور ${listing.floor}` : `${listing.totalBeds || 4} سراير`}
+              {listing.floor != null ? `الدور ${listing.floor}` : `${bedCounts.totalBeds} سراير`}
             </span>
           </span>
           <span className="rounded-2xl border border-[#d6c9b3] bg-[#fcfaf5] px-2 py-3">

@@ -25,6 +25,7 @@ import {
   furnishingLabels,
   getListingCoverImage,
   getListingImageAlt,
+  getRentalBedCounts,
   listingStatusLabels,
   listingTypeLabels,
   publicCompoundName,
@@ -47,7 +48,7 @@ type BasicFeatureKey = keyof typeof BASIC_FEATURES_MAP;
 const BASIC_FEATURE_KEYS = Object.keys(BASIC_FEATURES_MAP) as BasicFeatureKey[];
 
 function getAvailableBeds(listing: { availableBeds?: number | null; totalBeds?: number | null }) {
-  return listing.availableBeds ?? Math.max((listing.totalBeds ?? 4) - 0 - 0, 0);
+  return getRentalBedCounts(listing).availableBeds;
 }
 
 function getAvailableBedsLabel(count: number) {
@@ -86,8 +87,9 @@ function buildInquiryMessage(
     listing.locationText ?? listing.addressText ?? listing.compound?.address,
     publicRentalBrand.compoundAr,
   );
+  const bedCounts = getRentalBedCounts(listing);
   const availableBeds = getAvailableBeds(listing);
-  const totalBeds = listing.totalBeds ?? 4;
+  const totalBeds = bedCounts.totalBeds;
   const monthlyRent = formatRentalMoney(listing.monthlyRent);
   const depositAmount = toNumber(listing.depositAmount);
 
@@ -262,7 +264,8 @@ export function PublicRentalDetailPage() {
     publicRentalBrand.compoundAr,
   );
   const compoundName = publicCompoundName(listing.compound?.name);
-  const availableBeds = getAvailableBeds(listing);
+  const bedCounts = getRentalBedCounts(listing);
+  const availableBeds = bedCounts.availableBeds;
   const pricingItems = [
     { label: 'التأمين', value: toNumber(listing.depositAmount) > 0 ? formatRentalMoney(listing.depositAmount) : 'لا يوجد تأمين' },
   ];
@@ -418,7 +421,7 @@ export function PublicRentalDetailPage() {
               <div className="mt-4 grid grid-cols-3 gap-2 text-center text-sm text-[#38473d]">
                 <span className="rounded-2xl border border-[#d6c9b3] bg-[#fcfaf5] px-2 py-3 shadow-sm">
                   <Building2 className="mx-auto mb-1 h-5 w-5 text-[#8a6d22]" />
-                  <span className="font-semibold text-[#202c23]">{listing.floor != null ? `الدور ${listing.floor}` : `${listing.totalBeds || 4} سراير`}</span>
+                  <span className="font-semibold text-[#202c23]">{listing.floor != null ? `الدور ${listing.floor}` : `${bedCounts.totalBeds} سراير`}</span>
                 </span>
                 <span className="rounded-2xl border border-[#d6c9b3] bg-[#fcfaf5] px-2 py-3 shadow-sm">
                   <ShieldCheck className="mx-auto mb-1 h-5 w-5 text-[#8a6d22]" />
@@ -449,7 +452,7 @@ export function PublicRentalDetailPage() {
                 </div>
                 <div className="flex items-center justify-between border-t border-[#d2c4aa] pt-2">
                   <span className="font-bold text-[#38473d]">إجمالي السراير</span>
-                  <span className="font-black text-tertiary">{listing.totalBeds ?? 4}</span>
+                  <span className="font-black text-tertiary">{bedCounts.totalBeds}</span>
                 </div>
               </div>
 
@@ -507,7 +510,7 @@ export function PublicRentalDetailPage() {
               <div className="rounded-2xl bg-white/80 border border-[#d2c4aa] p-4"><dt className="text-sm text-[#38473d]">التأمين</dt><dd className="mt-1 font-black text-tertiary">{toNumber(listing.depositAmount) > 0 ? formatRentalMoney(listing.depositAmount) : 'لا يوجد تأمين'}</dd></div>
               <div className="rounded-2xl bg-white/80 border border-[#d2c4aa] p-4"><dt className="text-sm text-[#38473d]">تاريخ النشر</dt><dd className="mt-1 font-black text-tertiary">{formatRentalDate(listing.publishedAt)}</dd></div>
               <div className="rounded-2xl bg-white/80 border border-[#d2c4aa] p-4"><dt className="text-sm text-[#38473d]">عدد السراير المتاحة</dt><dd className="mt-1 font-black text-emerald-700">{availableBeds}</dd></div>
-              <div className="rounded-2xl bg-white/80 border border-[#d2c4aa] p-4"><dt className="text-sm text-[#38473d]">إجمالي السراير</dt><dd className="mt-1 font-black text-tertiary">{listing.totalBeds ?? 4}</dd></div>
+              <div className="rounded-2xl bg-white/80 border border-[#d2c4aa] p-4"><dt className="text-sm text-[#38473d]">إجمالي السراير</dt><dd className="mt-1 font-black text-tertiary">{bedCounts.totalBeds}</dd></div>
             </dl>
           </section>
 

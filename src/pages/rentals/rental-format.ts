@@ -104,6 +104,58 @@ export function publicCompoundName(value: string | null | undefined) {
   return publicRentalText(value, publicRentalBrand.compoundAr);
 }
 
+type RentalListingBedStatusLike = {
+  status?: string | null;
+};
+
+type RentalListingWithBedCounts = {
+  availableBeds?: number | null;
+  totalBeds?: number | null;
+  pendingBeds?: number | null;
+  rentedBeds?: number | null;
+  beds?: RentalListingBedStatusLike[] | null;
+};
+
+function getBedCountsFromBeds(beds: RentalListingBedStatusLike[]) {
+  let availableBeds = 0;
+  let pendingBeds = 0;
+  let rentedBeds = 0;
+
+  for (const bed of beds) {
+    switch (bed.status) {
+      case 'AVAILABLE':
+        availableBeds++;
+        break;
+      case 'RESERVED':
+        pendingBeds++;
+        break;
+      case 'RENTED':
+        rentedBeds++;
+        break;
+    }
+  }
+
+  return {
+    availableBeds,
+    totalBeds: availableBeds + pendingBeds + rentedBeds,
+  };
+}
+
+export function getRentalBedCounts(listing: RentalListingWithBedCounts) {
+  if (Array.isArray(listing.beds) && listing.beds.length > 0) {
+    return getBedCountsFromBeds(listing.beds);
+  }
+
+  const totalBeds = listing.totalBeds ?? 4;
+  const pendingBeds = listing.pendingBeds ?? 0;
+  const rentedBeds = listing.rentedBeds ?? 0;
+
+  return {
+    totalBeds,
+    availableBeds: listing.availableBeds ?? Math.max(totalBeds - pendingBeds - rentedBeds, 0),
+  };
+}
+
 export function sortListingImages(listingOrImages: RentalListing | RentalListingImage[] | null | undefined) {
   const images = Array.isArray(listingOrImages) ? listingOrImages : listingOrImages?.images;
 
