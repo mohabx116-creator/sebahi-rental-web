@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
   BedDouble,
@@ -18,7 +18,6 @@ import { ROUTES } from '../../lib/constants/routes';
 import { cn } from '../../lib/utils/cn';
 import { InlineOwnerAcquisitionCta } from '../../components/layout/MobileOwnerAcquisitionCta';
 import type { RentalListing } from '../../lib/api/types';
-import { getFallbackPublicRentalBySlug } from './rental-fallback';
 import {
   formatRentalDate,
   formatRentalMoney,
@@ -151,33 +150,37 @@ export function PublicRentalDetailPage() {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [imageError, setImageError] = useState(false);
-  const fallbackListing = slug ? getFallbackPublicRentalBySlug(slug) : undefined;
 
   const listingQuery = useQuery({
     queryKey: ['rentals', 'public', 'listing', slug],
-    queryFn: async () => {
-      try {
-        return await rentalApiService.getPublicRentalListingBySlug(slug ?? '');
-      } catch {
-        return fallbackListing;
-      }
-    },
-    initialData: fallbackListing,
+    queryFn: () => rentalApiService.getPublicRentalListingBySlug(slug ?? ''),
     enabled: Boolean(slug),
     staleTime: 0,
   });
 
   const listing = listingQuery.data;
   const coverImage = listing ? getListingCoverImage(listing) : null;
-  const gallery = listing ? sortListingImages(listing) : [];
+  const gallery = useMemo(() => (listing ? sortListingImages(listing) : []), [listing]);
 
   useEffect(() => {
-    setSelectedImageIndex(0);
-    setImageError(false);
+    const resetTimer = window.setTimeout(() => {
+      setSelectedImageIndex(0);
+      setImageError(false);
+    }, 0);
+
+    return () => {
+      window.clearTimeout(resetTimer);
+    };
   }, [slug]);
 
   useEffect(() => {
-    setImageError(false);
+    const resetTimer = window.setTimeout(() => {
+      setImageError(false);
+    }, 0);
+
+    return () => {
+      window.clearTimeout(resetTimer);
+    };
   }, [selectedImageIndex]);
 
   useEffect(() => {

@@ -7,7 +7,6 @@ import type { RentalListing, RentalListingQuery } from '../../lib/api/types';
 import { ROUTES } from '../../lib/constants/routes';
 import { cn } from '../../lib/utils/cn';
 import { MobileOwnerAcquisitionCta } from '../../components/layout/MobileOwnerAcquisitionCta';
-import { getFallbackPublicRentals } from './rental-fallback';
 import {
   formatRentalMoney,
   furnishingLabels,
@@ -252,17 +251,9 @@ function LoadingGrid() {
 export function PublicRentalsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = buildQuery(searchParams);
-  const fallbackRentals = getFallbackPublicRentals(query);
   const listingsQuery = useQuery({
     queryKey: ['rentals', 'public', 'listings', query],
-    queryFn: async () => {
-      try {
-        return await rentalApiService.getPublicRentalListings(query);
-      } catch {
-        return fallbackRentals;
-      }
-    },
-    initialData: fallbackRentals,
+    queryFn: () => rentalApiService.getPublicRentalListings(query),
     refetchInterval: 15000,
     refetchIntervalInBackground: false,
     refetchOnWindowFocus: true,
@@ -401,7 +392,7 @@ export function PublicRentalsPage() {
 
         {listingsQuery.isLoading && <LoadingGrid />}
 
-        {listingsQuery.isError && !listingsQuery.data?.data?.length && (
+        {listingsQuery.isError && listings.length === 0 && (
           <div className="rounded-[28px] border border-error/25 bg-error-container/10 p-6 text-right shadow-lg">
             <h3 className="text-xl font-black text-error">تعذر تحميل سوق الإيجارات</h3>
             <p className="mt-2 text-sm leading-7 text-fixed-dim">

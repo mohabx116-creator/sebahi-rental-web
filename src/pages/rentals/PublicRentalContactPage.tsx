@@ -8,7 +8,7 @@ import {
   MessageCircle,
   Sparkles,
 } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useParams } from 'react-router-dom';
 import { z } from 'zod';
@@ -16,7 +16,6 @@ import { ApiClientError } from '../../lib/api/api-client';
 import { rentalApiService } from '../../lib/api/rental-service';
 import type { RentalListing } from '../../lib/api/types';
 import { ROUTES } from '../../lib/constants/routes';
-import { getFallbackPublicRentalBySlug } from './rental-fallback';
 import {
   formatRentalMoney,
   furnishingLabels,
@@ -149,22 +148,14 @@ function ContactImageFallback({ title }: { title: string }) {
 export function PublicRentalContactPage() {
   const { slug } = useParams();
   const [isSubmitPending, setIsSubmitPending] = useState(false);
+  const [isReservationLocked, setIsReservationLocked] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isUnavailableError, setIsUnavailableError] = useState(false);
-  const clientRequestIdRef = useRef(createClientRequestId());
-  const inFlightReservationRef = useRef(false);
-  const fallbackListing = slug ? getFallbackPublicRentalBySlug(slug) : undefined;
+  const [clientRequestId] = useState(createClientRequestId);
 
   const listingQuery = useQuery({
     queryKey: ['rentals', 'public', 'listing', slug],
-    queryFn: async () => {
-      try {
-        return await rentalApiService.getPublicRentalListingBySlug(slug ?? '');
-      } catch {
-        return fallbackListing;
-      }
-    },
-    initialData: fallbackListing,
+    queryFn: () => rentalApiService.getPublicRentalListingBySlug(slug ?? ''),
     enabled: Boolean(slug),
     staleTime: 0,
   });
@@ -190,8 +181,8 @@ export function PublicRentalContactPage() {
   const availableBeds = listing ? getAvailableBeds(listing) : 0;
 
   const onSubmit = handleSubmit(async (values) => {
-    if (!listing || isSubmitPending || inFlightReservationRef.current) return;
-    inFlightReservationRef.current = true;
+    if (!listing || isSubmitPending || isReservationLocked) return;
+    setIsReservationLocked(true);
     setSubmitError(null);
     setIsUnavailableError(false);
     setIsSubmitPending(true);
@@ -199,7 +190,7 @@ export function PublicRentalContactPage() {
 
     try {
       const result = await rentalApiService.createRentalInquiry(listing.id, {
-        clientRequestId: clientRequestIdRef.current,
+        clientRequestId,
         tenantName: values.tenantName,
         tenantPhone: values.tenantPhone,
         tenantNationalId: values.tenantNationalId,
@@ -215,9 +206,9 @@ export function PublicRentalContactPage() {
       });
       const whatsappUrl = `https://wa.me/${whatsappPhone}?text=${encodeURIComponent(finalMessage)}`;
       if (whatsappWindow) {
-        whatsappWindow.location.href = whatsappUrl;
+        whatsappWindow.location.assign(whatsappUrl);
       } else {
-        window.location.href = whatsappUrl;
+        window.location.assign(whatsappUrl);
       }
       await copyToClipboard(finalMessage);
     } catch (error) {
@@ -240,7 +231,7 @@ export function PublicRentalContactPage() {
       }
       setSubmitError(errorMessage);
     } finally {
-      inFlightReservationRef.current = false;
+      setIsReservationLocked(false);
       setIsSubmitPending(false);
     }
   });

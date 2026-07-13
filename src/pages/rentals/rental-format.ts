@@ -146,13 +146,18 @@ export function getRentalBedCounts(listing: RentalListingWithBedCounts) {
     return getBedCountsFromBeds(listing.beds);
   }
 
-  const totalBeds = listing.totalBeds ?? 4;
+  const totalBeds = typeof listing.totalBeds === 'number' && Number.isFinite(listing.totalBeds) && listing.totalBeds >= 0
+    ? listing.totalBeds
+    : 0;
   const pendingBeds = listing.pendingBeds ?? 0;
   const rentedBeds = listing.rentedBeds ?? 0;
+  const availableBeds = typeof listing.availableBeds === 'number' && Number.isFinite(listing.availableBeds) && listing.availableBeds >= 0
+    ? listing.availableBeds
+    : Math.max(totalBeds - pendingBeds - rentedBeds, 0);
 
   return {
     totalBeds,
-    availableBeds: listing.availableBeds ?? Math.max(totalBeds - pendingBeds - rentedBeds, 0),
+    availableBeds,
   };
 }
 
