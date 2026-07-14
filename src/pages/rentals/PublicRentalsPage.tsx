@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query';
-import { ArrowLeft, BedDouble, Building2, Check, Filter, Home, MapPin, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, BedDouble, Building2, Check, Filter, Home, Images, MapPin, ShieldCheck } from 'lucide-react';
 import type { FormEvent, PointerEvent } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { rentalApiService } from '../../lib/api/rental-service';
@@ -137,6 +137,23 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
             {listingStatusLabels[listing.status]}
           </span>
         </div>
+        
+        {listing.images && listing.images.length > 0 && (
+          <div className="absolute inset-x-0 bottom-0 flex justify-start p-4">
+            <button
+              type="button"
+              className="z-20 flex items-center gap-1.5 rounded-full border border-white/20 bg-[#1f2c22]/60 px-3 py-1.5 text-xs font-bold text-white shadow-sm backdrop-blur-md transition hover:bg-[#1f2c22]/80"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                window.location.href = `/rentals/${listing.slug}?gallery=true`;
+              }}
+            >
+              <Images className="h-3.5 w-3.5" />
+              <span>الصور ({listing.images.length})</span>
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="space-y-5 p-4 text-right sm:p-5">

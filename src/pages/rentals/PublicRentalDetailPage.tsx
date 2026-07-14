@@ -12,7 +12,7 @@ import {
   ShieldCheck,
   Sparkles,
 } from 'lucide-react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { rentalApiService } from '../../lib/api/rental-service';
 import { ROUTES } from '../../lib/constants/routes';
 import { cn } from '../../lib/utils/cn';
@@ -147,8 +147,9 @@ function DetailError({ title, message }: { title: string; message: string }) {
 
 export function PublicRentalDetailPage() {
   const { slug } = useParams();
+  const [searchParams] = useSearchParams();
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(() => searchParams.get('gallery') === 'true');
   const [imageError, setImageError] = useState(false);
 
   const listingQuery = useQuery({
@@ -161,6 +162,12 @@ export function PublicRentalDetailPage() {
   const listing = listingQuery.data;
   const coverImage = listing ? getListingCoverImage(listing) : null;
   const gallery = useMemo(() => (listing ? sortListingImages(listing) : []), [listing]);
+
+  useEffect(() => {
+    if (searchParams.get('gallery') === 'true' && gallery.length > 0) {
+      setIsLightboxOpen(true);
+    }
+  }, [searchParams, gallery.length]);
 
   useEffect(() => {
     const resetTimer = window.setTimeout(() => {
