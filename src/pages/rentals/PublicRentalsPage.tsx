@@ -349,7 +349,7 @@ export function PublicRentalsPage() {
         </div>
       </section>
 
-      <section className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <section className="hidden mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <form key={searchParams.toString()} className="rounded-[28px] glass-panel p-5 lg:p-6" onSubmit={handleFilterSubmit}>
           <div className="mb-4 flex flex-col gap-2 text-right text-fixed sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-2">
