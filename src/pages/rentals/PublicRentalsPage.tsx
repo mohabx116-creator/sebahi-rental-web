@@ -84,7 +84,6 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
   const coverImage = getListingCoverImage(listing);
   const title = publicRentalText(listing.title);
   const location = publicRentalCardLocation;
-  const compoundName = publicRentalBrand.compoundAr;
   const depositAmount = toNumber(listing.depositAmount);
   const bedCounts = getRentalBedCounts(listing);
   const availableBeds = bedCounts.availableBeds;
@@ -328,19 +327,9 @@ export function PublicRentalsPage() {
             </div>
           </div>
 
-          <div className="rounded-[28px] border border-[#e4dac5] bg-white/78 p-5 text-right shadow-[0_24px_70px_rgba(28,45,34,0.08)] backdrop-blur-md sm:p-6">
-            <p className="text-sm font-bold text-tertiary">{heroCountLabel}</p>
-            <p className="mt-2 text-4xl font-black text-[#1f2c22] sm:text-5xl">{new Intl.NumberFormat('ar-EG').format(heroCount)}</p>
-            <div className="mt-5 grid gap-3 sm:grid-cols-2">
-              <div className="rounded-2xl border border-[#e7dcc5] bg-[#fffdf8] p-3">
-                <p className="text-xs font-bold text-[#7d6c49]">التحديث التلقائي</p>
-                <p className="mt-1 text-sm font-black text-[#132015]">قائمة متجددة على الواجهة</p>
-              </div>
-              <div className="rounded-2xl border border-[#e7dcc5] bg-[#fffdf8] p-3">
-                <p className="text-xs font-bold text-[#7d6c49]">الفرز</p>
-                <p className="mt-1 text-sm font-black text-[#132015]">الأحدث يظهر أولاً</p>
-              </div>
-            </div>
+          <div className="mr-auto w-fit rounded-2xl border border-[#e4dac5] bg-white/90 px-6 py-4 text-center shadow-[0_12px_40px_rgba(28,45,34,0.12)] backdrop-blur-md">
+            <p className="text-sm font-extrabold text-tertiary">{heroCountLabel}</p>
+            <p className="mt-1 text-4xl font-black text-[#1f2c22]">{new Intl.NumberFormat('ar-EG').format(heroCount)}</p>
           </div>
         </div>
       </section>
