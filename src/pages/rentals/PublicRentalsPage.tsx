@@ -191,9 +191,7 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
                 {formatRentalMoney(listing.monthlyRent)}
               </p>
             </div>
-            <div className="rounded-full border border-[#d2c4aa] bg-white px-3 py-2 text-xs font-bold text-[#524424]">
-              قابل للحجز
-            </div>
+
           </div>
         </div>
 
