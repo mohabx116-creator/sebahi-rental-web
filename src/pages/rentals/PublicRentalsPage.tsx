@@ -305,18 +305,9 @@ export function PublicRentalsPage() {
         <div className="absolute inset-0 bg-gradient-to-b from-[rgba(255,253,248,0.66)] via-[rgba(247,242,232,0.9)] to-[#f0eadc]" />
         <div className="relative mx-auto grid min-h-[420px] w-full max-w-7xl items-end gap-8 px-4 pb-10 pt-16 sm:min-h-[520px] sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:px-8">
           <div className="max-w-3xl text-right">
-            <span className="inline-flex items-center gap-2 rounded-full border border-[#e4dac5] bg-white/70 px-4 py-2 text-sm font-bold text-tertiary shadow-sm backdrop-blur-md">
-              <Home className="h-4 w-4" />
-              {publicRentalBrand.marketplaceLabel}
-            </span>
-            <h1 className="mt-5 text-3xl font-black leading-[1.25] text-[#1f2c22] sm:text-5xl lg:text-6xl">
+            <h1 className="text-3xl font-black leading-[1.25] text-[#1f2c22] sm:text-5xl lg:text-6xl">
               الإيجارات المتاحة في المنطقة
             </h1>
-            <div className="mt-6 flex flex-wrap gap-3 text-sm font-bold text-[#5f6e62]">
-              <span className="rounded-full border border-[#e4dac5] bg-white/70 px-4 py-2 shadow-sm backdrop-blur-md">
-                بحث سريع حسب السعر والمواصفات
-              </span>
-            </div>
           </div>
 
           <div className="mr-auto w-fit rounded-2xl border border-[#e4dac5] bg-white/90 px-6 py-4 text-center shadow-[0_12px_40px_rgba(28,45,34,0.12)] backdrop-blur-md">
