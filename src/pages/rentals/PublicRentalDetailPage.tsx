@@ -35,13 +35,13 @@ import {
 } from './rental-format';
 
 const BASIC_FEATURES_MAP = {
-  internet: 'إنترنت',
-  basic_appliances: 'أجهزة كهربائية أساسية',
-  water_motor: 'موتور مياه',
-  desks: 'مكاتب',
-  window_mesh: 'سلك شباك',
-  water_heater: 'سخان مياه',
-  water_filter: 'فلتر مياه',
+  internet: 'ط·آ·ط¢آ¥ط·آ¸أ¢â‚¬آ ط·آ·ط¹آ¾ط·آ·ط¢آ±ط·آ¸أ¢â‚¬آ ط·آ·ط¹آ¾',
+  basic_appliances: 'ط·آ·ط¢آ£ط·آ·ط¢آ¬ط·آ¸أ¢â‚¬طŒط·آ·ط¢آ²ط·آ·ط¢آ© ط·آ¸ط¦â€™ط·آ¸أ¢â‚¬طŒط·آ·ط¢آ±ط·آ·ط¢آ¨ط·آ·ط¢آ§ط·آ·ط¢آ¦ط·آ¸ط¸آ¹ط·آ·ط¢آ© ط·آ·ط¢آ£ط·آ·ط¢آ³ط·آ·ط¢آ§ط·آ·ط¢آ³ط·آ¸ط¸آ¹ط·آ·ط¢آ©',
+  water_motor: 'ط·آ¸أ¢â‚¬آ¦ط·آ¸ط«â€ ط·آ·ط¹آ¾ط·آ¸ط«â€ ط·آ·ط¢آ± ط·آ¸أ¢â‚¬آ¦ط·آ¸ط¸آ¹ط·آ·ط¢آ§ط·آ¸أ¢â‚¬طŒ',
+  desks: 'ط·آ¸أ¢â‚¬آ¦ط·آ¸ط¦â€™ط·آ·ط¢آ§ط·آ·ط¹آ¾ط·آ·ط¢آ¨',
+  window_mesh: 'ط·آ·ط¢آ³ط·آ¸أ¢â‚¬â€چط·آ¸ط¦â€™ ط·آ·ط¢آ´ط·آ·ط¢آ¨ط·آ·ط¢آ§ط·آ¸ط¦â€™',
+  water_heater: 'ط·آ·ط¢آ³ط·آ·ط¢آ®ط·آ·ط¢آ§ط·آ¸أ¢â‚¬آ  ط·آ¸أ¢â‚¬آ¦ط·آ¸ط¸آ¹ط·آ·ط¢آ§ط·آ¸أ¢â‚¬طŒ',
+  water_filter: 'ط·آ¸ط¸آ¾ط·آ¸أ¢â‚¬â€چط·آ·ط¹آ¾ط·آ·ط¢آ± ط·آ¸أ¢â‚¬آ¦ط·آ¸ط¸آ¹ط·آ·ط¢آ§ط·آ¸أ¢â‚¬طŒ',
 } as const;
 type BasicFeatureKey = keyof typeof BASIC_FEATURES_MAP;
 const BASIC_FEATURE_KEYS = Object.keys(BASIC_FEATURES_MAP) as BasicFeatureKey[];
@@ -51,10 +51,10 @@ function getAvailableBeds(listing: { availableBeds?: number | null; totalBeds?: 
 }
 
 function getAvailableBedsLabel(count: number) {
-  if (count <= 0) return 'غير متاحة';
-  if (count === 1) return 'سرير واحد متاح فقط';
-  if (count === 2) return 'متبقي سريران فقط';
-  return `متاح الآن: ${count} سراير`;
+  if (count <= 0) return 'ط·آ·ط·â€؛ط·آ¸ط¸آ¹ط·آ·ط¢آ± ط·آ¸أ¢â‚¬آ¦ط·آ·ط¹آ¾ط·آ·ط¢آ§ط·آ·ط¢آ­ط·آ·ط¢آ©';
+  if (count === 1) return 'ط·آ·ط¢آ³ط·آ·ط¢آ±ط·آ¸ط¸آ¹ط·آ·ط¢آ± ط·آ¸ط«â€ ط·آ·ط¢آ§ط·آ·ط¢آ­ط·آ·ط¢آ¯ ط·آ¸أ¢â‚¬آ¦ط·آ·ط¹آ¾ط·آ·ط¢آ§ط·آ·ط¢آ­ ط·آ¸ط¸آ¾ط·آ¸أ¢â‚¬ع‘ط·آ·ط¢آ·';
+  if (count === 2) return 'ط·آ¸أ¢â‚¬آ¦ط·آ·ط¹آ¾ط·آ·ط¢آ¨ط·آ¸أ¢â‚¬ع‘ط·آ¸ط¸آ¹ ط·آ·ط¢آ³ط·آ·ط¢آ±ط·آ¸ط¸آ¹ط·آ·ط¢آ±ط·آ·ط¢آ§ط·آ¸أ¢â‚¬آ  ط·آ¸ط¸آ¾ط·آ¸أ¢â‚¬ع‘ط·آ·ط¢آ·';
+  return `ط·آ¸أ¢â‚¬آ¦ط·آ·ط¹آ¾ط·آ·ط¢آ§ط·آ·ط¢آ­ ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ¢ط·آ¸أ¢â‚¬آ : ${count} ط·آ·ط¢آ³ط·آ·ط¢آ±ط·آ·ط¢آ§ط·آ¸ط¸آ¹ط·آ·ط¢آ±`;
 }
 
 
@@ -91,19 +91,19 @@ function buildInquiryMessage(
   const depositAmount = toNumber(listing.depositAmount);
 
   return [
-    'استفسار عن شقة للإيجار',
-    `- الإعلان: ${title}`,
-    `- المنطقة: ${location}`,
-    `- السعر الشهري: ${monthlyRent}`,
-    `- التأمين: ${depositAmount > 0 ? formatRentalMoney(depositAmount) : 'لا يوجد تأمين'}`,
-    `- الحالة: ${listing.unitCondition || 'غير محدد'}`,
-    `- الغرف: ${listing.bedrooms != null ? listing.bedrooms : 'غير محدد'}`,
-    `- الدور: ${listing.floor != null ? listing.floor : 'غير محدد'}`,
-    `- المساحة: ${listing.areaSqm ? `${listing.areaSqm} م²` : 'غير محددة'}`,
-    `- السراير المتاحة: ${availableBeds}`,
-    `- إجمالي السراير: ${totalBeds}`,
-    `- رابط الإعلان: ${window.location.origin}/rentals/${listing.slug}`,
-    'برجاء تأكيد التوفر والتواصل مع خدمة العملاء.',
+    'ط·آ·ط¢آ§ط·آ·ط¢آ³ط·آ·ط¹آ¾ط·آ¸ط¸آ¾ط·آ·ط¢آ³ط·آ·ط¢آ§ط·آ·ط¢آ± ط·آ·ط¢آ¹ط·آ¸أ¢â‚¬آ  ط·آ·ط¢آ´ط·آ¸أ¢â‚¬ع‘ط·آ·ط¢آ© ط·آ¸أ¢â‚¬â€چط·آ¸أ¢â‚¬â€چط·آ·ط¢آ¥ط·آ¸ط¸آ¹ط·آ·ط¢آ¬ط·آ·ط¢آ§ط·آ·ط¢آ±',
+    `- ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ¥ط·آ·ط¢آ¹ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ§ط·آ¸أ¢â‚¬آ : ${title}`,
+    `- ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ¸أ¢â‚¬آ¦ط·آ¸أ¢â‚¬آ ط·آ·ط¢آ·ط·آ¸أ¢â‚¬ع‘ط·آ·ط¢آ©: ${location}`,
+    `- ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ³ط·آ·ط¢آ¹ط·آ·ط¢آ± ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ´ط·آ¸أ¢â‚¬طŒط·آ·ط¢آ±ط·آ¸ط¸آ¹: ${monthlyRent}`,
+    `- ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¹آ¾ط·آ·ط¢آ£ط·آ¸أ¢â‚¬آ¦ط·آ¸ط¸آ¹ط·آ¸أ¢â‚¬آ : ${depositAmount > 0 ? formatRentalMoney(depositAmount) : 'ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ§ ط·آ¸ط¸آ¹ط·آ¸ط«â€ ط·آ·ط¢آ¬ط·آ·ط¢آ¯ ط·آ·ط¹آ¾ط·آ·ط¢آ£ط·آ¸أ¢â‚¬آ¦ط·آ¸ط¸آ¹ط·آ¸أ¢â‚¬آ '}`,
+    `- ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ­ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ©: ${listing.unitCondition || 'ط·آ·ط·â€؛ط·آ¸ط¸آ¹ط·آ·ط¢آ± ط·آ¸أ¢â‚¬آ¦ط·آ·ط¢آ­ط·آ·ط¢آ¯ط·آ·ط¢آ¯'}`,
+    `- ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط·â€؛ط·آ·ط¢آ±ط·آ¸ط¸آ¾: ${listing.bedrooms != null ? listing.bedrooms : 'ط·آ·ط·â€؛ط·آ¸ط¸آ¹ط·آ·ط¢آ± ط·آ¸أ¢â‚¬آ¦ط·آ·ط¢آ­ط·آ·ط¢آ¯ط·آ·ط¢آ¯'}`,
+    `- ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ¯ط·آ¸ط«â€ ط·آ·ط¢آ±: ${listing.floor != null ? listing.floor : 'ط·آ·ط·â€؛ط·آ¸ط¸آ¹ط·آ·ط¢آ± ط·آ¸أ¢â‚¬آ¦ط·آ·ط¢آ­ط·آ·ط¢آ¯ط·آ·ط¢آ¯'}`,
+    `- ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ¸أ¢â‚¬آ¦ط·آ·ط¢آ³ط·آ·ط¢آ§ط·آ·ط¢آ­ط·آ·ط¢آ©: ${listing.areaSqm ? `${listing.areaSqm} ط·آ¸أ¢â‚¬آ¦ط·آ¢ط¢آ²` : 'ط·آ·ط·â€؛ط·آ¸ط¸آ¹ط·آ·ط¢آ± ط·آ¸أ¢â‚¬آ¦ط·آ·ط¢آ­ط·آ·ط¢آ¯ط·آ·ط¢آ¯ط·آ·ط¢آ©'}`,
+    `- ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ³ط·آ·ط¢آ±ط·آ·ط¢آ§ط·آ¸ط¸آ¹ط·آ·ط¢آ± ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ¸أ¢â‚¬آ¦ط·آ·ط¹آ¾ط·آ·ط¢آ§ط·آ·ط¢آ­ط·آ·ط¢آ©: ${availableBeds}`,
+    `- ط·آ·ط¢آ¥ط·آ·ط¢آ¬ط·آ¸أ¢â‚¬آ¦ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ¸ط¸آ¹ ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ³ط·آ·ط¢آ±ط·آ·ط¢آ§ط·آ¸ط¸آ¹ط·آ·ط¢آ±: ${totalBeds}`,
+    `- ط·آ·ط¢آ±ط·آ·ط¢آ§ط·آ·ط¢آ¨ط·آ·ط¢آ· ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ¥ط·آ·ط¢آ¹ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ§ط·آ¸أ¢â‚¬آ : ${window.location.origin}/rentals/${listing.slug}`,
+    'ط·آ·ط¢آ¨ط·آ·ط¢آ±ط·آ·ط¢آ¬ط·آ·ط¢آ§ط·آ·ط·إ’ ط·آ·ط¹آ¾ط·آ·ط¢آ£ط·آ¸ط¦â€™ط·آ¸ط¸آ¹ط·آ·ط¢آ¯ ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¹آ¾ط·آ¸ط«â€ ط·آ¸ط¸آ¾ط·آ·ط¢آ± ط·آ¸ط«â€ ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¹آ¾ط·آ¸ط«â€ ط·آ·ط¢آ§ط·آ·ط¢آµط·آ¸أ¢â‚¬â€چ ط·آ¸أ¢â‚¬آ¦ط·آ·ط¢آ¹ ط·آ·ط¢آ®ط·آ·ط¢آ¯ط·آ¸أ¢â‚¬آ¦ط·آ·ط¢آ© ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ¹ط·آ¸أ¢â‚¬آ¦ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ§ط·آ·ط·إ’.',
   ].join('\n');
 }
 
@@ -124,7 +124,7 @@ function DetailImageFallback() {
     <div className="absolute inset-0 flex items-center justify-center overflow-hidden bg-[#eef2ee] p-6 text-center sm:p-8">
       <div className="flex max-w-sm flex-col items-center gap-3 text-[#5f6e62]">
         <Building2 className="h-10 w-10 text-tertiary" />
-        <p className="text-sm font-bold">الصورة غير متاحة حاليا</p>
+        <p className="text-sm font-bold">ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آµط·آ¸ط«â€ ط·آ·ط¢آ±ط·آ·ط¢آ© ط·آ·ط·â€؛ط·آ¸ط¸آ¹ط·آ·ط¢آ± ط·آ¸أ¢â‚¬آ¦ط·آ·ط¹آ¾ط·آ·ط¢آ§ط·آ·ط¢آ­ط·آ·ط¢آ© ط·آ·ط¢آ­ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ¸ط¸آ¹ط·آ·ط¢آ§</p>
       </div>
     </div>
   );
@@ -137,7 +137,7 @@ function DetailError({ title, message }: { title: string; message: string }) {
       <h1 className="mt-5 text-3xl font-black text-fixed">{title}</h1>
       <p className="mt-3 leading-8 text-fixed-dim">{message}</p>
       <Link className="mt-6 rounded-full bg-tertiary px-6 py-3 font-bold text-primary hover:bg-tertiary/90 transition shadow-lg shadow-tertiary/20" to={ROUTES.RENTALS}>
-        العودة إلى الإيجارات
+        ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ¹ط·آ¸ط«â€ ط·آ·ط¢آ¯ط·آ·ط¢آ© ط·آ·ط¢آ¥ط·آ¸أ¢â‚¬â€چط·آ¸أ¢â‚¬آ° ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ¥ط·آ¸ط¸آ¹ط·آ·ط¢آ¬ط·آ·ط¢آ§ط·آ·ط¢آ±ط·آ·ط¢آ§ط·آ·ط¹آ¾
       </Link>
     </main>
   );
@@ -259,8 +259,8 @@ export function PublicRentalDetailPage() {
   if (listingQuery.isError || !listing) {
     return (
       <DetailError
-        title="الإعلان غير موجود أو تم تحديث رابطه"
-        message="الإعلان غير موجود أو تم تحديث رابطه. يمكنك الرجوع إلى قائمة الإعلانات المتاحة واختيار الرابط الحالي من السوق."
+        title="ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ¥ط·آ·ط¢آ¹ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ§ط·آ¸أ¢â‚¬آ  ط·آ·ط·â€؛ط·آ¸ط¸آ¹ط·آ·ط¢آ± ط·آ¸أ¢â‚¬آ¦ط·آ¸ط«â€ ط·آ·ط¢آ¬ط·آ¸ط«â€ ط·آ·ط¢آ¯ ط·آ·ط¢آ£ط·آ¸ط«â€  ط·آ·ط¹آ¾ط·آ¸أ¢â‚¬آ¦ ط·آ·ط¹آ¾ط·آ·ط¢آ­ط·آ·ط¢آ¯ط·آ¸ط¸آ¹ط·آ·ط¢آ« ط·آ·ط¢آ±ط·آ·ط¢آ§ط·آ·ط¢آ¨ط·آ·ط¢آ·ط·آ¸أ¢â‚¬طŒ"
+        message="ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ¥ط·آ·ط¢آ¹ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ§ط·آ¸أ¢â‚¬آ  ط·آ·ط·â€؛ط·آ¸ط¸آ¹ط·آ·ط¢آ± ط·آ¸أ¢â‚¬آ¦ط·آ¸ط«â€ ط·آ·ط¢آ¬ط·آ¸ط«â€ ط·آ·ط¢آ¯ ط·آ·ط¢آ£ط·آ¸ط«â€  ط·آ·ط¹آ¾ط·آ¸أ¢â‚¬آ¦ ط·آ·ط¹آ¾ط·آ·ط¢آ­ط·آ·ط¢آ¯ط·آ¸ط¸آ¹ط·آ·ط¢آ« ط·آ·ط¢آ±ط·آ·ط¢آ§ط·آ·ط¢آ¨ط·آ·ط¢آ·ط·آ¸أ¢â‚¬طŒ. ط·آ¸ط¸آ¹ط·آ¸أ¢â‚¬آ¦ط·آ¸ط¦â€™ط·آ¸أ¢â‚¬آ ط·آ¸ط¦â€™ ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ±ط·آ·ط¢آ¬ط·آ¸ط«â€ ط·آ·ط¢آ¹ ط·آ·ط¢آ¥ط·آ¸أ¢â‚¬â€چط·آ¸أ¢â‚¬آ° ط·آ¸أ¢â‚¬ع‘ط·آ·ط¢آ§ط·آ·ط¢آ¦ط·آ¸أ¢â‚¬آ¦ط·آ·ط¢آ© ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ¥ط·آ·ط¢آ¹ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ§ط·آ¸أ¢â‚¬آ ط·آ·ط¢آ§ط·آ·ط¹آ¾ ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ¸أ¢â‚¬آ¦ط·آ·ط¹آ¾ط·آ·ط¢آ§ط·آ·ط¢آ­ط·آ·ط¢آ© ط·آ¸ط«â€ ط·آ·ط¢آ§ط·آ·ط¢آ®ط·آ·ط¹آ¾ط·آ¸ط¸آ¹ط·آ·ط¢آ§ط·آ·ط¢آ± ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ±ط·آ·ط¢آ§ط·آ·ط¢آ¨ط·آ·ط¢آ· ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ­ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ¸ط¸آ¹ ط·آ¸أ¢â‚¬آ¦ط·آ¸أ¢â‚¬آ  ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ³ط·آ¸ط«â€ ط·آ¸أ¢â‚¬ع‘."
       />
     );
   }
@@ -275,8 +275,10 @@ export function PublicRentalDetailPage() {
   const bedCounts = getRentalBedCounts(listing);
   const availableBeds = bedCounts.availableBeds;
   const availableBedsStatusLabel = getAvailableBedsStatusLabel(listing);
+  const isReserved = listing.status === 'RESERVED';
+  const isUnavailable = isReserved || availableBeds <= 0;
   const pricingItems = [
-    { label: 'التأمين', value: toNumber(listing.depositAmount) > 0 ? formatRentalMoney(listing.depositAmount) : 'لا يوجد تأمين' },
+    { label: 'ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¹آ¾ط·آ·ط¢آ£ط·آ¸أ¢â‚¬آ¦ط·آ¸ط¸آ¹ط·آ¸أ¢â‚¬آ ', value: toNumber(listing.depositAmount) > 0 ? formatRentalMoney(listing.depositAmount) : 'ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ§ ط·آ¸ط¸آ¹ط·آ¸ط«â€ ط·آ·ط¢آ¬ط·آ·ط¢آ¯ ط·آ·ط¹آ¾ط·آ·ط¢آ£ط·آ¸أ¢â‚¬آ¦ط·آ¸ط¸آ¹ط·آ¸أ¢â‚¬آ ' },
   ];
   const inquiryMessage = buildInquiryMessage(listing);
 
@@ -293,7 +295,7 @@ export function PublicRentalDetailPage() {
         <div className="mx-auto w-full max-w-7xl px-4 py-5 sm:px-6 lg:px-8 lg:py-8">
           <Link className="mb-5 inline-flex min-h-10 items-center gap-2 rounded-full px-4 py-1 text-sm font-bold text-fixed-dim hover:text-tertiary hover:bg-white/5 transition" to={ROUTES.RENTALS}>
             <ChevronRight className="h-5 w-5 text-tertiary" />
-            رجوع إلى الإيجارات
+            ط·آ·ط¢آ±ط·آ·ط¢آ¬ط·آ¸ط«â€ ط·آ·ط¢آ¹ ط·آ·ط¢آ¥ط·آ¸أ¢â‚¬â€چط·آ¸أ¢â‚¬آ° ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ¥ط·آ¸ط¸آ¹ط·آ·ط¢آ¬ط·آ·ط¢آ§ط·آ·ط¢آ±ط·آ·ط¢آ§ط·آ·ط¹آ¾
           </Link>
 
           <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_420px] xl:items-start">
@@ -329,7 +331,7 @@ export function PublicRentalDetailPage() {
                       {listing.isFeatured && (
                         <span className="inline-flex items-center gap-1 rounded-full bg-tertiary px-3 py-1 text-xs font-bold text-primary shadow-sm">
                           <Sparkles className="h-3.5 w-3.5 text-primary" />
-                          مميز
+                          ط·آ¸أ¢â‚¬آ¦ط·آ¸أ¢â‚¬آ¦ط·آ¸ط¸آ¹ط·آ·ط¢آ²
                         </span>
                       )}
                       <span className="rounded-full border border-[#d2c4aa] bg-white/80 px-3 py-1 text-xs font-bold text-[#132015] shadow-sm">
@@ -340,12 +342,12 @@ export function PublicRentalDetailPage() {
                           {listing.unitCondition || furnishingLabels[listing.furnishingStatus]}
                         </span>
                       )}
-                      {availableBeds > 0 && (
+                      {!isUnavailable && (
                         <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs font-black text-emerald-800 shadow-sm">
                           {getAvailableBedsLabel(availableBeds)}
                         </span>
                       )}
-                      {availableBeds <= 0 && (
+                      {isUnavailable && (
                         <span className="rounded-full border border-amber-500/20 bg-amber-500/10 px-3 py-1 text-xs font-black text-amber-800 shadow-sm">
                           {availableBedsStatusLabel}
                         </span>
@@ -368,18 +370,20 @@ export function PublicRentalDetailPage() {
 
             <aside className="hidden xl:block self-start rounded-[32px] glass-panel p-5 text-right xl:sticky xl:top-24 xl:p-6">
               <div className="rounded-[26px] border border-[#d2c4aa] bg-gradient-to-br from-[#fdfaf4] to-[#eef5ef] p-5 text-[#1f2c22] shadow-[0_18px_40px_rgba(28,45,34,0.08)]">
-                <p className="text-sm font-bold text-[#3e4d41]">إيجار الشقة الشهري</p>
+                <p className="text-sm font-bold text-[#3e4d41]">ط·آ·ط¢آ¥ط·آ¸ط¸آ¹ط·آ·ط¢آ¬ط·آ·ط¢آ§ط·آ·ط¢آ± ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ´ط·آ¸أ¢â‚¬ع‘ط·آ·ط¢آ© ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ´ط·آ¸أ¢â‚¬طŒط·آ·ط¢آ±ط·آ¸ط¸آ¹</p>
                 <p className="mt-1 text-4xl font-black leading-tight text-tertiary">{formatRentalMoney(listing.monthlyRent)}</p>
               </div>
 
               <div className="mt-4 grid grid-cols-2 gap-2 text-center text-sm text-[#38473d]">
                 <span className="rounded-2xl border border-[#d6c9b3] bg-[#fcfaf5] px-2 py-3 shadow-sm">
                   <Building2 className="mx-auto mb-1 h-5 w-5 text-[#8a6d22]" />
-                  <span className="font-semibold text-[#202c23]">{listing.floor != null ? `الدور ${listing.floor}` : `${bedCounts.totalBeds} سراير`}</span>
+                  <span className="font-semibold text-[#202c23]">{listing.floor != null ? `ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ¯ط·آ¸ط«â€ ط·آ·ط¢آ± ${listing.floor}` : `${bedCounts.totalBeds} ط·آ·ط¢آ³ط·آ·ط¢آ±ط·آ·ط¢آ§ط·آ¸ط¸آ¹ط·آ·ط¢آ±`}</span>
                 </span>
                 <span className="rounded-2xl border border-[#d6c9b3] bg-[#fcfaf5] px-2 py-3 shadow-sm">
                   <BedDouble className="mx-auto mb-1 h-5 w-5 text-[#8a6d22]" />
-                  <span className="font-semibold text-[#202c23]">عدد السراير المتاحة: {availableBeds}</span>
+                  <span className="font-semibold text-[#202c23]">
+                    {isUnavailable ? availableBedsStatusLabel : `ط·آ¹ط·آ¯ط·آ¯ ط·آ§ط¸â€‍ط·آ³ط·آ±ط·آ§ط¸ظ¹ط·آ± ط·آ§ط¸â€‍ط¸â€¦ط·ع¾ط·آ§ط·آ­ط·آ©: ${availableBeds}`}
+                  </span>
                 </span>
               </div>
 
@@ -395,17 +399,17 @@ export function PublicRentalDetailPage() {
 
 
               <div className="mt-5 space-y-3">
-                {availableBeds > 0 ? (
+                {!isUnavailable ? (
                   <Link className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-tertiary hover:bg-tertiary/90 px-5 py-4 text-base font-black text-primary shadow-xl shadow-tertiary/15 transition" to={`/rentals/${listing.slug}/contact`}>
                      <LockKeyhole className="h-5 w-5" />
-                     إرسال طلب معاينة
+                     ط·آ·ط¢آ¥ط·آ·ط¢آ±ط·آ·ط¢آ³ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چ ط·آ·ط¢آ·ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ¨ ط·آ¸أ¢â‚¬آ¦ط·آ·ط¢آ¹ط·آ·ط¢آ§ط·آ¸ط¸آ¹ط·آ¸أ¢â‚¬آ ط·آ·ط¢آ©
                   </Link>
                 ) : (
                   <div className="rounded-2xl border border-error/25 bg-error-container/20 px-4 py-3 text-center text-sm font-black text-error">
-                    تم الإيجار بالكامل لهذا الإعلان
+                    {isReserved ? 'ظ‚ظٹط¯ ط§ظ„ط­ط¬ط² ط§ظ„ط¢ظ†' : 'طھظ… ط§ظ„ط¥ظٹط¬ط§ط± ط¨ط§ظ„ظƒط§ظ…ظ„ ظ„ظ‡ط°ط§ ط§ظ„ط¥ط¹ظ„ط§ظ†'}
                   </div>
                 )}
-                {availableBeds > 0 && (
+                {!isUnavailable && (
                   <button
                     type="button"
                     onClick={async () => {
@@ -418,7 +422,7 @@ export function PublicRentalDetailPage() {
                     className="flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border border-[#b8c7bc] bg-[#f7fbf7] px-5 py-3 text-sm font-black text-[#111913] shadow-sm transition hover:bg-white"
                   >
                     <MessageCircle className="h-5 w-5 text-emerald-700" />
-                    استفسار
+                    ط·آ·ط¢آ§ط·آ·ط¢آ³ط·آ·ط¹آ¾ط·آ¸ط¸آ¾ط·آ·ط¢آ³ط·آ·ط¢آ§ط·آ·ط¢آ±
                   </button>
                 )}
               </div>
@@ -434,26 +438,26 @@ export function PublicRentalDetailPage() {
       <section className="mx-auto grid w-full max-w-7xl gap-6 px-4 py-8 sm:px-6 lg:px-8 xl:grid-cols-[minmax(0,1fr)_420px]">
         <div className="space-y-6">
           <section className="rounded-[28px] glass-panel p-6 text-right">
-            <h2 className="text-2xl font-black text-fixed">وصف الإعلان</h2>
+            <h2 className="text-2xl font-black text-fixed">ط·آ¸ط«â€ ط·آ·ط¢آµط·آ¸ط¸آ¾ ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ¥ط·آ·ط¢آ¹ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ§ط·آ¸أ¢â‚¬آ </h2>
             <p className="mt-4 whitespace-pre-line text-base leading-9 text-[#38473d]">{description}</p>
           </section>
 
           <section className="rounded-[28px] glass-panel p-6 text-right">
-            <h2 className="text-2xl font-black text-fixed">مواصفات الشقة</h2>
+            <h2 className="text-2xl font-black text-fixed">ط·آ¸أ¢â‚¬آ¦ط·آ¸ط«â€ ط·آ·ط¢آ§ط·آ·ط¢آµط·آ¸ط¸آ¾ط·آ·ط¢آ§ط·آ·ط¹آ¾ ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ´ط·آ¸أ¢â‚¬ع‘ط·آ·ط¢آ©</h2>
             <dl className="mt-5 grid gap-3 sm:grid-cols-2">
-              <div className="rounded-2xl bg-white/80 border border-[#d2c4aa] p-4"><dt className="text-sm text-[#38473d]">المساحة</dt><dd className="mt-1 font-black text-tertiary">{listing.areaSqm ? `${listing.areaSqm} م²` : 'غير محدد'}</dd></div>
-              <div className="rounded-2xl bg-white/80 border border-[#d2c4aa] p-4"><dt className="text-sm text-[#38473d]">عدد الغرف</dt><dd className="mt-1 font-black text-tertiary">{listing.bedrooms != null ? listing.bedrooms : 'غير محدد'}</dd></div>
-              <div className="rounded-2xl bg-white/80 border border-[#d2c4aa] p-4"><dt className="text-sm text-[#38473d]">الدور</dt><dd className="mt-1 font-black text-tertiary">{listing.floor ?? 'غير محدد'}</dd></div>
-              <div className="rounded-2xl bg-white/80 border border-[#d2c4aa] p-4"><dt className="text-sm text-[#38473d]">الشقة مكيفة</dt><dd className="mt-1 font-black text-tertiary">{listing.isAirConditioned ? 'نعم' : 'لا'}</dd></div>
-              <div className="rounded-2xl bg-white/80 border border-[#d2c4aa] p-4"><dt className="text-sm text-[#38473d]">التأمين</dt><dd className="mt-1 font-black text-tertiary">{toNumber(listing.depositAmount) > 0 ? formatRentalMoney(listing.depositAmount) : 'لا يوجد تأمين'}</dd></div>
-              <div className="rounded-2xl bg-white/80 border border-[#d2c4aa] p-4"><dt className="text-sm text-[#38473d]">تاريخ النشر</dt><dd className="mt-1 font-black text-tertiary">{formatRentalDate(listing.publishedAt)}</dd></div>
-              <div className="rounded-2xl bg-white/80 border border-[#d2c4aa] p-4"><dt className="text-sm text-[#38473d]">عدد السراير المتاحة</dt><dd className="mt-1 font-black text-emerald-700">{availableBeds}</dd></div>
-              <div className="rounded-2xl bg-white/80 border border-[#d2c4aa] p-4"><dt className="text-sm text-[#38473d]">إجمالي السراير</dt><dd className="mt-1 font-black text-tertiary">{bedCounts.totalBeds}</dd></div>
+              <div className="rounded-2xl bg-white/80 border border-[#d2c4aa] p-4"><dt className="text-sm text-[#38473d]">ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ¸أ¢â‚¬آ¦ط·آ·ط¢آ³ط·آ·ط¢آ§ط·آ·ط¢آ­ط·آ·ط¢آ©</dt><dd className="mt-1 font-black text-tertiary">{listing.areaSqm ? `${listing.areaSqm} ط·آ¸أ¢â‚¬آ¦ط·آ¢ط¢آ²` : 'ط·آ·ط·â€؛ط·آ¸ط¸آ¹ط·آ·ط¢آ± ط·آ¸أ¢â‚¬آ¦ط·آ·ط¢آ­ط·آ·ط¢آ¯ط·آ·ط¢آ¯'}</dd></div>
+              <div className="rounded-2xl bg-white/80 border border-[#d2c4aa] p-4"><dt className="text-sm text-[#38473d]">ط·آ·ط¢آ¹ط·آ·ط¢آ¯ط·آ·ط¢آ¯ ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط·â€؛ط·آ·ط¢آ±ط·آ¸ط¸آ¾</dt><dd className="mt-1 font-black text-tertiary">{listing.bedrooms != null ? listing.bedrooms : 'ط·آ·ط·â€؛ط·آ¸ط¸آ¹ط·آ·ط¢آ± ط·آ¸أ¢â‚¬آ¦ط·آ·ط¢آ­ط·آ·ط¢آ¯ط·آ·ط¢آ¯'}</dd></div>
+              <div className="rounded-2xl bg-white/80 border border-[#d2c4aa] p-4"><dt className="text-sm text-[#38473d]">ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ¯ط·آ¸ط«â€ ط·آ·ط¢آ±</dt><dd className="mt-1 font-black text-tertiary">{listing.floor ?? 'ط·آ·ط·â€؛ط·آ¸ط¸آ¹ط·آ·ط¢آ± ط·آ¸أ¢â‚¬آ¦ط·آ·ط¢آ­ط·آ·ط¢آ¯ط·آ·ط¢آ¯'}</dd></div>
+              <div className="rounded-2xl bg-white/80 border border-[#d2c4aa] p-4"><dt className="text-sm text-[#38473d]">ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ´ط·آ¸أ¢â‚¬ع‘ط·آ·ط¢آ© ط·آ¸أ¢â‚¬آ¦ط·آ¸ط¦â€™ط·آ¸ط¸آ¹ط·آ¸ط¸آ¾ط·آ·ط¢آ©</dt><dd className="mt-1 font-black text-tertiary">{listing.isAirConditioned ? 'ط·آ¸أ¢â‚¬آ ط·آ·ط¢آ¹ط·آ¸أ¢â‚¬آ¦' : 'ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ§'}</dd></div>
+              <div className="rounded-2xl bg-white/80 border border-[#d2c4aa] p-4"><dt className="text-sm text-[#38473d]">ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¹آ¾ط·آ·ط¢آ£ط·آ¸أ¢â‚¬آ¦ط·آ¸ط¸آ¹ط·آ¸أ¢â‚¬آ </dt><dd className="mt-1 font-black text-tertiary">{toNumber(listing.depositAmount) > 0 ? formatRentalMoney(listing.depositAmount) : 'ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ§ ط·آ¸ط¸آ¹ط·آ¸ط«â€ ط·آ·ط¢آ¬ط·آ·ط¢آ¯ ط·آ·ط¹آ¾ط·آ·ط¢آ£ط·آ¸أ¢â‚¬آ¦ط·آ¸ط¸آ¹ط·آ¸أ¢â‚¬آ '}</dd></div>
+              <div className="rounded-2xl bg-white/80 border border-[#d2c4aa] p-4"><dt className="text-sm text-[#38473d]">ط·آ·ط¹آ¾ط·آ·ط¢آ§ط·آ·ط¢آ±ط·آ¸ط¸آ¹ط·آ·ط¢آ® ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ¸أ¢â‚¬آ ط·آ·ط¢آ´ط·آ·ط¢آ±</dt><dd className="mt-1 font-black text-tertiary">{formatRentalDate(listing.publishedAt)}</dd></div>
+              <div className="rounded-2xl bg-white/80 border border-[#d2c4aa] p-4"><dt className="text-sm text-[#38473d]">عدد السراير المتاحة</dt><dd className="mt-1 font-black text-emerald-700">{isUnavailable ? availableBedsStatusLabel : availableBeds}</dd></div>
+              <div className="rounded-2xl bg-white/80 border border-[#d2c4aa] p-4"><dt className="text-sm text-[#38473d]">ط·آ·ط¢آ¥ط·آ·ط¢آ¬ط·آ¸أ¢â‚¬آ¦ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ¸ط¸آ¹ ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ³ط·آ·ط¢آ±ط·آ·ط¢آ§ط·آ¸ط¸آ¹ط·آ·ط¢آ±</dt><dd className="mt-1 font-black text-tertiary">{bedCounts.totalBeds}</dd></div>
             </dl>
           </section>
 
           <section className="rounded-[28px] glass-panel p-6 text-right">
-            <h2 className="text-2xl font-black text-fixed">الأساسيات</h2>
+            <h2 className="text-2xl font-black text-fixed">ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ£ط·آ·ط¢آ³ط·آ·ط¢آ§ط·آ·ط¢آ³ط·آ¸ط¸آ¹ط·آ·ط¢آ§ط·آ·ط¹آ¾</h2>
             <div className="mt-5 space-y-4">
               <div className="grid gap-3 sm:grid-cols-2">
                 {BASIC_FEATURE_KEYS.map((key) => {
@@ -462,7 +466,7 @@ export function PublicRentalDetailPage() {
                     <div key={key} className="flex items-center justify-between rounded-2xl bg-white/80 border border-[#d2c4aa] p-4">
                       <span className="text-sm text-[#38473d]">{BASIC_FEATURES_MAP[key]}</span>
                       <span className={cn("text-sm font-black", isAvailable ? "text-emerald-700" : "text-[#7b807a]")}>
-                        {isAvailable ? 'متوفر' : 'غير متوفر'}
+                        {isAvailable ? 'ط·آ¸أ¢â‚¬آ¦ط·آ·ط¹آ¾ط·آ¸ط«â€ ط·آ¸ط¸آ¾ط·آ·ط¢آ±' : 'ط·آ·ط·â€؛ط·آ¸ط¸آ¹ط·آ·ط¢آ± ط·آ¸أ¢â‚¬آ¦ط·آ·ط¹آ¾ط·آ¸ط«â€ ط·آ¸ط¸آ¾ط·آ·ط¢آ±'}
                       </span>
                     </div>
                   );
@@ -472,10 +476,10 @@ export function PublicRentalDetailPage() {
                 <span className="text-sm font-bold text-tertiary">
                   {(() => {
                     const selected = listing.basicFeatures || [];
-                    if (selected.length === BASIC_FEATURE_KEYS.length) return "كل الأساسيات موجودة";
-                    if (selected.length === 0) return "كل الأساسيات غير متوفرة";
+                    if (selected.length === BASIC_FEATURE_KEYS.length) return "ط·آ¸ط¦â€™ط·آ¸أ¢â‚¬â€چ ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ£ط·آ·ط¢آ³ط·آ·ط¢آ§ط·آ·ط¢آ³ط·آ¸ط¸آ¹ط·آ·ط¢آ§ط·آ·ط¹آ¾ ط·آ¸أ¢â‚¬آ¦ط·آ¸ط«â€ ط·آ·ط¢آ¬ط·آ¸ط«â€ ط·آ·ط¢آ¯ط·آ·ط¢آ©";
+                    if (selected.length === 0) return "ط·آ¸ط¦â€™ط·آ¸أ¢â‚¬â€چ ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ£ط·آ·ط¢آ³ط·آ·ط¢آ§ط·آ·ط¢آ³ط·آ¸ط¸آ¹ط·آ·ط¢آ§ط·آ·ط¹آ¾ ط·آ·ط·â€؛ط·آ¸ط¸آ¹ط·آ·ط¢آ± ط·آ¸أ¢â‚¬آ¦ط·آ·ط¹آ¾ط·آ¸ط«â€ ط·آ¸ط¸آ¾ط·آ·ط¢آ±ط·آ·ط¢آ©";
                     const missing = BASIC_FEATURE_KEYS.filter((k) => !selected.includes(k)).map((k) => BASIC_FEATURES_MAP[k]);
-                    return `الأساسيات الناقصة: ${missing.join('، ')}`;
+                    return `ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ£ط·آ·ط¢آ³ط·آ·ط¢آ§ط·آ·ط¢آ³ط·آ¸ط¸آ¹ط·آ·ط¢آ§ط·آ·ط¹آ¾ ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ¸أ¢â‚¬آ ط·آ·ط¢آ§ط·آ¸أ¢â‚¬ع‘ط·آ·ط¢آµط·آ·ط¢آ©: ${missing.join('ط·آ·ط¥â€™ ')}`;
                   })()}
                 </span>
               </div>
@@ -483,7 +487,7 @@ export function PublicRentalDetailPage() {
           </section>
 
           <section className="rounded-[28px] glass-panel p-6 text-right">
-            <h2 className="text-2xl font-black text-fixed">الكماليات والمميزات الإضافية</h2>
+            <h2 className="text-2xl font-black text-fixed">ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ¸ط¦â€™ط·آ¸أ¢â‚¬آ¦ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ¸ط¸آ¹ط·آ·ط¢آ§ط·آ·ط¹آ¾ ط·آ¸ط«â€ ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ¸أ¢â‚¬آ¦ط·آ¸أ¢â‚¬آ¦ط·آ¸ط¸آ¹ط·آ·ط¢آ²ط·آ·ط¢آ§ط·آ·ط¹آ¾ ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ¥ط·آ·ط¢آ¶ط·آ·ط¢آ§ط·آ¸ط¸آ¾ط·آ¸ط¸آ¹ط·آ·ط¢آ©</h2>
             <div className="mt-5 rounded-2xl bg-primary/45 border border-outline/40 p-5">
               <p className="whitespace-pre-line text-base leading-relaxed text-[#38473d]">
                 {listing.extraAmenitiesText || '-'}
@@ -494,9 +498,9 @@ export function PublicRentalDetailPage() {
 
         <div className="space-y-6">
           <section className="rounded-[28px] glass-panel p-6 text-right">
-            <h2 className="text-xl font-black text-fixed">الموقع والكمبوند</h2>
+            <h2 className="text-xl font-black text-fixed">ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ¸أ¢â‚¬آ¦ط·آ¸ط«â€ ط·آ¸أ¢â‚¬ع‘ط·آ·ط¢آ¹ ط·آ¸ط«â€ ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ¸ط¦â€™ط·آ¸أ¢â‚¬آ¦ط·آ·ط¢آ¨ط·آ¸ط«â€ ط·آ¸أ¢â‚¬آ ط·آ·ط¢آ¯</h2>
             <p className="mt-3 text-sm leading-7 text-[#38473d]">{compoundName}</p>
-            <p className="mt-1 text-sm leading-7 text-[#38473d]">{publicRentalText(listing.addressText ?? listing.compound?.address, 'القاهرة الجديدة')}</p>
+            <p className="mt-1 text-sm leading-7 text-[#38473d]">{publicRentalText(listing.addressText ?? listing.compound?.address, 'ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ¸أ¢â‚¬ع‘ط·آ·ط¢آ§ط·آ¸أ¢â‚¬طŒط·آ·ط¢آ±ط·آ·ط¢آ© ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ¬ط·آ·ط¢آ¯ط·آ¸ط¸آ¹ط·آ·ط¢آ¯ط·آ·ط¢آ©')}</p>
           </section>
         </div>
       </section>
@@ -507,7 +511,7 @@ export function PublicRentalDetailPage() {
           onClick={() => setIsLightboxOpen(false)}
         >
           <button
-            aria-label="إغلاق المعرض"
+            aria-label="ط·آ·ط¢آ¥ط·آ·ط·â€؛ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ§ط·آ¸أ¢â‚¬ع‘ ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ¸أ¢â‚¬آ¦ط·آ·ط¢آ¹ط·آ·ط¢آ±ط·آ·ط¢آ¶"
             className="absolute top-4 right-4 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition backdrop-blur-sm z-50"
             onClick={() => setIsLightboxOpen(false)}
           >
@@ -517,7 +521,7 @@ export function PublicRentalDetailPage() {
           {gallery.length > 1 && (
             <>
               <button
-                aria-label="الصورة السابقة"
+                aria-label="ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آµط·آ¸ط«â€ ط·آ·ط¢آ±ط·آ·ط¢آ© ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ³ط·آ·ط¢آ§ط·آ·ط¢آ¨ط·آ¸أ¢â‚¬ع‘ط·آ·ط¢آ©"
                 className="absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition backdrop-blur-sm z-50"
                 onClick={(e) => {
                   e.stopPropagation();
@@ -527,7 +531,7 @@ export function PublicRentalDetailPage() {
                 <ChevronRight className="h-8 w-8" />
               </button>
               <button
-                aria-label="الصورة التالية"
+                aria-label="ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آµط·آ¸ط«â€ ط·آ·ط¢آ±ط·آ·ط¢آ© ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¹آ¾ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ¸ط¸آ¹ط·آ·ط¢آ©"
                 className="absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition backdrop-blur-sm z-50"
                 onClick={(e) => {
                   e.stopPropagation();
@@ -559,7 +563,7 @@ export function PublicRentalDetailPage() {
         </div>
       )}
 
-      {availableBeds > 0 && (
+      {!isUnavailable && (
         <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[#d2c4aa] bg-[#fffdf8]/95 px-4 pb-[calc(env(safe-area-inset-bottom)+0.65rem)] pt-2.5 shadow-2xl backdrop-blur-xl xl:hidden">
           <div className="mx-auto max-w-7xl space-y-2">
             <div className="min-w-0 text-right">
@@ -571,7 +575,7 @@ export function PublicRentalDetailPage() {
               to={`/rentals/${listing.slug}/contact`}
             >
               <LockKeyhole className="h-4 w-4" />
-              طلب معاينة
+              ط·آ·ط¢آ·ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ¨ ط·آ¸أ¢â‚¬آ¦ط·آ·ط¢آ¹ط·آ·ط¢آ§ط·آ¸ط¸آ¹ط·آ¸أ¢â‚¬آ ط·آ·ط¢آ©
             </Link>
             <button
               type="button"
@@ -585,7 +589,7 @@ export function PublicRentalDetailPage() {
               className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border border-[#b8c7bc] bg-[#f7fbf7] px-4 py-3 text-sm font-black text-[#111913] shadow-sm transition hover:bg-white"
             >
               <MessageCircle className="h-4 w-4 text-emerald-700" />
-              استفسار
+              ط·آ·ط¢آ§ط·آ·ط¢آ³ط·آ·ط¹آ¾ط·آ¸ط¸آ¾ط·آ·ط¢آ³ط·آ·ط¢آ§ط·آ·ط¢آ±
             </button>
           </div>
         </div>

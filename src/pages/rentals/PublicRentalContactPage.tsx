@@ -176,9 +176,11 @@ export function PublicRentalContactPage() {
   const coverImage = listing ? getListingCoverImage(listing) : null;
   const availableBeds = listing ? getAvailableBeds(listing) : 0;
   const availableBedsStatusLabel = listing ? getAvailableBedsStatusLabel(listing) : '';
+  const isReserved = listing?.status === 'RESERVED';
+  const isUnavailable = isReserved || availableBeds <= 0;
 
   const onSubmit = handleSubmit(async (values) => {
-    if (!listing || isSubmitPending || isReservationLocked) return;
+    if (!listing || isSubmitPending || isReservationLocked || isReserved) return;
     setIsReservationLocked(true);
     setSubmitError(null);
     setIsUnavailableError(false);
@@ -299,7 +301,7 @@ export function PublicRentalContactPage() {
                   <span className="rounded-full bg-white/5 border border-white/10 px-3 py-1.5 text-xs font-black text-fixed">{listing.unitCondition || furnishingLabels[listing.furnishingStatus]}</span>
                 </div>
                 <h1 className="mt-4 text-2xl font-black leading-9 text-fixed">{title}</h1>
-                {availableBeds <= 0 && (
+                {isUnavailable && (
                   <div className="mt-3 inline-flex items-center rounded-full border border-amber-400/25 bg-amber-500/10 px-3 py-1.5 text-xs font-black text-amber-100 shadow-sm shadow-amber-500/10">
                     {availableBedsStatusLabel}
                   </div>
@@ -326,7 +328,7 @@ export function PublicRentalContactPage() {
               <p className="mt-3 text-sm leading-7 text-fixed-dim">
                 سنستقبل طلبك ونرسله للإدارة لمتابعة المعاينة، وسيتم ترتيب الموعد لاحقًا حسب الإتاحة.
               </p>
-              {availableBeds > 0 && (
+              {!isUnavailable && (
                 <div className="mt-4 inline-flex items-center rounded-full border border-emerald-400/30 bg-emerald-500/10 px-4 py-2 text-sm font-black text-emerald-400">
                   {getAvailableBedsLabel(availableBeds)}
                 </div>
@@ -427,7 +429,7 @@ export function PublicRentalContactPage() {
 
                 <button
                   className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 hover:bg-emerald-600 px-5 py-4 text-base font-black text-white transition disabled:cursor-not-allowed disabled:opacity-60 shadow-xl shadow-emerald-500/25 cursor-pointer"
-                  disabled={isSubmitPending || availableBeds <= 0}
+                  disabled={isSubmitPending || isUnavailable}
                   type="submit"
                 >
                   <MessageCircle className="h-5 w-5" />

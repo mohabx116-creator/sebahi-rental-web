@@ -163,15 +163,23 @@ export function getRentalBedCounts(listing: RentalListingWithBedCounts) {
 
 export function getPublicRentalStatusLabel(listing: RentalListingWithBedCounts & { status: RentalListingStatus }) {
   const bedCounts = getRentalBedCounts(listing);
-  if (bedCounts.availableBeds <= 0) {
+  if (listing.status === 'RESERVED') {
+    return 'قيد الحجز';
+  }
+
+  if (bedCounts.availableBeds <= 0 || listing.status === 'RENTED') {
     return 'تم الإيجار';
   }
 
   return listingStatusLabels[listing.status] ?? listing.status;
 }
 
-export function getAvailableBedsStatusLabel(listing: RentalListingWithBedCounts) {
+export function getAvailableBedsStatusLabel(listing: RentalListingWithBedCounts & { status?: string | null }) {
   const bedCounts = getRentalBedCounts(listing);
+  if (listing.status === 'RESERVED') {
+    return 'غير متاحة حاليًا';
+  }
+
   if (bedCounts.availableBeds <= 0) {
     return 'غير متاحة';
   }

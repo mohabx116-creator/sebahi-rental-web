@@ -80,7 +80,8 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
   const availableBeds = bedCounts.availableBeds;
   const bedsStatusText = getAvailableBedsStatusLabel(listing);
   const hasAirConditioning = Boolean(listing.isAirConditioned);
-  const isFullyRented = availableBeds <= 0;
+  const isReserved = listing.status === 'RESERVED';
+  const isUnavailable = isReserved || availableBeds <= 0;
 
   const handlePrefetch = () => {
     prefetchRentalListingDetail(queryClient, listing.slug);
@@ -103,14 +104,14 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
         'group relative block overflow-hidden rounded-[28px] glass-card border-[#e8ddc9] shadow-[0_24px_60px_rgba(28,45,34,0.06)] transition-all duration-300 hover:-translate-y-1',
         listing.isFeatured && 'ring-1 ring-tertiary/20'
         ,
-        isFullyRented &&
+        isUnavailable &&
           'border-amber-200/70 bg-gradient-to-br from-amber-50 via-white to-emerald-50 shadow-[0_24px_70px_rgba(214,178,94,0.16)] ring-1 ring-amber-300/30'
       )}
       onFocusCapture={handleFocus}
       onMouseEnter={handlePrefetch}
       onPointerDownCapture={handlePointerDown}
     >
-      {isFullyRented && (
+      {isUnavailable && (
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(circle_at_20%_0%,rgba(255,255,255,0.9),transparent_28%),radial-gradient(circle_at_80%_20%,rgba(255,236,174,0.55),transparent_28%),linear-gradient(135deg,rgba(255,255,255,0.55),rgba(255,255,255,0.06))] mix-blend-screen opacity-80 animate-pulse"
@@ -135,7 +136,7 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
           <span
             className={cn(
               'rounded-full border px-3 py-1.5 text-xs font-black shadow-md backdrop-blur-md',
-              isFullyRented
+              isUnavailable
                 ? 'border-amber-200/70 bg-white/95 text-amber-800'
                 : 'border-white/80 bg-white/95 text-[#1f3c2f]'
             )}
@@ -180,9 +181,9 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
           <span
             className={cn(
               'rounded-full border px-3 py-1 text-sm font-bold',
-              availableBeds > 0
-                ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
-                : 'border-amber-200 bg-amber-50 text-amber-800'
+              isUnavailable
+                ? 'border-amber-200 bg-amber-50 text-amber-800'
+                : 'border-emerald-200 bg-emerald-50 text-emerald-800'
             )}
           >
             {bedsStatusText}
@@ -215,7 +216,9 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
           </span>
           <span className="rounded-2xl border border-[#d6c9b3] bg-[#fcfaf5] px-2 py-3">
             <BedDouble className="mx-auto mb-1 h-5 w-5 text-[#6e5314]" />
-            <span className="font-bold text-[#202c23]">عدد السراير المتاحة: {availableBeds}</span>
+            <span className="font-bold text-[#202c23]">
+              {isUnavailable ? bedsStatusText : `عدد السراير المتاحة: ${availableBeds}`}
+            </span>
           </span>
         </div>
 
