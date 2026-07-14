@@ -359,13 +359,6 @@ export function PublicRentalsPage() {
       </section>
 
       <section className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-6 flex items-center justify-between gap-4 border-b border-outline/40 pb-4">
-          <h2 className="text-2xl font-black text-fixed">إعلانات إيجار معروضة</h2>
-          <p className="text-sm font-bold text-fixed-dim">
-            <span className="ml-2 text-xs font-normal text-tertiary/75">(يتم تحديث العقارات تلقائيًا)</span>
-            {listingsQuery.isFetching ? 'جاري تحميل الإعلانات' : `${new Intl.NumberFormat('ar-EG').format(exactTotalCount)} نتيجة`}
-          </p>
-        </div>
 
         {listingsQuery.isFetching && !listingsQuery.data && (
           <div className="mb-6 rounded-[24px] border border-tertiary/20 bg-tertiary/10 p-4 text-right text-tertiary">
