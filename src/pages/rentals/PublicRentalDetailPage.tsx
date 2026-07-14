@@ -310,7 +310,7 @@ export function PublicRentalDetailPage() {
                   ) : (
                     <img
                       alt={getListingImageAlt(listing, activeImage)}
-                      className="relative h-full w-full object-contain transition duration-300 group-hover:opacity-95"
+                      className={cn("relative h-full w-full object-contain transition duration-300 group-hover:opacity-95", isUnavailable && "opacity-85 mix-blend-multiply filter brightness-75 grayscale-[30%]")}
                       decoding="async"
                       loading="eager"
                       src={activeImageUrl}
@@ -319,6 +319,21 @@ export function PublicRentalDetailPage() {
                         setImageError(true);
                       }}
                     />
+                  )}
+                  {isUnavailable && <div className="absolute inset-0 bg-[#362e1a]/30 mix-blend-multiply backdrop-blur-[2px]" />}
+                  {isUnavailable && (
+                    <div className="absolute inset-0 flex items-center justify-center p-4">
+                      <div className="rounded-2xl border border-white/20 bg-black/60 px-8 py-4 text-center backdrop-blur-md shadow-2xl">
+                        <span className="text-xl sm:text-3xl font-black tracking-widest text-white">
+                          {listing.status === 'RESERVED' ? 'قيد الحجز' : 'تم الإيجار'}
+                        </span>
+                        <p className="mt-2 text-sm sm:text-base font-bold text-white/90">
+                          {listing.status === 'RESERVED' 
+                            ? 'هذا الإعلان قيد الحجز حالياً'
+                            : 'هذا الإعلان تم تأجيره بالكامل'}
+                        </p>
+                      </div>
+                    </div>
                   )}
                 </div>
 
@@ -402,11 +417,11 @@ export function PublicRentalDetailPage() {
                 {!isUnavailable ? (
                   <Link className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-tertiary hover:bg-tertiary/90 px-5 py-4 text-base font-black text-primary shadow-xl shadow-tertiary/15 transition" to={`/rentals/${listing.slug}/contact`}>
                      <LockKeyhole className="h-5 w-5" />
-                     ط·آ·ط¢آ¥ط·آ·ط¢آ±ط·آ·ط¢آ³ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چ ط·آ·ط¢آ·ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ¨ ط·آ¸أ¢â‚¬آ¦ط·آ·ط¢آ¹ط·آ·ط¢آ§ط·آ¸ط¸آ¹ط·آ¸أ¢â‚¬آ ط·آ·ط¢آ©
+                     ط·آ·ط¢آ·ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ¨ ط·آ¸أ¢â‚¬آ¦ط·آ·ط¢آ¹ط·آ·ط¢آ§ط·آ¸ط¸آ¹ط·آ¸أ¢â‚¬آ ط·آ·ط¢آ©
                   </Link>
                 ) : (
-                  <div className="rounded-2xl border border-error/25 bg-error-container/20 px-4 py-3 text-center text-sm font-black text-error">
-                    {isReserved ? 'ظ‚ظٹط¯ ط§ظ„ط­ط¬ط² ط§ظ„ط¢ظ†' : 'طھظ… ط§ظ„ط¥ظٹط¬ط§ط± ط¨ط§ظ„ظƒط§ظ…ظ„ ظ„ظ‡ط°ط§ ط§ظ„ط¥ط¹ظ„ط§ظ†'}
+                  <div className="flex min-h-14 w-full cursor-not-allowed items-center justify-center gap-2 rounded-2xl border border-amber-200/50 bg-amber-50/50 px-5 py-4 text-base font-black text-amber-800/60 shadow-sm">
+                    غير متاح حالياً
                   </div>
                 )}
                 {!isUnavailable && (
@@ -563,37 +578,43 @@ export function PublicRentalDetailPage() {
         </div>
       )}
 
-      {!isUnavailable && (
-        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[#d2c4aa] bg-[#fffdf8]/95 px-4 pb-[calc(env(safe-area-inset-bottom)+0.65rem)] pt-2.5 shadow-2xl backdrop-blur-xl xl:hidden">
-          <div className="mx-auto max-w-7xl space-y-2">
-            <div className="min-w-0 text-right">
-              <p className="truncate text-sm font-black text-tertiary">{formatRentalMoney(listing.monthlyRent)}</p>
-              <p className="mt-1 text-sm font-bold text-[#38473d]">{getAvailableBedsLabel(availableBeds)}</p>
-            </div>
-            <Link
-              className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-tertiary px-4 py-3 text-sm font-black text-primary shadow-lg shadow-tertiary/20"
-              to={`/rentals/${listing.slug}/contact`}
-            >
-              <LockKeyhole className="h-4 w-4" />
-              ط·آ·ط¢آ·ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ¨ ط·آ¸أ¢â‚¬آ¦ط·آ·ط¢آ¹ط·آ·ط¢آ§ط·آ¸ط¸آ¹ط·آ¸أ¢â‚¬آ ط·آ·ط¢آ©
-            </Link>
-            <button
-              type="button"
-              onClick={async () => {
-                window.open(customerSupportWhatsAppGroupUrl, '_blank', 'noopener,noreferrer');
-                const copied = await copyToClipboard(inquiryMessage);
-                if (!copied) {
-                  console.warn('Unable to copy inquiry message automatically');
-                }
-              }}
-              className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border border-[#b8c7bc] bg-[#f7fbf7] px-4 py-3 text-sm font-black text-[#111913] shadow-sm transition hover:bg-white"
-            >
-              <MessageCircle className="h-4 w-4 text-emerald-700" />
-              ط·آ·ط¢آ§ط·آ·ط¢آ³ط·آ·ط¹آ¾ط·آ¸ط¸آ¾ط·آ·ط¢آ³ط·آ·ط¢آ§ط·آ·ط¢آ±
-            </button>
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[#d2c4aa] bg-[#fffdf8]/95 px-4 pb-[calc(env(safe-area-inset-bottom)+0.65rem)] pt-2.5 shadow-2xl backdrop-blur-xl xl:hidden">
+        <div className="mx-auto max-w-7xl space-y-2">
+          <div className="min-w-0 text-right">
+            <p className="truncate text-sm font-black text-tertiary">{formatRentalMoney(listing.monthlyRent)}</p>
+            <p className="mt-1 text-sm font-bold text-[#38473d]">{isUnavailable ? availableBedsStatusLabel : getAvailableBedsLabel(availableBeds)}</p>
           </div>
+          {isUnavailable ? (
+            <div className="flex min-h-12 w-full cursor-not-allowed items-center justify-center gap-2 rounded-2xl border border-amber-200/50 bg-amber-50/50 px-4 py-3 text-sm font-black text-amber-800/60 shadow-sm">
+              غير متاح حالياً
+            </div>
+          ) : (
+            <>
+              <Link
+                className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-tertiary px-4 py-3 text-sm font-black text-primary shadow-lg shadow-tertiary/20"
+                to={`/rentals/${listing.slug}/contact`}
+              >
+                <LockKeyhole className="h-4 w-4" />
+                ط·آ·ط¢آ·ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ¨ ط·آ¸أ¢â‚¬آ¦ط·آ·ط¢آ¹ط·آ·ط¢آ§ط·آ¸ط¸آ¹ط·آ¸أ¢â‚¬آ ط·آ·ط¢آ©
+              </Link>
+              <button
+                type="button"
+                onClick={async () => {
+                  window.open(customerSupportWhatsAppGroupUrl, '_blank', 'noopener,noreferrer');
+                  const copied = await copyToClipboard(inquiryMessage);
+                  if (!copied) {
+                    console.warn('Unable to copy inquiry message automatically');
+                  }
+                }}
+                className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border border-[#b8c7bc] bg-[#f7fbf7] px-4 py-3 text-sm font-black text-[#111913] shadow-sm transition hover:bg-white"
+              >
+                <MessageCircle className="h-4 w-4 text-emerald-700" />
+                ط·آ·ط¢آ§ط·آ·ط¢آ³ط·آ·ط¹آ¾ط·آ¸ط¸آ¾ط·آ·ط¢آ³ط·آ·ط¢آ§ط·آ·ط¢آ±
+              </button>
+            </>
+          )}
         </div>
-      )}
+      </div>
 
     </main>
   );

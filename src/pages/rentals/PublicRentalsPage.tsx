@@ -20,6 +20,7 @@ import {
   publicRentalBrand,
   publicRentalText,
   toNumber,
+  isRentalUnavailable,
 } from './rental-format';
 
 import heroImage from '../../assets/sebahi-gardens-hero.jpg';
@@ -80,8 +81,7 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
   const availableBeds = bedCounts.availableBeds;
   const bedsStatusText = getAvailableBedsStatusLabel(listing);
   const hasAirConditioning = Boolean(listing.isAirConditioned);
-  const isReserved = listing.status === 'RESERVED';
-  const isUnavailable = isReserved || availableBeds <= 0;
+  const isUnavailable = isRentalUnavailable(listing);
 
   const handlePrefetch = () => {
     prefetchRentalListingDetail(queryClient, listing.slug);
@@ -122,7 +122,7 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
         {coverImage && (
           <img
             alt={getListingImageAlt(listing, coverImage)}
-            className="relative h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className={cn("relative h-full w-full object-cover transition-transform duration-500 group-hover:scale-105", isUnavailable && "opacity-85 mix-blend-multiply filter brightness-90")}
             decoding="async"
             loading="lazy"
             src={getOptimizedListingImageUrl(coverImage, 'card')}
@@ -132,6 +132,13 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
           />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent opacity-40" />
+        {isUnavailable && <div className="absolute inset-0 bg-[#362e1a]/20 mix-blend-multiply backdrop-blur-[1px]" />}
+        
+        {isUnavailable && (
+          <div className="absolute -left-12 top-6 z-20 w-48 -rotate-45 transform bg-amber-600/90 py-1.5 text-center text-xs font-black tracking-widest text-white shadow-lg backdrop-blur-md sm:top-8 sm:py-2 sm:text-sm">
+            {listing.status === 'RESERVED' ? 'قيد الحجز' : 'تم الإيجار'}
+          </div>
+        )}
         <div className="absolute inset-x-0 top-0 z-10 flex items-start justify-between gap-3 p-4">
           <span
             className={cn(
@@ -223,12 +230,16 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
         </div>
 
         <div className="flex flex-col gap-3 border-t border-[#d6c9b3] pt-4 sm:flex-row sm:items-center sm:justify-between">
-          <span
-            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-tertiary px-5 py-3 text-sm font-black text-primary shadow-lg shadow-tertiary/10 transition group-hover:bg-tertiary/95"
-          >
-            عرض التفاصيل
-            <ArrowLeft className="h-4 w-4 text-primary" />
-          </span>
+          {isUnavailable ? (
+            <span className="inline-flex min-h-11 cursor-not-allowed items-center justify-center gap-2 rounded-full bg-gray-200 px-5 py-3 text-sm font-black text-gray-500 shadow-sm">
+              غير متاح حالياً
+            </span>
+          ) : (
+            <span className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-tertiary px-5 py-3 text-sm font-black text-primary shadow-lg shadow-tertiary/10 transition group-hover:bg-tertiary/95">
+              عرض التفاصيل
+              <ArrowLeft className="h-4 w-4 text-primary" />
+            </span>
+          )}
           <div className="text-right">
             <p className="text-xs font-bold text-[#5e4f2f]">التأمين</p>
             <p className="text-base font-extrabold text-[#1d2a21]">

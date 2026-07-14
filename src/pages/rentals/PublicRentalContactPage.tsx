@@ -28,6 +28,8 @@ import {
   listingTypeLabels,
   publicCompoundName,
   publicRentalText,
+  isRentalReserved,
+  isRentalUnavailable,
 } from './rental-format';
 
 const contactSchema = z.object({
@@ -176,8 +178,8 @@ export function PublicRentalContactPage() {
   const coverImage = listing ? getListingCoverImage(listing) : null;
   const availableBeds = listing ? getAvailableBeds(listing) : 0;
   const availableBedsStatusLabel = listing ? getAvailableBedsStatusLabel(listing) : '';
-  const isReserved = listing?.status === 'RESERVED';
-  const isUnavailable = isReserved || availableBeds <= 0;
+  const isReserved = listing ? isRentalReserved(listing) : false;
+  const isUnavailable = listing ? isRentalUnavailable(listing) : false;
 
   const onSubmit = handleSubmit(async (values) => {
     if (!listing || isSubmitPending || isReservationLocked || isReserved) return;
@@ -335,110 +337,129 @@ export function PublicRentalContactPage() {
               )}
 
 
-              <div className="mt-4 rounded-[22px] border border-outline/45 bg-primary/35 p-4">
-                <h3 className="text-base font-black text-fixed">خطوات بسيطة</h3>
-                <div className="mt-3 grid gap-2 sm:grid-cols-3">
-                  {[
-                    ['١', 'املأ بياناتك'],
-                    ['٢', 'راجع الطلب'],
-                    ['٣', 'أرسل المعاينة'],
-                  ].map(([step, label]) => (
-                    <div className="flex items-center gap-2 rounded-2xl bg-primary/45 border border-outline/40 px-3 py-2" key={step}>
-                      <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-secondary text-xs font-black text-white">
-                        {step}
-                      </span>
-                      <p className="text-xs font-black leading-5 text-fixed">{label}</p>
-                    </div>
-                  ))}
+              {isUnavailable ? (
+                <div className="mt-7 rounded-[22px] border border-amber-200/50 bg-amber-50/50 p-6 text-center shadow-sm">
+                  <h3 className="text-xl font-black text-amber-900">
+                    الإعلان غير متاح حالياً
+                  </h3>
+                  <p className="mt-3 text-sm font-bold leading-6 text-amber-800/80">
+                    {isReserved ? 'هذا الإعلان قيد الحجز حالياً.' : 'تم تأجير هذا الإعلان بالكامل.'}
+                  </p>
+                  <Link
+                    className="mt-5 inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-white px-6 py-3 text-sm font-black text-amber-900 shadow-sm transition hover:bg-amber-50"
+                    to={ROUTES.RENTALS}
+                  >
+                    تصفح إعلانات أخرى
+                  </Link>
                 </div>
-              </div>
+              ) : (
+                <>
+                  <div className="mt-4 rounded-[22px] border border-outline/45 bg-primary/35 p-4">
+                    <h3 className="text-base font-black text-fixed">خطوات بسيطة</h3>
+                    <div className="mt-3 grid gap-2 sm:grid-cols-3">
+                      {[
+                        ['١', 'املأ بياناتك'],
+                        ['٢', 'راجع الطلب'],
+                        ['٣', 'أرسل المعاينة'],
+                      ].map(([step, label]) => (
+                        <div className="flex items-center gap-2 rounded-2xl bg-primary/45 border border-outline/40 px-3 py-2" key={step}>
+                          <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-secondary text-xs font-black text-white">
+                            {step}
+                          </span>
+                          <p className="text-xs font-black leading-5 text-fixed">{label}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
 
-              <form className="mt-7 space-y-5 text-right" onSubmit={onSubmit}>
-                <div className="rounded-2xl border border-[#b8c7bc] bg-[#f7fbf7] p-4">
-                  <h3 className="text-base font-black text-[#111913]">ملخص الطلب</h3>
-                  <dl className="mt-3 space-y-1.5 text-sm">
-                    <div className="flex items-center justify-between gap-4">
-                      <dt className="font-bold text-[#38473d]">الإعلان</dt>
-                      <dd className="max-w-[60%] truncate font-black text-[#111913]">{title}</dd>
+                  <form className="mt-7 space-y-5 text-right" onSubmit={onSubmit}>
+                    <div className="rounded-2xl border border-[#b8c7bc] bg-[#f7fbf7] p-4">
+                      <h3 className="text-base font-black text-[#111913]">ملخص الطلب</h3>
+                      <dl className="mt-3 space-y-1.5 text-sm">
+                        <div className="flex items-center justify-between gap-4">
+                          <dt className="font-bold text-[#38473d]">الإعلان</dt>
+                          <dd className="max-w-[60%] truncate font-black text-[#111913]">{title}</dd>
+                        </div>
+                        <div className="flex items-center justify-between gap-4">
+                          <dt className="font-bold text-[#38473d]">الإيجار</dt>
+                          <dd className="font-black text-tertiary">{formatRentalMoney(listing.monthlyRent)}</dd>
+                        </div>
+                        {listing.depositAmount && (
+                          <div className="flex items-center justify-between gap-4">
+                            <dt className="font-bold text-[#38473d]">التأمين</dt>
+                            <dd className="font-black text-tertiary">{formatRentalMoney(listing.depositAmount)}</dd>
+                          </div>
+                        )}
+                        <div className="flex items-center justify-between gap-4">
+                          <dt className="font-bold text-[#38473d]">السراير المطلوبة</dt>
+                          <dd className="font-black text-[#111913]">1</dd>
+                        </div>
+                        <div className="flex items-center justify-between gap-4">
+                          <dt className="font-bold text-[#38473d]">المتابعة</dt>
+                          <dd className="font-black text-[#111913]">واتساب</dd>
+                        </div>
+                      </dl>
                     </div>
-                    <div className="flex items-center justify-between gap-4">
-                      <dt className="font-bold text-[#38473d]">الإيجار</dt>
-                      <dd className="font-black text-tertiary">{formatRentalMoney(listing.monthlyRent)}</dd>
-                    </div>
-                    {listing.depositAmount && (
-                      <div className="flex items-center justify-between gap-4">
-                        <dt className="font-bold text-[#38473d]">التأمين</dt>
-                        <dd className="font-black text-tertiary">{formatRentalMoney(listing.depositAmount)}</dd>
+
+                    {isUnavailableError ? (
+                      <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-right">
+                        <h4 className="text-base font-black text-error">الطلب لم يعد متاحا</h4>
+                        <p className="mt-2 text-sm font-bold leading-6 text-[#526055]">
+                          تم التعامل معه من شخص آخر. اختر إعلاناً آخر من القائمة.
+                        </p>
+                        <Link
+                          className="mt-4 inline-flex min-h-11 w-full items-center justify-center rounded-2xl bg-white/5 px-4 py-3 text-sm font-black text-fixed transition hover:bg-white/10"
+                          to={ROUTES.RENTALS}
+                        >
+                          عرض الإعلانات المتاحة
+                        </Link>
                       </div>
-                    )}
-                    <div className="flex items-center justify-between gap-4">
-                      <dt className="font-bold text-[#38473d]">السراير المطلوبة</dt>
-                      <dd className="font-black text-[#111913]">1</dd>
-                    </div>
-                    <div className="flex items-center justify-between gap-4">
-                      <dt className="font-bold text-[#38473d]">المتابعة</dt>
-                      <dd className="font-black text-[#111913]">واتساب</dd>
-                    </div>
-                  </dl>
-                </div>
+                    ) : submitError ? (
+                      <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm font-bold text-error">
+                        {submitError}
+                      </div>
+                    ) : null}
 
-                {isUnavailableError ? (
-                  <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-right">
-                    <h4 className="text-base font-black text-error">الطلب لم يعد متاحا</h4>
-                    <p className="mt-2 text-sm font-bold leading-6 text-[#526055]">
-                      تم التعامل معه من شخص آخر. اختر إعلاناً آخر من القائمة.
-                    </p>
-                    <Link
-                      className="mt-4 inline-flex min-h-11 w-full items-center justify-center rounded-2xl bg-white/5 px-4 py-3 text-sm font-black text-fixed transition hover:bg-white/10"
-                      to={ROUTES.RENTALS}
+                    <section className="rounded-[24px] border border-[#b8c7bc] bg-white/80 p-4 shadow-sm">
+                      <h3 className="text-base font-black text-[#111913]">بيانات التواصل</h3>
+                      <div className="mt-4 space-y-4">
+                        <label className="block">
+                          <span className="mb-2 block text-sm font-bold text-[#38473d]">الاسم بالكامل</span>
+                          <input
+                            className="w-full rounded-2xl border border-[#b8c7bc] bg-[#edf3ff] text-right text-[#111913] focus:border-tertiary focus:ring-tertiary/20"
+                            disabled={isSubmitPending}
+                            {...register('tenantName')}
+                          />
+                          {errors.tenantName && <span className="mt-1 block text-sm font-bold text-error">{errors.tenantName.message}</span>}
+                        </label>
+
+                        <label className="block">
+                          <span className="mb-2 block text-sm font-bold text-[#38473d]">رقم الموبايل</span>
+                          <input
+                            className="w-full rounded-2xl border border-[#b8c7bc] bg-[#edf3ff] text-right text-[#111913] focus:border-tertiary focus:ring-tertiary/20"
+                            disabled={isSubmitPending}
+                            inputMode="tel"
+                            {...register('tenantPhone')}
+                          />
+                          {errors.tenantPhone && <span className="mt-1 block text-sm font-bold text-error">{errors.tenantPhone.message}</span>}
+                        </label>
+                      </div>
+                    </section>
+
+                    <button
+                      className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 hover:bg-emerald-600 px-5 py-4 text-base font-black text-white transition disabled:cursor-not-allowed disabled:opacity-60 shadow-xl shadow-emerald-500/25 cursor-pointer"
+                      disabled={isSubmitPending || isUnavailable}
+                      type="submit"
                     >
-                      عرض الإعلانات المتاحة
-                    </Link>
-                  </div>
-                ) : submitError ? (
-                  <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm font-bold text-error">
-                    {submitError}
-                  </div>
-                ) : null}
-
-                <section className="rounded-[24px] border border-[#b8c7bc] bg-white/80 p-4 shadow-sm">
-                  <h3 className="text-base font-black text-[#111913]">بيانات التواصل</h3>
-                  <div className="mt-4 space-y-4">
-                    <label className="block">
-                      <span className="mb-2 block text-sm font-bold text-[#38473d]">الاسم بالكامل</span>
-                      <input
-                        className="w-full rounded-2xl border border-[#b8c7bc] bg-[#edf3ff] text-right text-[#111913] focus:border-tertiary focus:ring-tertiary/20"
-                        disabled={isSubmitPending}
-                        {...register('tenantName')}
-                      />
-                      {errors.tenantName && <span className="mt-1 block text-sm font-bold text-error">{errors.tenantName.message}</span>}
-                    </label>
-
-                    <label className="block">
-                      <span className="mb-2 block text-sm font-bold text-[#38473d]">رقم الموبايل</span>
-                      <input
-                        className="w-full rounded-2xl border border-[#b8c7bc] bg-[#edf3ff] text-right text-[#111913] focus:border-tertiary focus:ring-tertiary/20"
-                        disabled={isSubmitPending}
-                        inputMode="tel"
-                        {...register('tenantPhone')}
-                      />
-                      {errors.tenantPhone && <span className="mt-1 block text-sm font-bold text-error">{errors.tenantPhone.message}</span>}
-                    </label>
-                  </div>
-                </section>
-
-                <button
-                  className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 hover:bg-emerald-600 px-5 py-4 text-base font-black text-white transition disabled:cursor-not-allowed disabled:opacity-60 shadow-xl shadow-emerald-500/25 cursor-pointer"
-                  disabled={isSubmitPending || isUnavailable}
-                  type="submit"
-                >
-                  <MessageCircle className="h-5 w-5" />
-                  {isSubmitPending ? 'جارٍ إرسال طلب المعاينة...' : 'إرسال طلب المعاينة'}
-                </button>
-                <p className="text-center text-xs font-bold leading-6 text-[#526055]">
-                  بعد الإرسال سيفتح واتساب برسالة جاهزة لإرسال الطلب.
-                </p>
-              </form>
+                      <MessageCircle className="h-5 w-5" />
+                      {isSubmitPending ? 'جارٍ إرسال طلب المعاينة...' : 'إرسال طلب المعاينة'}
+                    </button>
+                    <p className="text-center text-xs font-bold leading-6 text-[#526055]">
+                      بعد الإرسال سيفتح واتساب برسالة جاهزة لإرسال الطلب.
+                    </p>
+                  </form>
+                </>
+              )}
             </div>
 
             <Link

@@ -227,3 +227,21 @@ export function getOptimizedListingImageUrl(
   if (!image?.url) return '';
   return image.optimizedUrls?.[variant] ?? transformCloudinaryImageUrl(image.url, variant);
 }
+
+export function isRentalReserved(listing: RentalListingWithBedCounts & { status?: string | null }) {
+  return listing.status === 'RESERVED';
+}
+
+export function isRentalRented(listing: RentalListingWithBedCounts & { status?: string | null }) {
+  if (listing.status === 'RENTED') return true;
+  
+  const counts = getRentalBedCounts(listing);
+  if (counts.totalBeds > 0 && counts.availableBeds <= 0) {
+    return true;
+  }
+  return false;
+}
+
+export function isRentalUnavailable(listing: RentalListingWithBedCounts & { status?: string | null }) {
+  return isRentalReserved(listing) || isRentalRented(listing);
+}
