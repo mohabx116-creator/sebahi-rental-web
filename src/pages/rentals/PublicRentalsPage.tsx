@@ -128,7 +128,7 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent opacity-40" />
         <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-3 p-4">
-          <span className="rounded-full border-2 border-white/60 bg-emerald-500 px-3 py-1.5 text-xs font-black text-white shadow-md backdrop-blur-md">
+          <span className="rounded-full border border-white/80 bg-white/95 px-3 py-1.5 text-xs font-black text-[#1f3c2f] shadow-md backdrop-blur-md">
             {listingStatusLabels[listing.status]}
           </span>
         </div>
@@ -137,7 +137,7 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
           <div className="absolute inset-x-0 bottom-0 flex justify-start p-4">
             <button
               type="button"
-              className="z-20 flex items-center gap-2 rounded-xl border-2 border-transparent bg-white/95 px-5 py-2.5 text-sm font-black text-tertiary shadow-xl backdrop-blur-md transition-all hover:scale-105 hover:bg-white"
+              className="z-20 flex items-center gap-2 rounded-xl border border-white/80 bg-white/95 px-5 py-2.5 text-sm font-black text-[#1f3c2f] shadow-lg backdrop-blur-md transition-all hover:scale-105 hover:bg-white"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
