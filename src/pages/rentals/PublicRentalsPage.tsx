@@ -107,45 +107,44 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
   };
 
   return (
-    <article
+    <Link
+      to={`/rentals/${listing.slug}`}
       className={cn(
-        'group overflow-hidden rounded-[28px] glass-card border-[#e8ddc9] shadow-[0_24px_60px_rgba(28,45,34,0.06)] transition-transform duration-300 hover:-translate-y-1',
+        'group block overflow-hidden rounded-[28px] glass-card border-[#e8ddc9] shadow-[0_24px_60px_rgba(28,45,34,0.06)] transition-transform duration-300 hover:-translate-y-1',
         listing.isFeatured && 'ring-1 ring-tertiary/20'
       )}
       onFocusCapture={handleFocus}
       onMouseEnter={handlePrefetch}
       onPointerDownCapture={handlePointerDown}
     >
-      <Link className="block" to={`/rentals/${listing.slug}`}>
-        <div className="relative aspect-[16/11] overflow-hidden bg-surface-dim">
-          <ListingImageFallback title={title} />
-          {coverImage && (
-            <img
-              alt={getListingImageAlt(listing, coverImage)}
-              className="relative h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-              decoding="async"
-              loading="lazy"
-              src={getOptimizedListingImageUrl(coverImage, 'card')}
-              onError={(event) => {
-                event.currentTarget.style.display = 'none';
-              }}
-            />
-          )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent opacity-40" />
-          <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-3 p-4">
-            <span className="rounded-full border border-white/20 bg-[#1f2c22]/70 px-3 py-1 text-xs font-bold text-white shadow-sm backdrop-blur-md">
-              {listingStatusLabels[listing.status]}
-            </span>
-          </div>
+      <div className="relative aspect-[16/11] overflow-hidden bg-surface-dim">
+        <ListingImageFallback title={title} />
+        {coverImage && (
+          <img
+            alt={getListingImageAlt(listing, coverImage)}
+            className="relative h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            decoding="async"
+            loading="lazy"
+            src={getOptimizedListingImageUrl(coverImage, 'card')}
+            onError={(event) => {
+              event.currentTarget.style.display = 'none';
+            }}
+          />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent opacity-40" />
+        <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-3 p-4">
+          <span className="rounded-full border border-white/20 bg-[#1f2c22]/70 px-3 py-1 text-xs font-bold text-white shadow-sm backdrop-blur-md">
+            {listingStatusLabels[listing.status]}
+          </span>
         </div>
-      </Link>
+      </div>
 
       <div className="space-y-5 p-4 text-right sm:p-5">
         <div>
           <p className="text-sm font-extrabold text-[#1f3c2f]">{compoundName}</p>
-          <Link className="mt-1 block text-[1.15rem] font-black leading-8 text-[#1d2a21] transition hover:text-tertiary" to={`/rentals/${listing.slug}`}>
+          <span className="mt-1 block text-[1.15rem] font-black leading-8 text-[#1d2a21] transition group-hover:text-tertiary">
             {title}
-          </Link>
+          </span>
           <p className="mt-2 flex items-center gap-2 text-sm font-semibold text-[#3e4d41]">
             <MapPin className="h-4 w-4 shrink-0 text-[#4e5e52]" />
             <span className="line-clamp-1">{location}</span>
@@ -208,13 +207,12 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
         </div>
 
         <div className="flex flex-col gap-3 border-t border-[#d6c9b3] pt-4 sm:flex-row sm:items-center sm:justify-between">
-          <Link
-            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-tertiary px-5 py-3 text-sm font-black text-primary shadow-lg shadow-tertiary/10 transition hover:bg-tertiary/95"
-            to={`/rentals/${listing.slug}`}
+          <span
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-tertiary px-5 py-3 text-sm font-black text-primary shadow-lg shadow-tertiary/10 transition group-hover:bg-tertiary/95"
           >
             عرض التفاصيل
             <ArrowLeft className="h-4 w-4 text-primary" />
-          </Link>
+          </span>
           <div className="text-right">
             <p className="text-xs font-bold text-[#5e4f2f]">التأمين</p>
             <p className="text-base font-extrabold text-[#1d2a21]">
@@ -223,7 +221,7 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
           </div>
         </div>
       </div>
-    </article>
+    </Link>
   );
 }
 
