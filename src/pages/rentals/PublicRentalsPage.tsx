@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query';
-import { ArrowLeft, BedDouble, Building2, Check, Filter, Home, Images, MapPin, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, BedDouble, Building2, Check, Filter, Home, Images, MapPin } from 'lucide-react';
 import type { FormEvent, PointerEvent } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { rentalApiService } from '../../lib/api/rental-service';
