@@ -38,7 +38,6 @@ const contactSchema = z.object({
       return words.length >= 2;
     }, 'الاسم يجب أن يكون باللغة العربية ويتكون من اسمين على الأقل.'),
   tenantPhone: z.string().trim().min(5, 'اكتب رقم موبايل صحيح'),
-  tenantNationalId: z.string().trim().regex(/^[0-9]{14}$/, 'الرقم القومي يجب أن يكون 14 رقمًا باللغة الإنجليزية.'),
 });
 
 type ContactFormValues = z.infer<typeof contactSchema>;
@@ -68,14 +67,12 @@ async function copyToClipboard(text: string): Promise<boolean> {
 function generateMessageContent({
   tenantName,
   tenantPhone,
-  tenantNationalId,
   listing,
   reservedBedNumber,
   remainingAvailableBeds,
 }: {
   tenantName: string;
   tenantPhone: string;
-  tenantNationalId: string;
   listing: ContactInquiryListing;
   reservedBedNumber?: number | null;
   remainingAvailableBeds?: number | null;
@@ -86,10 +83,9 @@ function generateMessageContent({
   const totalBeds = bedCounts.totalBeds;
   const remainingBeds =
     remainingAvailableBeds ?? (reservedBedNumber ? Math.max(availableBeds - 1, 0) : availableBeds);
-  return `طلب حجز سرير:
+  return `طلب معاينة:
 - الاسم بالكامل: ${tenantName}
 - رقم الموبايل: ${tenantPhone}
-- الرقم القومي: ${tenantNationalId}
 - عنوان الإعلان: ${listing.title}
 - معرف الإعلان (ID): ${listing.id}
 - معرف الشقة (Unit ID): ${listing.unitId || 'غير متوفر'}
@@ -99,7 +95,7 @@ function generateMessageContent({
 - حالة الشقة: ${listing.unitCondition || 'غير متوفر'}
 - عدد السراير المتاحة: ${availableBeds}
 - إجمالي السراير: ${totalBeds}${reservedBedNumber ? `
-- رقم السرير المحجوز: سرير ${reservedBedNumber}
+- رقم السرير المقترح للمعاينة: سرير ${reservedBedNumber}
 - عدد السراير المتاحة بعد الطلب: ${remainingBeds}` : ''}`;
 }
 
@@ -169,7 +165,6 @@ export function PublicRentalContactPage() {
     defaultValues: {
       tenantName: '',
       tenantPhone: '',
-      tenantNationalId: '',
     },
   });
 
@@ -193,13 +188,11 @@ export function PublicRentalContactPage() {
         clientRequestId,
         tenantName: values.tenantName,
         tenantPhone: values.tenantPhone,
-        tenantNationalId: values.tenantNationalId,
         message: '',
       });
       const finalMessage = generateMessageContent({
         tenantName: values.tenantName,
         tenantPhone: values.tenantPhone,
-        tenantNationalId: values.tenantNationalId,
         listing,
         reservedBedNumber: result.bedNumber,
         remainingAvailableBeds: result.remainingAvailableBeds,
@@ -213,7 +206,7 @@ export function PublicRentalContactPage() {
       await copyToClipboard(finalMessage);
     } catch (error) {
       console.error(error);
-      let errorMessage = 'تعذر إتمام طلب الحجز، حاول مرة أخرى أو تواصل عبر واتساب';
+      let errorMessage = 'تعذر إتمام طلب المعاينة، حاول مرة أخرى أو تواصل عبر واتساب';
       if (error instanceof ApiClientError) {
         if (
           error.status === 409 ||
@@ -318,13 +311,13 @@ export function PublicRentalContactPage() {
             <div className="rounded-[32px] glass-panel p-5 shadow-xl sm:p-7">
               <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold text-tertiary backdrop-blur-md">
                 <MessageCircle className="h-4 w-4 text-tertiary" />
-                الحجز عبر واتساب
+                طلب معاينة عبر واتساب
               </span>
               <h2 className="mt-5 text-3xl font-black leading-[1.35] text-fixed">
-                احجز سرير داخل الشقة عبر واتساب في {compoundName}
+                أرسل طلب معاينة للوحدة عبر واتساب في {compoundName}
               </h2>
               <p className="mt-3 text-sm leading-7 text-fixed-dim">
-                الحجز يتم على سرير داخل الشقة، وليس على الشقة بالكامل. سيتم تحديد رقم السرير تلقائيًا حسب أولوية الإتاحة.
+                سنستقبل طلبك ونرسله للإدارة لمتابعة المعاينة، وسيتم ترتيب الموعد لاحقًا حسب الإتاحة.
               </p>
               {availableBeds > 0 && (
                 <div className="mt-4 inline-flex items-center rounded-full border border-emerald-400/30 bg-emerald-500/10 px-4 py-2 text-sm font-black text-emerald-400">
@@ -338,8 +331,8 @@ export function PublicRentalContactPage() {
                 <div className="mt-3 grid gap-2 sm:grid-cols-3">
                   {[
                     ['١', 'املأ بياناتك'],
-                    ['٢', 'أكد الحجز'],
-                    ['٣', 'أرسل واتساب'],
+                    ['٢', 'راجع الطلب'],
+                    ['٣', 'أرسل المعاينة'],
                   ].map(([step, label]) => (
                     <div className="flex items-center gap-2 rounded-2xl bg-primary/45 border border-outline/40 px-3 py-2" key={step}>
                       <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-secondary text-xs font-black text-white">
@@ -382,9 +375,9 @@ export function PublicRentalContactPage() {
 
                 {isUnavailableError ? (
                   <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-right">
-                    <h4 className="text-base font-black text-error">السرير لم يعد متاحا</h4>
+                    <h4 className="text-base font-black text-error">الطلب لم يعد متاحا</h4>
                     <p className="mt-2 text-sm font-bold leading-6 text-[#526055]">
-                      تم حجزه من شخص آخر. اختر إعلاناً آخر من القائمة.
+                      تم التعامل معه من شخص آخر. اختر إعلاناً آخر من القائمة.
                     </p>
                     <Link
                       className="mt-4 inline-flex min-h-11 w-full items-center justify-center rounded-2xl bg-white/5 px-4 py-3 text-sm font-black text-fixed transition hover:bg-white/10"
@@ -425,34 +418,16 @@ export function PublicRentalContactPage() {
                   </div>
                 </section>
 
-                <section className="rounded-[24px] border border-[#b8c7bc] bg-white/80 p-4 shadow-sm">
-                  <h3 className="text-base font-black text-[#111913]">بيانات التحقق</h3>
-                  <label className="mt-4 block">
-                    <span className="mb-2 block text-sm font-bold text-[#38473d]">الرقم القومي</span>
-                    <input
-                      className="w-full rounded-2xl border border-[#b8c7bc] bg-[#edf3ff] text-right text-[#111913] focus:border-tertiary focus:ring-tertiary/20"
-                      disabled={isSubmitPending}
-                      maxLength={14}
-                      placeholder="14 رقم باللغة الإنجليزية"
-                      {...register('tenantNationalId')}
-                    />
-                    <span className="mt-2 block text-xs font-bold leading-6 text-[#38473d]">
-                      نستخدمه لتسجيل طلبك فقط.
-                    </span>
-                    {errors.tenantNationalId && <span className="mt-1 block text-sm font-bold text-error">{errors.tenantNationalId.message}</span>}
-                  </label>
-                </section>
-
                 <button
                   className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 hover:bg-emerald-600 px-5 py-4 text-base font-black text-white transition disabled:cursor-not-allowed disabled:opacity-60 shadow-xl shadow-emerald-500/25 cursor-pointer"
                   disabled={isSubmitPending || availableBeds <= 0}
                   type="submit"
                 >
                   <MessageCircle className="h-5 w-5" />
-                  {isSubmitPending ? 'جاري حجز السرير...' : 'تأكيد الحجز'}
+                  {isSubmitPending ? 'جارٍ إرسال طلب المعاينة...' : 'إرسال طلب المعاينة'}
                 </button>
                 <p className="text-center text-xs font-bold leading-6 text-[#526055]">
-                  بعد التأكيد سيفتح واتساب برسالة جاهزة لإرسال الطلب.
+                  بعد الإرسال سيفتح واتساب برسالة جاهزة لإرسال الطلب.
                 </p>
               </form>
             </div>
