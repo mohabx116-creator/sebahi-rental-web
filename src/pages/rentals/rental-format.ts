@@ -161,6 +161,15 @@ export function getRentalBedCounts(listing: RentalListingWithBedCounts) {
   };
 }
 
+export function getPublicRentalStatusLabel(listing: RentalListingWithBedCounts & { status: RentalListingStatus }) {
+  const bedCounts = getRentalBedCounts(listing);
+  if (bedCounts.availableBeds <= 0) {
+    return 'تم الحجز بالكامل';
+  }
+
+  return listingStatusLabels[listing.status] ?? listing.status;
+}
+
 export function sortListingImages(listingOrImages: RentalListing | RentalListingImage[] | null | undefined) {
   const images = Array.isArray(listingOrImages) ? listingOrImages : listingOrImages?.images;
 

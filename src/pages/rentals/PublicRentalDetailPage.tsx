@@ -24,7 +24,7 @@ import {
   getListingCoverImage,
   getListingImageAlt,
   getRentalBedCounts,
-  listingStatusLabels,
+  getPublicRentalStatusLabel,
   listingTypeLabels,
   publicCompoundName,
   publicRentalBrand,
@@ -50,7 +50,7 @@ function getAvailableBeds(listing: { availableBeds?: number | null; totalBeds?: 
 }
 
 function getAvailableBedsLabel(count: number) {
-  if (count <= 0) return 'لا توجد سراير متاحة';
+  if (count <= 0) return 'تم الحجز بالكامل';
   if (count === 1) return 'سرير واحد متاح فقط';
   if (count === 2) return 'متبقي سريران فقط';
   return `متاح الآن: ${count} سراير`;
@@ -322,7 +322,7 @@ export function PublicRentalDetailPage() {
                   <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between flex-row-reverse">
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="rounded-full border border-[#d2c4aa] bg-white/80 px-3 py-1 text-xs font-bold text-[#132015] shadow-sm">
-                        {listingStatusLabels[listing.status]}
+                        {getPublicRentalStatusLabel(listing)}
                       </span>
                       {listing.isFeatured && (
                         <span className="inline-flex items-center gap-1 rounded-full bg-tertiary px-3 py-1 text-xs font-bold text-primary shadow-sm">
@@ -395,7 +395,7 @@ export function PublicRentalDetailPage() {
                   </Link>
                 ) : (
                   <div className="rounded-2xl border border-error/25 bg-error-container/20 px-4 py-3 text-center text-sm font-black text-error">
-                    لا توجد سراير متاحة لهذا الإعلان
+                    تم الحجز بالكامل لهذا الإعلان
                   </div>
                 )}
                 {availableBeds > 0 && (

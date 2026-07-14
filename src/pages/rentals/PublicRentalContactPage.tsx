@@ -21,9 +21,9 @@ import {
   furnishingLabels,
   getListingCoverImage,
   getListingImageAlt,
+  getPublicRentalStatusLabel,
   getRentalBedCounts,
   getOptimizedListingImageUrl,
-  listingStatusLabels,
   listingTypeLabels,
   publicCompoundName,
   publicRentalText,
@@ -104,7 +104,7 @@ function getAvailableBeds(listing: { availableBeds?: number; totalBeds?: number 
 }
 
 function getAvailableBedsLabel(count: number) {
-  if (count <= 0) return 'لا توجد سراير متاحة';
+  if (count <= 0) return 'تم الحجز بالكامل';
   if (count === 1) return 'سرير واحد متاح فقط';
   if (count === 2) return 'متبقي سريران فقط';
   return `متاح الآن: ${count} سراير`;
@@ -216,7 +216,7 @@ export function PublicRentalContactPage() {
           error.message?.includes('unavailable') ||
           error.message?.includes('متاحة')
         ) {
-          errorMessage = 'لا توجد سراير متاحة لهذا الإعلان';
+          errorMessage = 'تم الحجز بالكامل لهذا الإعلان';
           setIsUnavailableError(true);
         } else if (error.message) {
           errorMessage = error.message;
@@ -285,7 +285,7 @@ export function PublicRentalContactPage() {
                 <div className="flex flex-wrap gap-2">
                   <span className="inline-flex items-center gap-2 rounded-full bg-secondary/30 border border-secondary/20 px-3 py-1.5 text-xs font-black text-white">
                     <Building2 className="h-4 w-4 text-tertiary" />
-                    {listingStatusLabels[listing.status]}
+                    {getPublicRentalStatusLabel(listing)}
                   </span>
                   {listing.isFeatured && (
                     <span className="inline-flex items-center gap-1 rounded-full bg-tertiary px-3 py-1.5 text-xs font-black text-primary shadow-sm">

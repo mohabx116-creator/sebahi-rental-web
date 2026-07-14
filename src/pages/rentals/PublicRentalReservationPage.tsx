@@ -14,7 +14,7 @@ import type { RentalReservation } from '../../lib/api/types';
 import { ROUTES } from '../../lib/constants/routes';
 import {
   formatRentalDate,
-  listingStatusLabels,
+  getPublicRentalStatusLabel,
   publicRentalBrand,
   publicRentalText,
   reservationStatusLabels,
@@ -170,7 +170,7 @@ export function PublicRentalReservationPage() {
                   <p className="text-sm font-bold text-tertiary">الإعلان المرتبط</p>
                   <h2 className="mt-2 text-2xl font-black leading-9 text-fixed">{listingTitle}</h2>
                   <p className="mt-2 text-sm text-fixed-dim">
-                    حالة الإعلان: {listingStatusLabels[reservation.listing.status] ?? reservation.listing.status}
+                    حالة الإعلان: {getPublicRentalStatusLabel(reservation.listing)}
                   </p>
                   {listingHref && (
                     <Link className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-full bg-tertiary hover:bg-tertiary/90 px-5 py-2.5 text-sm font-bold text-primary transition shadow-lg shadow-tertiary/20" to={listingHref}>

@@ -14,7 +14,7 @@ import {
   getListingImageAlt,
   getOptimizedListingImageUrl,
   getRentalBedCounts,
-  listingStatusLabels,
+  getPublicRentalStatusLabel,
   listingTypeLabels,
   publicRentalBrand,
   publicRentalText,
@@ -27,7 +27,7 @@ const publicRentalCardLocation = 'حدائق العاشر من رمضان';
 const PUBLIC_RENTAL_DETAIL_STALE_TIME_MS = 30_000;
 
 function getAvailableBedsText(availableBeds: number) {
-  if (availableBeds <= 0) return 'لا توجد سراير متاحة';
+  if (availableBeds <= 0) return 'تم الحجز بالكامل';
   if (availableBeds === 1) return 'آخر سرير متاح';
   return `عدد السراير المتاحة: ${availableBeds}`;
 }
@@ -129,7 +129,7 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent opacity-40" />
         <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-3 p-4">
           <span className="rounded-full border border-white/80 bg-white/95 px-3 py-1.5 text-xs font-black text-[#1f3c2f] shadow-md backdrop-blur-md">
-            {listingStatusLabels[listing.status]}
+            {getPublicRentalStatusLabel(listing)}
           </span>
         </div>
         
