@@ -274,7 +274,7 @@ export function PublicRentalsPage() {
   const visibleListings = [...filteredListings].sort((a, b) => Number(b.isFeatured) - Number(a.isFeatured));
   const paginationMeta = listingsQuery.data?.meta;
   const hasClientOnlyFilters = Boolean(selectedCondition) || airConditionedOnly;
-  const exactTotalCount = paginationMeta?.totalCount ?? listings.length;
+
   const exactAvailableCount = paginationMeta?.availableCount ?? paginationMeta?.totalCount ?? listings.length;
   const visibleCount = visibleListings.length;
   const heroCount = hasClientOnlyFilters ? visibleCount : exactAvailableCount;

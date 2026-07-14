@@ -9,7 +9,6 @@ import {
   X,
   LockKeyhole,
   MapPin,
-  ShieldCheck,
   Sparkles,
 } from 'lucide-react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
@@ -57,9 +56,7 @@ function getAvailableBedsLabel(count: number) {
   return `متاح الآن: ${count} سراير`;
 }
 
-function getBasicsSummary(listing: Pick<RentalListing, 'basicFeatures'>) {
-  return (listing.basicFeatures || []).length >= 7 ? 'الأساسيات مكتملة' : 'أساسيات غير مكتملة';
-}
+
 
 const customerSupportWhatsAppGroupUrl = 'https://chat.whatsapp.com/ECEZfbsvjlU43eDvKa9XUu';
 
@@ -348,35 +345,7 @@ export function PublicRentalDetailPage() {
                       )}
                     </div>
 
-                    {gallery.length > 1 && (
-                      <div className="flex items-center justify-between gap-3 sm:justify-end">
-                        <span className="text-xs font-bold text-[#3e4d41]">
-                          صورة {selectedImageIndex + 1} من {gallery.length}
-                        </span>
-                        <div className="flex items-center gap-1.5" dir="ltr">
-                          <button
-                            aria-label="الصورة السابقة"
-                            className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#d2c4aa] bg-white/80 text-[#132015] hover:bg-tertiary hover:text-primary transition shadow-sm"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSelectedImageIndex((prev) => (prev - 1 + gallery.length) % gallery.length);
-                            }}
-                          >
-                            <ChevronLeft className="h-5 w-5" />
-                          </button>
-                          <button
-                            aria-label="الصورة التالية"
-                            className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#d2c4aa] bg-white/80 text-[#132015] hover:bg-tertiary hover:text-primary transition shadow-sm"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSelectedImageIndex((prev) => (prev + 1) % gallery.length);
-                            }}
-                          >
-                            <ChevronRight className="h-5 w-5" />
-                          </button>
-                        </div>
-                      </div>
-                    )}
+
                   </div>
 
                   <h1 className="text-2xl font-black leading-[1.35] sm:text-3xl lg:text-4xl text-[#1f2c22]">{title}</h1>
@@ -387,39 +356,7 @@ export function PublicRentalDetailPage() {
                 </div>
               </div>
 
-              {gallery.length > 1 && (
-                <div className="flex gap-2 sm:gap-3 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-primary/10 snap-x">
-                  {gallery.map((image, index) => {
-                    const thumbUrl = image.optimizedUrls
-                      ? (image.optimizedUrls.thumbnail ?? image.url)
-                      : image.url;
-                    return (
-                      <button
-                        key={image.id}
-                        aria-label={`عرض الصورة ${index + 1}`}
-                        className={cn(
-                          "relative shrink-0 aspect-[4/3] w-24 sm:w-28 rounded-2xl overflow-hidden border-2 bg-surface-dim snap-start transition",
-                          selectedImageIndex === index
-                            ? "border-tertiary ring-2 ring-tertiary/30 scale-95 shadow-md"
-                            : "border-[#d2c4aa] hover:border-tertiary/50"
-                        )}
-                        onClick={() => setSelectedImageIndex(index)}
-                      >
-                        <img
-                          alt={getListingImageAlt(listing, image)}
-                          className="h-full w-full object-cover"
-                          decoding="async"
-                          loading="lazy"
-                          src={thumbUrl}
-                          onError={(event) => {
-                            event.currentTarget.style.display = 'none';
-                          }}
-                        />
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
+
             </div>
 
             <aside className="self-start rounded-[32px] glass-panel p-5 text-right xl:sticky xl:top-24 xl:p-6">
@@ -428,14 +365,10 @@ export function PublicRentalDetailPage() {
                 <p className="mt-1 text-4xl font-black leading-tight text-tertiary">{formatRentalMoney(listing.monthlyRent)}</p>
               </div>
 
-              <div className="mt-4 grid grid-cols-3 gap-2 text-center text-sm text-[#38473d]">
+              <div className="mt-4 grid grid-cols-2 gap-2 text-center text-sm text-[#38473d]">
                 <span className="rounded-2xl border border-[#d6c9b3] bg-[#fcfaf5] px-2 py-3 shadow-sm">
                   <Building2 className="mx-auto mb-1 h-5 w-5 text-[#8a6d22]" />
                   <span className="font-semibold text-[#202c23]">{listing.floor != null ? `الدور ${listing.floor}` : `${bedCounts.totalBeds} سراير`}</span>
-                </span>
-                <span className="rounded-2xl border border-[#d6c9b3] bg-[#fcfaf5] px-2 py-3 shadow-sm">
-                  <ShieldCheck className="mx-auto mb-1 h-5 w-5 text-[#8a6d22]" />
-                  <span className="font-semibold text-[#202c23]">{getBasicsSummary(listing)}</span>
                 </span>
                 <span className="rounded-2xl border border-[#d6c9b3] bg-[#fcfaf5] px-2 py-3 shadow-sm">
                   <BedDouble className="mx-auto mb-1 h-5 w-5 text-[#8a6d22]" />
@@ -452,25 +385,13 @@ export function PublicRentalDetailPage() {
                 ))}
               </div>
 
-              <div className="mt-4 space-y-2 rounded-[24px] border border-[#d2c4aa] bg-white/80 p-4 text-sm shadow-sm">
-                <p className="pb-3 border-b border-[#d2c4aa] text-sm font-bold leading-7 text-[#38473d]">
-                  يمكن الحجز على سرير أو غرفة أو الشقة بالكامل.
-                </p>
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-[#38473d]">عدد السراير المتاحة</span>
-                  <span className="font-black text-emerald-700">{getAvailableBedsLabel(availableBeds)}</span>
-                </div>
-                <div className="flex items-center justify-between border-t border-[#d2c4aa] pt-2">
-                  <span className="font-bold text-[#38473d]">إجمالي السراير</span>
-                  <span className="font-black text-tertiary">{bedCounts.totalBeds}</span>
-                </div>
-              </div>
+
 
               <div className="mt-5 space-y-3">
                 {availableBeds > 0 ? (
                   <Link className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-tertiary hover:bg-tertiary/90 px-5 py-4 text-base font-black text-primary shadow-xl shadow-tertiary/15 transition" to={`/rentals/${listing.slug}/contact`}>
                      <LockKeyhole className="h-5 w-5" />
-                     طلب معاينة
+                     إرسال طلب معاينة
                   </Link>
                 ) : (
                   <div className="rounded-2xl border border-error/25 bg-error-container/20 px-4 py-3 text-center text-sm font-black text-error">
