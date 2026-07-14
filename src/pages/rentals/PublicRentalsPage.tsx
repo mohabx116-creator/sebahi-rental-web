@@ -19,6 +19,7 @@ import {
   listingTypeLabels,
   publicRentalBrand,
   publicRentalText,
+  sortPublicRentalListings,
   toNumber,
   isRentalUnavailable,
 } from './rental-format';
@@ -294,7 +295,7 @@ export function PublicRentalsPage() {
     if (!selectedCondition) return true;
     return listing.unitCondition?.trim() === selectedCondition.trim();
   });
-  const visibleListings = [...filteredListings].sort((a, b) => Number(b.isFeatured) - Number(a.isFeatured));
+  const visibleListings = sortPublicRentalListings(filteredListings);
   const paginationMeta = listingsQuery.data?.meta;
   const hasClientOnlyFilters = Boolean(selectedCondition) || airConditionedOnly;
 

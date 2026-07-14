@@ -245,3 +245,30 @@ export function isRentalRented(listing: RentalListingWithBedCounts & { status?: 
 export function isRentalUnavailable(listing: RentalListingWithBedCounts & { status?: string | null }) {
   return isRentalReserved(listing) || isRentalRented(listing);
 }
+
+export function getPublicRentalSortPriority(listing: RentalListingWithBedCounts & { status?: string | null }) {
+  if (isRentalReserved(listing)) {
+    return 1;
+  }
+
+  if (isRentalRented(listing)) {
+    return 2;
+  }
+
+  return 0;
+}
+
+export function sortPublicRentalListings<T extends RentalListingWithBedCounts & { status?: string | null; isFeatured?: boolean; createdAt?: string }>(listings: T[]) {
+  return [...listings].sort((a, b) => {
+    const priorityDiff = getPublicRentalSortPriority(a) - getPublicRentalSortPriority(b);
+    if (priorityDiff !== 0) return priorityDiff;
+
+    const featuredDiff = Number(b.isFeatured) - Number(a.isFeatured);
+    if (featuredDiff !== 0) return featuredDiff;
+
+    const createdAtDiff = new Date(b.createdAt ?? 0).getTime() - new Date(a.createdAt ?? 0).getTime();
+    if (createdAtDiff !== 0) return createdAtDiff;
+
+    return 0;
+  });
+}
