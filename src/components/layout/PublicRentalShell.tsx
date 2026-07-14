@@ -2,6 +2,7 @@ import { Home, Megaphone } from 'lucide-react';
 import { Link, Outlet } from 'react-router-dom';
 import dalilSubhiLogo from '../../assets/dalil-subhi-logo.jpg';
 import { ROUTES } from '../../lib/constants/routes';
+import Footer from './Footer';
 
 export function PublicRentalShell() {
   return (
@@ -45,65 +46,7 @@ export function PublicRentalShell() {
 
       <Outlet />
 
-      <footer className="border-t border-[#e4dac5] bg-[#f2ebde] text-[#243128]">
-        <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-8 text-right md:grid-cols-2" dir="rtl">
-            <div className="space-y-3">
-              <h3 className="text-base font-bold text-[#1f2c22]">مجمع الخدمات للمنطقة</h3>
-              <p className="text-sm leading-relaxed text-[#5f6e62]">منصة آمنة لعرض خدمات المنطقة</p>
-            </div>
-
-            <div className="space-y-3">
-              <h3 className="text-base font-bold text-[#1f2c22]">روابط مهمة</h3>
-              <ul className="space-y-2 text-sm text-[#5f6e62]">
-                <li>
-                  <a
-                    href="https://www.dalilsubhi.com/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="transition-colors hover:text-emerald-700"
-                  >
-                    الصفحة الرئيسية
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://chat.whatsapp.com/ECEZfbsvjlU43eDvKa9XUu"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="transition-colors hover:text-emerald-700"
-                  >
-                    خدمة العملاء
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://www.facebook.com/share/g/1CzbCwjugk/?mibextid=KtfwRi"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="transition-colors hover:text-emerald-700"
-                  >
-                    جروب الفيس بوك
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://dalilsubhi.com/publishing-policy"
-                    className="transition-colors hover:text-emerald-700"
-                  >
-                    سياسة النشر والإعلان
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-          </div>
-
-          <div className="mt-8 border-t border-[#e4dac5] pt-6 text-center">
-            <p className="text-xs text-[#6d756a]">© 2026 مجمع الخدمات للمنطقة</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
