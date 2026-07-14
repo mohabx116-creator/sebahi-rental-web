@@ -359,7 +359,7 @@ export function PublicRentalDetailPage() {
 
             </div>
 
-            <aside className="self-start rounded-[32px] glass-panel p-5 text-right xl:sticky xl:top-24 xl:p-6">
+            <aside className="hidden xl:block self-start rounded-[32px] glass-panel p-5 text-right xl:sticky xl:top-24 xl:p-6">
               <div className="rounded-[26px] border border-[#d2c4aa] bg-gradient-to-br from-[#fdfaf4] to-[#eef5ef] p-5 text-[#1f2c22] shadow-[0_18px_40px_rgba(28,45,34,0.08)]">
                 <p className="text-sm font-bold text-[#3e4d41]">إيجار الشقة الشهري</p>
                 <p className="mt-1 text-4xl font-black leading-tight text-tertiary">{formatRentalMoney(listing.monthlyRent)}</p>
@@ -418,7 +418,7 @@ export function PublicRentalDetailPage() {
             </aside>
           </div>
 
-          <div className="mt-5">
+          <div className="mt-5 hidden xl:block">
             <InlineOwnerAcquisitionCta />
           </div>
         </div>
