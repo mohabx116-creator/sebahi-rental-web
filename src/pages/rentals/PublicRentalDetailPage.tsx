@@ -23,6 +23,7 @@ import {
   furnishingLabels,
   getListingCoverImage,
   getListingImageAlt,
+  getAvailableBedsStatusLabel,
   getRentalBedCounts,
   getPublicRentalStatusLabel,
   listingTypeLabels,
@@ -50,7 +51,7 @@ function getAvailableBeds(listing: { availableBeds?: number | null; totalBeds?: 
 }
 
 function getAvailableBedsLabel(count: number) {
-  if (count <= 0) return 'تم الحجز بالكامل';
+  if (count <= 0) return 'غير متاحة';
   if (count === 1) return 'سرير واحد متاح فقط';
   if (count === 2) return 'متبقي سريران فقط';
   return `متاح الآن: ${count} سراير`;
@@ -273,6 +274,7 @@ export function PublicRentalDetailPage() {
   const compoundName = publicCompoundName(listing.compound?.name);
   const bedCounts = getRentalBedCounts(listing);
   const availableBeds = bedCounts.availableBeds;
+  const availableBedsStatusLabel = getAvailableBedsStatusLabel(listing);
   const pricingItems = [
     { label: 'التأمين', value: toNumber(listing.depositAmount) > 0 ? formatRentalMoney(listing.depositAmount) : 'لا يوجد تأمين' },
   ];
@@ -343,6 +345,11 @@ export function PublicRentalDetailPage() {
                           {getAvailableBedsLabel(availableBeds)}
                         </span>
                       )}
+                      {availableBeds <= 0 && (
+                        <span className="rounded-full border border-amber-500/20 bg-amber-500/10 px-3 py-1 text-xs font-black text-amber-800 shadow-sm">
+                          {availableBedsStatusLabel}
+                        </span>
+                      )}
                     </div>
 
 
@@ -395,7 +402,7 @@ export function PublicRentalDetailPage() {
                   </Link>
                 ) : (
                   <div className="rounded-2xl border border-error/25 bg-error-container/20 px-4 py-3 text-center text-sm font-black text-error">
-                    تم الحجز بالكامل لهذا الإعلان
+                    تم الإيجار بالكامل لهذا الإعلان
                   </div>
                 )}
                 {availableBeds > 0 && (

@@ -13,6 +13,7 @@ import {
   getListingCoverImage,
   getListingImageAlt,
   getOptimizedListingImageUrl,
+  getAvailableBedsStatusLabel,
   getRentalBedCounts,
   getPublicRentalStatusLabel,
   listingTypeLabels,
@@ -25,13 +26,6 @@ import heroImage from '../../assets/sebahi-gardens-hero.jpg';
 
 const publicRentalCardLocation = 'حدائق العاشر من رمضان';
 const PUBLIC_RENTAL_DETAIL_STALE_TIME_MS = 30_000;
-
-function getAvailableBedsText(availableBeds: number) {
-  if (availableBeds <= 0) return 'تم الحجز بالكامل';
-  if (availableBeds === 1) return 'آخر سرير متاح';
-  return `عدد السراير المتاحة: ${availableBeds}`;
-}
-
 
 function prefetchRentalListingDetail(queryClient: QueryClient, slug: string) {
   if (!slug) return;
@@ -84,8 +78,9 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
   const depositAmount = toNumber(listing.depositAmount);
   const bedCounts = getRentalBedCounts(listing);
   const availableBeds = bedCounts.availableBeds;
-  const bedsStatusText = getAvailableBedsText(availableBeds);
+  const bedsStatusText = getAvailableBedsStatusLabel(listing);
   const hasAirConditioning = Boolean(listing.isAirConditioned);
+  const isFullyRented = availableBeds <= 0;
 
   const handlePrefetch = () => {
     prefetchRentalListingDetail(queryClient, listing.slug);
@@ -105,13 +100,22 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
     <Link
       to={`/rentals/${listing.slug}`}
       className={cn(
-        'group block overflow-hidden rounded-[28px] glass-card border-[#e8ddc9] shadow-[0_24px_60px_rgba(28,45,34,0.06)] transition-transform duration-300 hover:-translate-y-1',
+        'group relative block overflow-hidden rounded-[28px] glass-card border-[#e8ddc9] shadow-[0_24px_60px_rgba(28,45,34,0.06)] transition-all duration-300 hover:-translate-y-1',
         listing.isFeatured && 'ring-1 ring-tertiary/20'
+        ,
+        isFullyRented &&
+          'border-amber-200/70 bg-gradient-to-br from-amber-50 via-white to-emerald-50 shadow-[0_24px_70px_rgba(214,178,94,0.16)] ring-1 ring-amber-300/30'
       )}
       onFocusCapture={handleFocus}
       onMouseEnter={handlePrefetch}
       onPointerDownCapture={handlePointerDown}
     >
+      {isFullyRented && (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(circle_at_20%_0%,rgba(255,255,255,0.9),transparent_28%),radial-gradient(circle_at_80%_20%,rgba(255,236,174,0.55),transparent_28%),linear-gradient(135deg,rgba(255,255,255,0.55),rgba(255,255,255,0.06))] mix-blend-screen opacity-80 animate-pulse"
+        />
+      )}
       <div className="relative aspect-[16/11] overflow-hidden bg-surface-dim">
         <ListingImageFallback title={title} />
         {coverImage && (
@@ -127,8 +131,15 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
           />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent opacity-40" />
-        <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-3 p-4">
-          <span className="rounded-full border border-white/80 bg-white/95 px-3 py-1.5 text-xs font-black text-[#1f3c2f] shadow-md backdrop-blur-md">
+        <div className="absolute inset-x-0 top-0 z-10 flex items-start justify-between gap-3 p-4">
+          <span
+            className={cn(
+              'rounded-full border px-3 py-1.5 text-xs font-black shadow-md backdrop-blur-md',
+              isFullyRented
+                ? 'border-amber-200/70 bg-white/95 text-amber-800'
+                : 'border-white/80 bg-white/95 text-[#1f3c2f]'
+            )}
+          >
             {getPublicRentalStatusLabel(listing)}
           </span>
         </div>
@@ -151,7 +162,7 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
         )}
       </div>
 
-      <div className="space-y-5 p-4 text-right sm:p-5">
+      <div className="relative z-10 space-y-5 p-4 text-right sm:p-5">
         <div>
           <p className="flex items-center gap-2 text-sm font-semibold text-[#3e4d41]">
             <MapPin className="h-4 w-4 shrink-0 text-[#4e5e52]" />
@@ -171,7 +182,7 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
               'rounded-full border px-3 py-1 text-sm font-bold',
               availableBeds > 0
                 ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
-                : 'border-rose-200 bg-rose-50 text-rose-700'
+                : 'border-amber-200 bg-amber-50 text-amber-800'
             )}
           >
             {bedsStatusText}

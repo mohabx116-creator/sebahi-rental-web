@@ -21,6 +21,7 @@ import {
   furnishingLabels,
   getListingCoverImage,
   getListingImageAlt,
+  getAvailableBedsStatusLabel,
   getPublicRentalStatusLabel,
   getRentalBedCounts,
   getOptimizedListingImageUrl,
@@ -104,7 +105,7 @@ function getAvailableBeds(listing: { availableBeds?: number; totalBeds?: number 
 }
 
 function getAvailableBedsLabel(count: number) {
-  if (count <= 0) return 'تم الحجز بالكامل';
+  if (count <= 0) return 'غير متاحة';
   if (count === 1) return 'سرير واحد متاح فقط';
   if (count === 2) return 'متبقي سريران فقط';
   return `متاح الآن: ${count} سراير`;
@@ -174,6 +175,7 @@ export function PublicRentalContactPage() {
   const compoundName = publicCompoundName(listing?.compound?.name);
   const coverImage = listing ? getListingCoverImage(listing) : null;
   const availableBeds = listing ? getAvailableBeds(listing) : 0;
+  const availableBedsStatusLabel = listing ? getAvailableBedsStatusLabel(listing) : '';
 
   const onSubmit = handleSubmit(async (values) => {
     if (!listing || isSubmitPending || isReservationLocked) return;
@@ -216,7 +218,7 @@ export function PublicRentalContactPage() {
           error.message?.includes('unavailable') ||
           error.message?.includes('متاحة')
         ) {
-          errorMessage = 'تم الحجز بالكامل لهذا الإعلان';
+          errorMessage = 'تم الإيجار بالكامل لهذا الإعلان';
           setIsUnavailableError(true);
         } else if (error.message) {
           errorMessage = error.message;
@@ -297,6 +299,11 @@ export function PublicRentalContactPage() {
                   <span className="rounded-full bg-white/5 border border-white/10 px-3 py-1.5 text-xs font-black text-fixed">{listing.unitCondition || furnishingLabels[listing.furnishingStatus]}</span>
                 </div>
                 <h1 className="mt-4 text-2xl font-black leading-9 text-fixed">{title}</h1>
+                {availableBeds <= 0 && (
+                  <div className="mt-3 inline-flex items-center rounded-full border border-amber-400/25 bg-amber-500/10 px-3 py-1.5 text-xs font-black text-amber-100 shadow-sm shadow-amber-500/10">
+                    {availableBedsStatusLabel}
+                  </div>
+                )}
                 <div className="mt-5">
                   <div className="rounded-3xl bg-primary/45 border border-outline/45 p-4">
                     <p className="text-xs font-bold text-fixed-dim">إيجار الشقة الشهري</p>
