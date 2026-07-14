@@ -23,7 +23,7 @@ import {
 
 import heroImage from '../../assets/sebahi-gardens-hero.jpg';
 
-const publicRentalCardLocation = 'المنطقة المحيطة-حدائق العاشر من رمضان';
+const publicRentalCardLocation = 'حدائق العاشر من رمضان';
 const PUBLIC_RENTAL_DETAIL_STALE_TIME_MS = 30_000;
 
 function getAvailableBedsText(availableBeds: number) {
@@ -142,15 +142,15 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
           <div className="absolute inset-x-0 bottom-0 flex justify-start p-4">
             <button
               type="button"
-              className="z-20 flex items-center gap-1.5 rounded-full border border-white/20 bg-[#1f2c22]/60 px-3 py-1.5 text-xs font-bold text-white shadow-sm backdrop-blur-md transition hover:bg-[#1f2c22]/80"
+              className="z-20 flex items-center gap-2 rounded-xl border-2 border-white/40 bg-black/75 px-5 py-2.5 text-sm font-black text-white shadow-[0_8px_16px_rgba(0,0,0,0.5)] backdrop-blur-md transition hover:scale-105 hover:bg-black"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 window.location.href = `/rentals/${listing.slug}?gallery=true`;
               }}
             >
-              <Images className="h-3.5 w-3.5" />
-              <span>الصور ({listing.images.length})</span>
+              <Images className="h-4 w-4" />
+              <span>عرض الصور ({listing.images.length})</span>
             </button>
           </div>
         )}
@@ -158,11 +158,7 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
 
       <div className="space-y-5 p-4 text-right sm:p-5">
         <div>
-          <p className="text-sm font-extrabold text-[#1f3c2f]">{compoundName}</p>
-          <span className="mt-1 block text-[1.15rem] font-black leading-8 text-[#1d2a21] transition group-hover:text-tertiary">
-            {title}
-          </span>
-          <p className="mt-2 flex items-center gap-2 text-sm font-semibold text-[#3e4d41]">
+          <p className="flex items-center gap-2 text-sm font-semibold text-[#3e4d41]">
             <MapPin className="h-4 w-4 shrink-0 text-[#4e5e52]" />
             <span className="line-clamp-1">{location}</span>
           </p>
