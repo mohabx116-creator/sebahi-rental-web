@@ -32,9 +32,6 @@ function getAvailableBedsText(availableBeds: number) {
   return `عدد السراير المتاحة: ${availableBeds}`;
 }
 
-function getBasicsSummary(listing: RentalListing) {
-  return (listing.basicFeatures || []).length >= 7 ? 'الأساسيات مكتملة' : 'أساسيات غير مكتملة';
-}
 
 function prefetchRentalListingDetail(queryClient: QueryClient, slug: string) {
   if (!slug) return;
@@ -88,7 +85,6 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
   const bedCounts = getRentalBedCounts(listing);
   const availableBeds = bedCounts.availableBeds;
   const bedsStatusText = getAvailableBedsText(availableBeds);
-  const basicsSummary = getBasicsSummary(listing);
   const hasAirConditioning = Boolean(listing.isAirConditioned);
 
   const handlePrefetch = () => {
@@ -201,16 +197,12 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-3 text-center text-sm text-[#364539] sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 text-center text-sm text-[#364539] sm:grid-cols-2">
           <span className="rounded-2xl border border-[#d6c9b3] bg-[#fcfaf5] px-2 py-3">
             <Building2 className="mx-auto mb-1 h-5 w-5 text-[#6e5314]" />
             <span className="font-bold text-[#202c23]">
               {listing.floor != null ? `الدور ${listing.floor}` : `${bedCounts.totalBeds} سراير`}
             </span>
-          </span>
-          <span className="rounded-2xl border border-[#d6c9b3] bg-[#fcfaf5] px-2 py-3">
-            <ShieldCheck className="mx-auto mb-1 h-5 w-5 text-[#6e5314]" />
-            <span className="font-bold text-[#202c23]">{basicsSummary}</span>
           </span>
           <span className="rounded-2xl border border-[#d6c9b3] bg-[#fcfaf5] px-2 py-3">
             <BedDouble className="mx-auto mb-1 h-5 w-5 text-[#6e5314]" />
