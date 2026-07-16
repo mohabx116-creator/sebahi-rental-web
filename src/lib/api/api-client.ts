@@ -2,6 +2,7 @@ import axios from 'axios';
 import type { ApiResponse, PaginatedMeta } from './types';
 
 const DEFAULT_API_BASE_URL = 'https://compound-os-api-replica.onrender.com/api/v1';
+const FORBIDDEN_API_HOSTNAMES = new Set(['compound-os-api.onrender.com']);
 
 export type ApiClientErrorCode = 'HTTP_ERROR' | 'API_ERROR' | 'INVALID_RESPONSE' | 'NETWORK_ERROR' | 'UNKNOWN_ERROR';
 
@@ -19,7 +20,45 @@ export class ApiClientError extends Error {
   }
 }
 
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim() || DEFAULT_API_BASE_URL;
+function normalizeApiBaseUrl(value?: string | null) {
+  const candidate = value?.trim();
+  if (!candidate) {
+    return DEFAULT_API_BASE_URL;
+  }
+
+  if (/\/health\/?$/i.test(candidate)) {
+    return DEFAULT_API_BASE_URL;
+  }
+
+  if (!/^https?:\/\//i.test(candidate)) {
+    return DEFAULT_API_BASE_URL;
+  }
+
+  try {
+    const url = new URL(candidate);
+    url.pathname = url.pathname.replace(/\/+$/, '');
+
+    if (FORBIDDEN_API_HOSTNAMES.has(url.hostname)) {
+      return DEFAULT_API_BASE_URL;
+    }
+
+    if (!url.pathname.includes('/api/v1')) {
+      return DEFAULT_API_BASE_URL;
+    }
+
+    if (url.pathname.endsWith('/health')) {
+      return DEFAULT_API_BASE_URL;
+    }
+
+    url.search = '';
+    url.hash = '';
+    return url.toString().replace(/\/+$/, '');
+  } catch {
+    return DEFAULT_API_BASE_URL;
+  }
+}
+
+const apiBaseUrl = normalizeApiBaseUrl(import.meta.env.VITE_API_BASE_URL);
 
 export const apiClient = axios.create({
   baseURL: apiBaseUrl.replace(/\/+$/, ''),
