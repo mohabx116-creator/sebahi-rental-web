@@ -47,6 +47,7 @@ export function getFallbackPublicRentals(query: RentalListingQuery = {}) {
   const limit = Math.max(1, Math.floor(query.limit ?? DEFAULT_PAGE_SIZE));
   const filtered = RENTALS_FALLBACK.filter((listing) => matchesQuery(listing, query));
   const totalCount = filtered.length;
+  const availableCount = filtered.filter((listing) => listing.status === 'ACTIVE').length;
   const totalPages = totalCount === 0 ? 1 : Math.ceil(totalCount / limit);
   const start = (page - 1) * limit;
   const data = filtered.slice(start, start + limit);
@@ -55,7 +56,7 @@ export function getFallbackPublicRentals(query: RentalListingQuery = {}) {
     page,
     limit,
     totalCount,
-    availableCount: totalCount,
+    availableCount,
     totalPages,
     hasNextPage: page < totalPages,
     hasPreviousPage: page > 1,
