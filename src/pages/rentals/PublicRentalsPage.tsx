@@ -338,7 +338,7 @@ export function PublicRentalsPage() {
                 <span className="h-px w-8 bg-gradient-to-l from-amber-500/80 to-transparent" />
                 <span className="text-[0.7rem] font-bold uppercase tracking-[0.35em]">{'\u0628\u0648\u0627\u0628\u0629 \u0627\u0644\u0625\u064a\u062c\u0627\u0631\u0627\u062a'}</span>
               </div>
-              <h1 className="text-3xl font-black leading-[1.2] text-[#1f2c22] sm:text-5xl lg:text-6xl">
+              <h1 className="whitespace-nowrap text-[clamp(1rem,3.5vw,2.9rem)] font-black leading-none tracking-[-0.04em] text-[#183328]">
                 {'\u0627\u0644\u0625\u064a\u062c\u0627\u0631\u0627\u062a \u0627\u0644\u0645\u062a\u0627\u062d\u0629 \u0641\u064a \u0627\u0644\u0645\u0646\u0637\u0642\u0629'}
               </h1>
             </div>
