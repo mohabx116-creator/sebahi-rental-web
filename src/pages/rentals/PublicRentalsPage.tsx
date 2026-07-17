@@ -137,7 +137,7 @@ function RentalListingCard({ listing }: { listing: RentalListing }) {
         
         {isUnavailable && (
           <div className="absolute -left-12 top-6 z-20 w-48 -rotate-45 transform bg-amber-600/90 py-1.5 text-center text-xs font-black tracking-widest text-white shadow-lg backdrop-blur-md sm:top-8 sm:py-2 sm:text-sm">
-            {listing.status === 'RESERVED' ? 'قيد الحجز' : 'تم الإيجار'}
+            {getPublicRentalStatusLabel(listing)}
           </div>
         )}
         <div className="absolute inset-x-0 top-0 z-10 flex items-start justify-between gap-3 p-4">

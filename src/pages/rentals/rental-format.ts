@@ -163,10 +163,6 @@ export function getRentalBedCounts(listing: RentalListingWithBedCounts) {
 
 export function getPublicRentalStatusLabel(listing: RentalListingWithBedCounts & { status: RentalListingStatus }) {
   const bedCounts = getRentalBedCounts(listing);
-  if (listing.status === 'RESERVED') {
-    return 'قيد الحجز';
-  }
-
   if (bedCounts.availableBeds <= 0 || listing.status === 'RENTED') {
     return 'تم الإيجار';
   }
@@ -176,12 +172,8 @@ export function getPublicRentalStatusLabel(listing: RentalListingWithBedCounts &
 
 export function getAvailableBedsStatusLabel(listing: RentalListingWithBedCounts & { status?: string | null }) {
   const bedCounts = getRentalBedCounts(listing);
-  if (listing.status === 'RESERVED') {
+  if (bedCounts.availableBeds <= 0 || listing.status === 'RENTED') {
     return 'غير متاحة حاليًا';
-  }
-
-  if (bedCounts.availableBeds <= 0) {
-    return 'غير متاحة';
   }
 
   return `عدد السراير المتاحة: ${bedCounts.availableBeds}`;
@@ -228,10 +220,6 @@ export function getOptimizedListingImageUrl(
   return image.optimizedUrls?.[variant] ?? transformCloudinaryImageUrl(image.url, variant);
 }
 
-export function isRentalReserved(listing: RentalListingWithBedCounts & { status?: string | null }) {
-  return listing.status === 'RESERVED';
-}
-
 export function isRentalRented(listing: RentalListingWithBedCounts & { status?: string | null }) {
   if (listing.status === 'RENTED') return true;
   
@@ -243,16 +231,12 @@ export function isRentalRented(listing: RentalListingWithBedCounts & { status?: 
 }
 
 export function isRentalUnavailable(listing: RentalListingWithBedCounts & { status?: string | null }) {
-  return isRentalReserved(listing) || isRentalRented(listing);
+  return isRentalRented(listing);
 }
 
 export function getPublicRentalSortPriority(listing: RentalListingWithBedCounts & { status?: string | null }) {
-  if (isRentalReserved(listing)) {
-    return 1;
-  }
-
   if (isRentalRented(listing)) {
-    return 2;
+    return 1;
   }
 
   return 0;

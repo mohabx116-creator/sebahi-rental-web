@@ -325,12 +325,10 @@ export function PublicRentalDetailPage() {
                     <div className="absolute inset-0 flex items-center justify-center p-4">
                       <div className="rounded-2xl border border-white/20 bg-black/60 px-8 py-4 text-center backdrop-blur-md shadow-2xl">
                         <span className="text-xl sm:text-3xl font-black tracking-widest text-white">
-                          {listing.status === 'RESERVED' ? 'قيد الحجز' : 'تم الإيجار'}
+                          {getPublicRentalStatusLabel(listing)}
                         </span>
                         <p className="mt-2 text-sm sm:text-base font-bold text-white/90">
-                          {listing.status === 'RESERVED' 
-                            ? 'هذا الإعلان قيد الحجز حالياً'
-                            : 'هذا الإعلان تم تأجيره بالكامل'}
+                          هذا الإعلان تم تأجيره بالكامل
                         </p>
                       </div>
                     </div>

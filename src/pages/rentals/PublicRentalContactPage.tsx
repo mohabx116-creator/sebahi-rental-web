@@ -28,7 +28,6 @@ import {
   listingTypeLabels,
   publicCompoundName,
   publicRentalText,
-  isRentalReserved,
   isRentalUnavailable,
 } from './rental-format';
 
@@ -178,11 +177,10 @@ export function PublicRentalContactPage() {
   const coverImage = listing ? getListingCoverImage(listing) : null;
   const availableBeds = listing ? getAvailableBeds(listing) : 0;
   const availableBedsStatusLabel = listing ? getAvailableBedsStatusLabel(listing) : '';
-  const isReserved = listing ? isRentalReserved(listing) : false;
   const isUnavailable = listing ? isRentalUnavailable(listing) : false;
 
   const onSubmit = handleSubmit(async (values) => {
-    if (!listing || isSubmitPending || isReservationLocked || isReserved) return;
+    if (!listing || isSubmitPending || isReservationLocked || isUnavailable) return;
     setIsReservationLocked(true);
     setSubmitError(null);
     setIsUnavailableError(false);
@@ -343,7 +341,7 @@ export function PublicRentalContactPage() {
                     الإعلان غير متاح حالياً
                   </h3>
                   <p className="mt-3 text-sm font-bold leading-6 text-amber-800/80">
-                    {isReserved ? 'هذا الإعلان قيد الحجز حالياً.' : 'تم تأجير هذا الإعلان بالكامل.'}
+                    تم تأجير هذا الإعلان بالكامل.
                   </p>
                   <Link
                     className="mt-5 inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-white px-6 py-3 text-sm font-black text-amber-900 shadow-sm transition hover:bg-amber-50"
