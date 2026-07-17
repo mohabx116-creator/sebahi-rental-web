@@ -299,11 +299,15 @@ export function PublicRentalsPage() {
   const paginationMeta = listingsQuery.data?.meta;
   const hasClientOnlyFilters = Boolean(selectedCondition) || airConditionedOnly;
 
-  const exactAvailableCount = paginationMeta?.availableCount ?? paginationMeta?.totalCount ?? listings.length;
-  const visibleCount = visibleListings.length;
-  const heroCount = hasClientOnlyFilters ? visibleCount : exactAvailableCount;
+  const exactAvailableCount = paginationMeta?.availableCount ?? listings.filter((listing) => listing.status === 'ACTIVE').length;
+  const exactRentedCount = paginationMeta?.rentedCount ?? listings.filter((listing) => listing.status === 'RENTED').length;
+  const visibleAvailableCount = visibleListings.filter((listing) => listing.status === 'ACTIVE').length;
+  const visibleRentedCount = visibleListings.filter((listing) => listing.status === 'RENTED').length;
+  const availableCount = hasClientOnlyFilters ? visibleAvailableCount : exactAvailableCount;
+  const rentedCount = hasClientOnlyFilters ? visibleRentedCount : exactRentedCount;
   const heroCountLabel = hasClientOnlyFilters ? 'المتاح في هذه الصفحة' : 'الإعلانات المتاحة';
   let activeFilters = 0;
+  const rentedCountLabel = hasClientOnlyFilters ? '\u0627\u0644\u0645\u0624\u062c\u0631\u0629 \u0641\u064a \u0647\u0630\u0647 \u0627\u0644\u0635\u0641\u062d\u0629' : '\u0627\u0644\u0625\u0639\u0644\u0627\u0646\u0627\u062a \u0627\u0644\u0645\u0624\u062c\u0631\u0629';
   searchParams.forEach((value) => {
     if (value.trim()) activeFilters += 1;
   });
@@ -334,9 +338,15 @@ export function PublicRentalsPage() {
             </h1>
           </div>
 
-          <div className="mr-auto w-fit rounded-2xl border border-[#e4dac5] bg-white/90 px-6 py-4 text-center shadow-[0_12px_40px_rgba(28,45,34,0.12)] backdrop-blur-md">
-            <p className="text-sm font-extrabold text-tertiary">{heroCountLabel}</p>
-            <p className="mt-1 text-4xl font-black text-[#1f2c22]">{new Intl.NumberFormat('ar-EG').format(heroCount)}</p>
+          <div className="mr-auto grid w-full max-w-[32rem] gap-3 sm:grid-cols-2">
+            <div className="rounded-2xl border border-[#e4dac5] bg-white/90 px-6 py-4 text-center shadow-[0_12px_40px_rgba(28,45,34,0.12)] backdrop-blur-md">
+              <p className="text-sm font-extrabold text-tertiary">{heroCountLabel}</p>
+              <p className="mt-1 text-4xl font-black text-[#1f2c22]">{new Intl.NumberFormat('ar-EG').format(availableCount)}</p>
+            </div>
+            <div className="rounded-2xl border border-[#e4dac5] bg-white/90 px-6 py-4 text-center shadow-[0_12px_40px_rgba(28,45,34,0.12)] backdrop-blur-md">
+              <p className="text-sm font-extrabold text-tertiary">{rentedCountLabel}</p>
+              <p className="mt-1 text-4xl font-black text-[#1f2c22]">{new Intl.NumberFormat('ar-EG').format(rentedCount)}</p>
+            </div>
           </div>
         </div>
       </section>
@@ -471,3 +481,4 @@ export function PublicRentalsPage() {
     </main>
   );
 }
+

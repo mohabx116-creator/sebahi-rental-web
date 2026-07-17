@@ -3,6 +3,7 @@ export interface PaginatedMeta {
   limit: number;
   totalCount: number;
   availableCount?: number;
+  rentedCount?: number;
   totalPages: number;
   hasNextPage: boolean;
   hasPreviousPage: boolean;
