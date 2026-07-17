@@ -333,9 +333,15 @@ export function PublicRentalsPage() {
         <div className="absolute inset-0 bg-gradient-to-b from-[rgba(255,253,248,0.66)] via-[rgba(247,242,232,0.9)] to-[#f0eadc]" />
         <div className="relative mx-auto grid min-h-[420px] w-full max-w-7xl items-end gap-8 px-4 pb-10 pt-16 sm:min-h-[520px] sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:px-8">
           <div className="max-w-3xl text-right">
-            <h1 className="text-3xl font-black leading-[1.25] text-[#1f2c22] sm:text-5xl lg:text-6xl">
-              الإيجارات المتاحة في المنطقة
-            </h1>
+            <div className="inline-flex max-w-full flex-col gap-3 rounded-[28px] border border-amber-200/70 bg-[#fffaf0]/78 px-5 py-4 text-right shadow-[0_18px_50px_rgba(74,58,34,0.12)] backdrop-blur-md sm:px-6 sm:py-5">
+              <div className="flex items-center justify-end gap-2 text-amber-700/90">
+                <span className="h-px w-8 bg-gradient-to-l from-amber-500/80 to-transparent" />
+                <span className="text-[0.7rem] font-bold uppercase tracking-[0.35em]">{'\u0628\u0648\u0627\u0628\u0629 \u0627\u0644\u0625\u064a\u062c\u0627\u0631\u0627\u062a'}</span>
+              </div>
+              <h1 className="text-3xl font-black leading-[1.2] text-[#1f2c22] sm:text-5xl lg:text-6xl">
+                {'\u0627\u0644\u0625\u064a\u062c\u0627\u0631\u0627\u062a \u0627\u0644\u0645\u062a\u0627\u062d\u0629 \u0641\u064a \u0627\u0644\u0645\u0646\u0637\u0642\u0629'}
+              </h1>
+            </div>
           </div>
 
           <div className="mr-auto grid w-full max-w-[32rem] gap-3 sm:grid-cols-2">
