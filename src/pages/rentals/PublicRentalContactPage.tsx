@@ -106,10 +106,10 @@ function getAvailableBeds(listing: { availableBeds?: number; totalBeds?: number 
 }
 
 function getAvailableBedsLabel(count: number) {
-  if (count <= 0) return 'غير متاحة';
-  if (count === 1) return 'سرير واحد متاح فقط';
-  if (count === 2) return 'متبقي سريران فقط';
-  return `متاح الآن: ${count} سراير`;
+  if (count <= 0) return '\u0639\u062F\u062F \u0627\u0644\u0633\u0631\u0627\u0626\u0631 \u0627\u0644\u0645\u062A\u0627\u062D\u0629: 0';
+  if (count === 1) return '\u0633\u0631\u064A\u0631 \u0648\u0627\u062D\u062F \u0645\u062A\u0627\u062D \u0641\u0642\u0637';
+  if (count === 2) return '\u0645\u062A\u0628\u0642\u064A \u0633\u0631\u064A\u0631\u0627\u0646 \u0641\u0642\u0637';
+  return `\u0645\u062A\u0627\u062D \u0627\u0644\u0622\u0646: ${count} \u0633\u0631\u064A\u0631`;
 }
 
 const whatsappPhone = '201224591618';
